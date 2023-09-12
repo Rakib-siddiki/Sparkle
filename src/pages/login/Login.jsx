@@ -1,15 +1,14 @@
 import { useState } from "react";
-import regImg from "../../assets/reg/reg_Img.png";
+import google from "../../assets/login/Google.svg";
+import LoginImg from "../../assets/login/login_img.jpg";
 import { GiBullseye, GiBurningEye } from "react-icons/gi";
 import { Link } from "react-router-dom";
 
-const Reg = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
 
   const [emailError, setEmailError] = useState("");
-  const [fullNameError, setFullNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   const isValidEmail = (email) => {
@@ -21,23 +20,18 @@ const Reg = () => {
     setEmail(e.target.value);
     setEmailError("");
   };
-   const handleFullName = (e) => {
-     setFullName(e.target.value);
-     setFullNameError(""); // Reset email error when input changes
-   };
-   
   const upperCase = /^(?=.*[A-Z])/; //At least one uppercase letter.
   const lowerCase = /^(?=.*[a-z])/; // At least one lowercase letter.
   const digit = /^(?=.*\d)/; //At least one digit.
   const symbol = /^(?=.*[@#$%^&+=!])/; //At least one special character (you can add or remove special
   const noSpace = /^(?!.*\s)/; //No whitespace allowed.
   const lentgh = /^.{8,}/; // Minimum length of 8 characters (you can adjust this as well).
- 
+
   const handlePassword = (e) => {
     setPassword(e.target.value);
     setPasswordError("");
 
-    // I changed the if-else statements to check for the negation of the regex conditions
+        // I changed the if-else statements to check for the negation of the regex conditions
     if (!lowerCase.test(e.target.value)) {
       setPasswordError("At least one lowercase letter");
     } else if (!upperCase.test(e.target.value)) {
@@ -62,47 +56,47 @@ const Reg = () => {
     } else if (!isValidEmail(email)) {
       setEmailError("Invalid Email Format");
     }
-    if (!fullName) {
-      setFullNameError("Plese Enter Your Name");
-    }
     if (!password) {
       setPasswordError("Plese Enter Your password");
     }
   };
   return (
     <>
-      <section className="bg-reg-img sm:bg-none h-screen sm:h-full  bg-no-repeat bg-center bg-cover">
+      <section className="bg-login-img sm:bg-none h-screen sm:h-full  bg-no-repeat bg-center bg-cover">
         {/* overlay  */}
         <div className="bg-[rgba(0,0,0,.4)] sm:bg-transparent h-screen">
-          <div className="flex md:h-screen px-5">
+          <div className="flex md:h-screen">
             {/* left part */}
             <div className="sm:w-2/4 w-full sm:px-5 ">
               <div className="flex justify-end  xl:mr-16">
-                <div className="block pt-20 lg:pt-24 md:portrait:pt-40 sm:pt-10 mx-auto">
+                <div className="block pt-20 lg:pt-40 md:portrait:pt-40 sm:pt-10 mx-auto">
                   {/* title  */}
-                  <h2 className=" bg-gradient-to-r from-cyan-500 to-blue-400 font-extrabold text-transparent bg-clip-text  font-nunito sm:font-semibold sm:text-reg-pripamry  text-2xl sm:text-3xl">
-                    Get started with easily register
+                  <h2 className=" bg-gradient-to-r from-cyan-500 to-blue-400 font-extrabold text-transparent bg-clip-text  font-open sm:font-semibold sm:text-login-primary  text-2xl md:text-3xl lg:text-4xl">
+                    Login to your account!
                   </h2>
-                  <p className="font-nunito text-base sm:text-reg-seconadry text-white md:mt-3 md:mb-14 mb-7 sm:mb-10">
-                    Free register and you can enjoy it
-                  </p>
+                  <div className=" w-48 py-3 px-4 md:w-60 md:py-5 md:px-[30px] my-8 flex items-center rounded-lg border border:bg-reg-seconadry">
+                    <img src={google} alt="logo" />
+                    <p className="ml-3 font-semibold text-sm md:text-base text-white sm:text-login-primary">
+                      Login with Google
+                    </p>
+                  </div>
                   {/* title  */}
                   {/* form  */}
                   <form>
                     {/* input 1 */}
-                    <div className="relative">
+                    <div className="relative mb-14 ">
                       <input
-                        className="relative sm:text-reg-primary bg-transparent border-b-2 sm:bg-white pr-10 portrait:pr-5 sm:landscape:pr-8  py-3 xl:py-6 sm:pl-5 sm:pr-10  md:portrait:pr-8 xl:pl-10 sm:rounded-lg w-60 sm:w-full lg:w-96 sm:border border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-reg-pripamry text-white xl:text-base font-semibold"
+                        className="relative bg-transparent border-b-2 sm:bg-white pr-10 md:pr-12 py-3 xl:py-4 w-full lg:w-96 sm:border-b border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-login-primary text-white xl:text-xl font-semibold "
                         type="email"
                         required
                         onChange={handleEmail}
                       />
-                      <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">
+                      <p className="absolute top-[-18px] left-0 bg-transparent text-white sm:text-reg-seconadry sm:bg-white">
                         Email Address
                       </p>
 
                       {emailError && (
-                        <div className="absolute top-16 xl:top-[86px] left-0">
+                        <div className="absolute top-[62px] xl:top-[72px] left-0">
                           <p className="z-10 py-1 px-2 w-60 sm:w-full  lg:w-96 relative font-nunito font-semibold text-sm md:text-base text-white bg-red-500 rounded capitalize">
                             {emailError}
                           </p>
@@ -111,48 +105,26 @@ const Reg = () => {
                       )}
                     </div>
                     {/* input 1 */}
-
                     {/* input 2 */}
-                    <div className="relative my-14 md:my-16 lg:my-16    ">
-                      <input
-                        className="relative sm:text-reg-primary bg-transparent border-b-2 sm:bg-white pr-10 portrait:pr-5 sm:landscape:pr-8  py-3 xl:py-6 sm:pl-5 sm:pr-10  md:portrait:pr-8 xl:pl-10 sm:rounded-lg w-60 sm:w-full lg:w-96 sm:border border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-reg-pripamry text-white xl:text-base font-semibold"
-                        type="text"
-                        onChange={handleFullName}
-                      />
-                      <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">
-                        Full Name
-                      </p>
-                      {fullNameError && (
-                        <div className="absolute top-16 xl:top-[86px] left-0">
-                          <p className="z-10 py-1 px-2 w-60 sm:w-full  lg:w-96 relative font-nunito font-semibold text-sm md:text-base text-white bg-red-500 rounded capitalize">
-                            {fullNameError}
-                          </p>
-                          <span className=" absolute -top-12 -left-14 xl:-top-[49px] xl:-left-14 triangle-up scale-[0.2]"></span>
-                        </div>
-                      )}
-                    </div>
-                    {/* input 2 */}
-
-                    {/* input 3 */}
                     <div className="relative">
                       <input
-                        className="relative sm:text-reg-primary bg-transparent border-b-2 sm:bg-white pr-10 portrait:pr-5 sm:landscape:pr-8  py-3 xl:py-6 sm:pl-5 sm:pr-10  md:portrait:pr-8 xl:pl-10 sm:rounded-lg w-60 sm:w-full lg:w-96 sm:border border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-reg-pripamry text-white xl:text-base font-semibold"
+                        className="relative bg-transparent border-b-2 sm:bg-white pr-10 md:pr-12 py-3 xl:py-4 mb-12 xl:mb-10 w-full lg:w-96 sm:border-b border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-login-primary text-white xl:text-xl font-semibold"
                         type={visible ? "text" : "password"}
                         onChange={handlePassword}
                       />
-                      <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl  text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">
+                      <p className="absolute top-[-18px] left-0 bg-transparent text-white sm:text-reg-seconadry sm:bg-white">
                         Password
                       </p>
                       {/* eye btn  */}
                       <span
                         onClick={handleEye}
-                        className="absolute top-4 right-28 sm:top-4 sm:right-2 xl:top-7 lg:top-4 lg:right-12 xl:right-14  text-[#E25822]  lg:text-lg xl:text-xl "
+                        className="absolute top-4 right-4 sm:top-4 sm:right-2 xl:top-7 lg:top-4 lg:right-12 xl:right-4  text-[#E25822]  lg:text-lg xl:text-xl "
                       >
                         {visible ? <GiBullseye /> : <GiBurningEye />}
                       </span>
                       {/* eye btn  */}
                       {passwordError && (
-                        <div className="absolute top-16 xl:top-[86px] left-0">
+                        <div className="absolute top-[62px] xl:top-[72px] left-0">
                           <p className="z-10 py-1 px-2 w-60 sm:w-full  lg:w-96 relative font-nunito font-semibold text-sm md:text-base text-white bg-red-500 rounded capitalize">
                             {passwordError}
                           </p>
@@ -160,20 +132,20 @@ const Reg = () => {
                         </div>
                       )}
                     </div>
-                    {/* input 3 */}
+                    {/* input 2 */}
                   </form>
                   {/* form  */}
                   <div>
                     <button
                       onClick={handleSubmit}
-                      className="active:scale-95 sm:w-full w-32 lg:w-96 bg-[#5F35F5] xl:py-5 py-2.5 sm:py-3 md:py-4  rounded-sm sm:rounded-[86px] xl:mt-[50px] md:mt-10 sm:mt-8 mt-12 mb-5 font-nunito font-semibold text-base sm:text-xl text-white"
+                      className="active:scale-95 w-full  lg:w-96 bg-[#5F35F5] xl:py-5 py-2.5 sm:py-3 md:py-4 rounded-sm sm:rounded-[86px] md:mt-2 mb-5 font-nunito font-semibold text-base sm:text-xl text-white"
                     >
-                      Sign up
+                      Login to Continue
                     </button>
                     <h5 className=" w-full lg:w-96 sm:text-center text-[13px] text-white sm:text-[#03014C] sm:pb-5 md:pb-0">
                       Already have an account ?
-                      <Link to="/" className="text-[#EA6C00]">
-                        Sign In
+                      <Link to="/registation" className="text-[#EA6C00] ml-1">
+                        Sign up
                       </Link>
                     </h5>
                   </div>
@@ -183,10 +155,10 @@ const Reg = () => {
             {/* left part */}
 
             {/* right part */}
-            <div className="sm:w-2/4 bg-reg-img bg-no-repeat bg-center bg-cover ">
+            <div className="sm:w-2/4 bg-login-img bg-no-repeat bg-center bg-cover ">
               <img
                 className="hidden sm:block h-full md:hidden"
-                src={regImg}
+                src={LoginImg}
                 alt="img"
               />
             </div>
@@ -198,4 +170,4 @@ const Reg = () => {
   );
 };
 
-export default Reg;
+export default Login;
