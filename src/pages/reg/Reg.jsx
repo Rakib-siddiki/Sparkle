@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { getAuth, createUserWithEmailAndPassword,sendEmailVerification} from "firebase/auth";
 import regImg from "../../assets/reg/reg_Img.png";
 import { GiBullseye, GiBurningEye } from "react-icons/gi";
 import { Link } from "react-router-dom";
-
+import { ToastContainer, toast } from "react-toastify";
 const Reg = () => {
+  const auth = getAuth(); 
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +22,7 @@ const Reg = () => {
   const handleEmail = (e) => {
     setEmail(e.target.value);
     setEmailError("");
+    
   };
   const handleFullName = (e) => {
     setFullName(e.target.value);
@@ -33,10 +36,12 @@ const Reg = () => {
   const noSpace = /^(?!.*\s)/; //No whitespace allowed.
   const lentgh = /^.{8,}/; // Minimum length of 8 characters (you can adjust this as well).
 
+  
+
   const handlePassword = (e) => {
     setPassword(e.target.value);
     setPasswordError("");
-
+    
     // I changed the if-else statements to check for the negation of the regex conditions
     if (!lowerCase.test(e.target.value)) {
       setPasswordError("At least one lowercase letter");
@@ -50,7 +55,7 @@ const Reg = () => {
       setPasswordError("No whitespace allowed");
     } else if (!lentgh.test(e.target.value)) {
       setPasswordError("Minimum length of 8 characters");
-    }
+    } 
   };
   const [visible, setVisible] = useState(false);
   const handleEye = () => {
@@ -68,9 +73,41 @@ const Reg = () => {
     if (!password) {
       setPasswordError("Plese Enter Your password");
     }
+    if (email && fullName && password && isValidEmail) {
+      // firbase
+      
+      createUserWithEmailAndPassword(auth, email, password).then(()=>{
+        sendEmailVerification(auth.currentUser).then(() => {
+          
+         toast.success("Registration successful Verify your email");
+         setEmail('')
+         setFullName('')
+         setPassword('')
+        });
+      } 
+      ).catch((error)=>{
+        const errorCode = error.code;
+       if (errorCode === "auth/email-already-in-use") {
+         setEmailError("this email already exists");
+       }
+      })
+      // firbase
+    }
   };
   return (
     <>
+      <ToastContainer className={`w-10`}
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <section className="bg-reg-img sm:bg-none h-screen sm:h-full  bg-no-repeat bg-center bg-cover">
         {/* overlay  */}
         <div className="bg-[rgba(0,0,0,.4)] sm:bg-transparent h-screen">
@@ -80,7 +117,7 @@ const Reg = () => {
               <div className="flex justify-end  xl:mr-16">
                 <div className="block pt-20 lg:pt-24 md:portrait:pt-40 sm:pt-10 mx-auto">
                   {/* title  */}
-                  <h2 className=" bg-gradient-to-r from-cyan-500 to-blue-400 sm:text-reg-primary font-extrabold text-transparent bg-clip-text  font-nunito sm:font-semibold sm:text-reg-pripamry  text-2xl sm:text-3xl">
+                  <h2 className="bg-gradient-to-r from-cyan-500 to-blue-400 sm:text-reg-primary font-extrabold text-transparent bg-clip-text  font-nunito sm:font-semibold sm:text-reg-pripamry  text-2xl sm:text-3xl">
                     Get started with easily register
                   </h2>
                   <p className="font-nunito text-base sm:text-reg-seconadry text-white md:mt-3 md:mb-14 mb-7 sm:mb-10">
@@ -95,12 +132,12 @@ const Reg = () => {
                         className="relative sm:text-reg-primary bg-transparent border-b-2 sm:bg-white pr-10 portrait:pr-5 sm:landscape:pr-8  py-3 xl:py-6 sm:pl-5 sm:pr-10  md:portrait:pr-8 xl:pl-10 sm:rounded-lg w-60 sm:w-full lg:w-96 sm:border border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-reg-pripamry text-white xl:text-base font-semibold"
                         type="email"
                         required
+                        value={email}
                         onChange={handleEmail}
                       />
                       <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">
                         Email Address
                       </p>
-
                       {emailError && (
                         <div className="absolute top-16 xl:top-[86px] left-0">
                           <p className="z-10 py-1 px-2 w-60 sm:w-full  lg:w-96 relative font-nunito font-semibold text-sm md:text-base text-white bg-red-500 rounded capitalize">
@@ -117,6 +154,7 @@ const Reg = () => {
                       <input
                         className="relative sm:text-reg-primary bg-transparent border-b-2 sm:bg-white pr-10 portrait:pr-5 sm:landscape:pr-8  py-3 xl:py-6 sm:pl-5 sm:pr-10  md:portrait:pr-8 xl:pl-10 sm:rounded-lg w-60 sm:w-full lg:w-96 sm:border border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-reg-pripamry text-white xl:text-base font-semibold"
                         type="text"
+                        value={fullName}
                         onChange={handleFullName}
                       />
                       <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">
@@ -138,6 +176,7 @@ const Reg = () => {
                       <input
                         className="relative sm:text-reg-primary bg-transparent border-b-2 sm:bg-white pr-10 portrait:pr-5 sm:landscape:pr-8  py-3 xl:py-6 sm:pl-5 sm:pr-10  md:portrait:pr-8 xl:pl-10 sm:rounded-lg w-60 sm:w-full lg:w-96 sm:border border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-reg-pripamry text-white xl:text-base font-semibold"
                         type={visible ? "text" : "password"}
+                        value={password}
                         onChange={handlePassword}
                       />
                       <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl  text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">

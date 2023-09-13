@@ -123,7 +123,7 @@ const Login = () => {
                     </button>
                     <h5 className=" w-full lg:w-96 sm:text-center text-[13px] text-white sm:text-[#03014C] sm:pb-5 md:pb-0">
                       Already have an account ?
-                      <Link to="/registation" className="text-[#EA6C00] ml-1">
+                      <Link to="/registration" className="text-[#EA6C00] ml-1">
                         Sign up
                       </Link>
                     </h5>

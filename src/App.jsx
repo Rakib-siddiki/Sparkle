@@ -7,7 +7,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" exact element={<Login />} />
-        <Route path="/registation" element={<Reg />} />
+        <Route path="/registration" element={<Reg />} />
 
         {/* if user search unknown page name*/}
         <Route path="*" element={<NotFound />} />
