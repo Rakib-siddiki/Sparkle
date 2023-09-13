@@ -21,18 +21,18 @@ const Reg = () => {
     setEmail(e.target.value);
     setEmailError("");
   };
-   const handleFullName = (e) => {
-     setFullName(e.target.value);
-     setFullNameError(""); // Reset email error when input changes
-   };
-   
+  const handleFullName = (e) => {
+    setFullName(e.target.value);
+    setFullNameError(""); // Reset email error when input changes
+  };
+
   const upperCase = /^(?=.*[A-Z])/; //At least one uppercase letter.
   const lowerCase = /^(?=.*[a-z])/; // At least one lowercase letter.
   const digit = /^(?=.*\d)/; //At least one digit.
   const symbol = /^(?=.*[@#$%^&+=!])/; //At least one special character (you can add or remove special
   const noSpace = /^(?!.*\s)/; //No whitespace allowed.
   const lentgh = /^.{8,}/; // Minimum length of 8 characters (you can adjust this as well).
- 
+
   const handlePassword = (e) => {
     setPassword(e.target.value);
     setPasswordError("");
@@ -80,7 +80,7 @@ const Reg = () => {
               <div className="flex justify-end  xl:mr-16">
                 <div className="block pt-20 lg:pt-24 md:portrait:pt-40 sm:pt-10 mx-auto">
                   {/* title  */}
-                  <h2 className=" bg-gradient-to-r from-cyan-500 to-blue-400 font-extrabold text-transparent bg-clip-text  font-nunito sm:font-semibold sm:text-reg-pripamry  text-2xl sm:text-3xl">
+                  <h2 className=" bg-gradient-to-r from-cyan-500 to-blue-400 sm:text-reg-primary font-extrabold text-transparent bg-clip-text  font-nunito sm:font-semibold sm:text-reg-pripamry  text-2xl sm:text-3xl">
                     Get started with easily register
                   </h2>
                   <p className="font-nunito text-base sm:text-reg-seconadry text-white md:mt-3 md:mb-14 mb-7 sm:mb-10">

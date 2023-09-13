@@ -20,31 +20,10 @@ const Login = () => {
     setEmail(e.target.value);
     setEmailError("");
   };
-  const upperCase = /^(?=.*[A-Z])/; //At least one uppercase letter.
-  const lowerCase = /^(?=.*[a-z])/; // At least one lowercase letter.
-  const digit = /^(?=.*\d)/; //At least one digit.
-  const symbol = /^(?=.*[@#$%^&+=!])/; //At least one special character (you can add or remove special
-  const noSpace = /^(?!.*\s)/; //No whitespace allowed.
-  const lentgh = /^.{8,}/; // Minimum length of 8 characters (you can adjust this as well).
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
     setPasswordError("");
-
-        // I changed the if-else statements to check for the negation of the regex conditions
-    if (!lowerCase.test(e.target.value)) {
-      setPasswordError("At least one lowercase letter");
-    } else if (!upperCase.test(e.target.value)) {
-      setPasswordError("At least one uppercase letter");
-    } else if (!digit.test(e.target.value)) {
-      setPasswordError("At least one digit");
-    } else if (!symbol.test(e.target.value)) {
-      setPasswordError("At least one special character");
-    } else if (!noSpace.test(e.target.value)) {
-      setPasswordError("No whitespace allowed");
-    } else if (!lentgh.test(e.target.value)) {
-      setPasswordError("Minimum length of 8 characters");
-    }
   };
   const [visible, setVisible] = useState(false);
   const handleEye = () => {
