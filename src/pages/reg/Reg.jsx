@@ -2,10 +2,17 @@ import { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword,sendEmailVerification} from "firebase/auth";
 import regImg from "../../assets/reg/reg_Img.png";
 import { GiBullseye, GiBurningEye } from "react-icons/gi";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 const Reg = () => {
+  // firebase authentication
   const auth = getAuth(); 
+  // firebase authentication
+  // for redirect 
+  const navigate = useNavigate();
+  
+  // for redirect 
+
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
@@ -78,12 +85,16 @@ const Reg = () => {
       
       createUserWithEmailAndPassword(auth, email, password).then(()=>{
         sendEmailVerification(auth.currentUser).then(() => {
-          
          toast.success("Registration successful Verify your email");
          setEmail('')
          setFullName('')
          setPassword('')
+         setTimeout((redirect) => {
+           navigate("/");
+           return redirect;
+         }, 2500);
         });
+        
       } 
       ).catch((error)=>{
         const errorCode = error.code;
@@ -94,11 +105,13 @@ const Reg = () => {
       // firbase
     }
   };
+  
   return (
     <>
-      <ToastContainer className={`w-10`}
+      <ToastContainer
+        className={`w-10`}
         position="top-center"
-        autoClose={5000}
+        autoClose={1500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -133,6 +146,7 @@ const Reg = () => {
                         type="email"
                         required
                         value={email}
+                        placeholder="Enter you email"
                         onChange={handleEmail}
                       />
                       <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">
@@ -155,6 +169,7 @@ const Reg = () => {
                         className="relative sm:text-reg-primary bg-transparent border-b-2 sm:bg-white pr-10 portrait:pr-5 sm:landscape:pr-8  py-3 xl:py-6 sm:pl-5 sm:pr-10  md:portrait:pr-8 xl:pl-10 sm:rounded-lg w-60 sm:w-full lg:w-96 sm:border border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-reg-pripamry text-white xl:text-base font-semibold"
                         type="text"
                         value={fullName}
+                        placeholder="Enter your full name"
                         onChange={handleFullName}
                       />
                       <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">
@@ -177,6 +192,7 @@ const Reg = () => {
                         className="relative sm:text-reg-primary bg-transparent border-b-2 sm:bg-white pr-10 portrait:pr-5 sm:landscape:pr-8  py-3 xl:py-6 sm:pl-5 sm:pr-10  md:portrait:pr-8 xl:pl-10 sm:rounded-lg w-60 sm:w-full lg:w-96 sm:border border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-reg-pripamry text-white xl:text-base font-semibold"
                         type={visible ? "text" : "password"}
                         value={password}
+                        placeholder="Create your password"
                         onChange={handlePassword}
                       />
                       <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl  text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">

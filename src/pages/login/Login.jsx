@@ -2,9 +2,12 @@ import { useState } from "react";
 import google from "../../assets/login/Google.svg";
 import LoginImg from "../../assets/login/login_img.jpg";
 import { GiBullseye, GiBurningEye } from "react-icons/gi";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword} from "firebase/auth"
+import { toast,ToastContainer } from "react-toastify";
 const Login = () => {
+  const auth = getAuth();
+  const navigate = useNavigate()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -38,9 +41,38 @@ const Login = () => {
     if (!password) {
       setPasswordError("Plese Enter Your password");
     }
+    if (email&&password) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user
+          if (user.emailVerified) {
+            navigate("/home")
+          }else {
+          toast.error("Please verify your email before signing in.");
+          }
+          
+        })
+        .catch((error) => {
+          toast.error("Incorrect Information",error)
+        });
+
+    }
   };
   return (
     <>
+      <ToastContainer
+        className={`w-10`}
+        position="top-center"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <section className="bg-login-img sm:bg-none h-screen sm:h-full  bg-no-repeat bg-center bg-cover">
         {/* overlay  */}
         <div className="bg-[rgba(0,0,0,.4)] sm:bg-transparent h-screen">
