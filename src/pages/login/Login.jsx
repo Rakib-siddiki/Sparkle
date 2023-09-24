@@ -3,17 +3,24 @@ import google from "../../assets/login/Google.svg";
 import LoginImg from "../../assets/login/login_img.jpg";
 import { GiBullseye, GiBurningEye } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword} from "firebase/auth"
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import { toast,ToastContainer } from "react-toastify";
 const Login = () => {
   const auth = getAuth();
-  const navigate = useNavigate()
+  const provider = new GoogleAuthProvider();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+//for errors
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
+// for Email
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailRegex.test(email);
@@ -23,7 +30,7 @@ const Login = () => {
     setEmail(e.target.value);
     setEmailError("");
   };
-
+  // for password
   const handlePassword = (e) => {
     setPassword(e.target.value);
     setPasswordError("");
@@ -32,6 +39,7 @@ const Login = () => {
   const handleEye = () => {
     setVisible(!visible);
   };
+  // handle submit
   const handleSubmit = () => {
     if (!email) {
       setEmailError("Please Enter Your Email");
@@ -41,23 +49,36 @@ const Login = () => {
     if (!password) {
       setPasswordError("Plese Enter Your password");
     }
-    if (email&&password) {
+    if (email && password) {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          const user = userCredential.user
+          const user = userCredential.user;
           if (user.emailVerified) {
-            navigate("/home")
-          }else {
-          toast.error("Please verify your email before signing in.");
+            navigate("/home");
+          } else {
+            toast.error("Please verify your email before signing in.");
           }
-          
         })
         .catch((error) => {
-          toast.error("Incorrect Information",error)
+          const errorCode = error.code
+          console.log(errorCode);
+          toast.error("Incorrect Information");
         });
-
     }
   };
+  // handle submit
+  //for Google Login
+  const handleGoogle = ()=>{
+    signInWithPopup(auth, provider)
+      .then(() => {
+        navigate('/home')
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        console.log(errorCode);
+      });
+  }
   return (
     <>
       <ToastContainer
@@ -85,7 +106,10 @@ const Login = () => {
                   <h2 className=" bg-gradient-to-r from-cyan-500 to-blue-400 font-extrabold text-transparent bg-clip-text  font-open sm:font-semibold sm:text-login-primary  text-2xl md:text-3xl lg:text-4xl">
                     Login to your account!
                   </h2>
-                  <div className=" w-48 py-3 px-4 md:w-60 md:py-5 md:px-[30px] my-8 flex items-center rounded-lg border border:bg-reg-seconadry">
+                  <div
+                    onClick={handleGoogle}
+                    className=" cursor-pointer w-48 py-3 px-4 md:w-60 md:py-5 md:px-[30px] my-8 flex items-center rounded-lg border border:bg-reg-seconadry"
+                  >
                     <img src={google} alt="logo" />
                     <p className="ml-3 font-semibold text-sm md:text-base text-white sm:text-login-primary">
                       Login with Google
@@ -155,10 +179,13 @@ const Login = () => {
                     </button>
                     <h5 className=" w-full lg:w-96 sm:text-center text-[13px] text-white sm:text-[#03014C] sm:pb-5 md:pb-0">
                       Already have an account ?
-                      <Link to="/registration" className="text-[#EA6C00] ml-1">
+                      <Link to="/registration" className="text-[#ffaa60] ml-1">
                         Sign up
                       </Link>
                     </h5>
+                    <div className=" w-full lg:w-96 sm:text-center text-[13px] text-white sm:text-reg-primary sm:font-bold text-md sm:pb-5 md:pb-0 cursor-pointer">
+                      <Link to="/forgetPassword">Forget Password</Link>
+                    </div>
                   </div>
                 </div>
               </div>
