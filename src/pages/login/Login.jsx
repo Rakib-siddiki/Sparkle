@@ -10,7 +10,13 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { toast,ToastContainer } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { userLogInfo } from "../../slices/userSlice";
+
 const Login = () => {
+  //from redux-tool-kit
+  const dispach = useDispatch()
+
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate();
@@ -51,10 +57,12 @@ const Login = () => {
     }
     if (email && password) {
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          const user = userCredential.user;
-          if (user.emailVerified) {
-            navigate("/home");
+        .then((user) => {
+          const userData = user.user;
+          if (userData.emailVerified) {
+            dispach(userLogInfo(userData))
+            localStorage.setItem("userData", JSON.stringify(userLogInfo(user)));
+            navigate("/");
           } else {
             toast.error("Please verify your email before signing in.");
           }

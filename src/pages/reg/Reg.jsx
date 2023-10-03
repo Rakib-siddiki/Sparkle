@@ -89,9 +89,8 @@ const Reg = () => {
          setEmail('')
          setFullName('')
          setPassword('')
-         setTimeout((redirect) => {
-           navigate("/");
-           return redirect;
+         setTimeout(() => {
+           navigate("/login");
          }, 2500);
         });
         

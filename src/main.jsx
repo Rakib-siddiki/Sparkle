@@ -5,14 +5,20 @@ import "./index.css";
 import firebaseConfig from "./FireBaseConfig.jsx";
 import "react-toastify/dist/ReactToastify.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// pages
 import Login from "./pages/login/Login.jsx";
 import Reg from "./pages/reg/Reg";
-import Home from "./components/Home";
+
 import NotFound from "./pages/not-found/NotFound";
 import ForgetPassword from "./pages/forgetPassword/forgetPassword";
+import Home from "./pages/home/Home";
+// redux tool-kit
+import { store } from "./store";
+import { Provider } from "react-redux";
+
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/login",
     element: <Login />,
   },
   {
@@ -20,20 +26,22 @@ const router = createBrowserRouter([
     element: <Reg />,
   },
   {
-    path: "/home",
-    element: <Home/>,
+    path: "/",
+    element: <Home />,
   },
   {
     path: "/forgetPassword",
-    element: <ForgetPassword/>,
+    element: <ForgetPassword />,
   },
   {
     path: "*",
-    element: <NotFound/>,
+    element: <NotFound />,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+<Provider store={store}>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  </Provider>
 );
