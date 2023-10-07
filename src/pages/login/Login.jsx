@@ -9,13 +9,13 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
-import { toast,ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { userLogInfo } from "../../slices/userSlice";
 
 const Login = () => {
   //from redux-tool-kit
-  const dispach = useDispatch()
+  const dispach = useDispatch();
 
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -23,10 +23,10 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-//for errors
+  //for errors
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-// for Email
+  // for Email
   const isValidEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailRegex.test(email);
@@ -46,7 +46,7 @@ const Login = () => {
     setVisible(!visible);
   };
   // handle submit
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!email) {
       setEmailError("Please Enter Your Email");
     } else if (!isValidEmail(email)) {
@@ -56,19 +56,16 @@ const Login = () => {
       setPasswordError("Plese Enter Your password");
     }
     if (email && password) {
-      signInWithEmailAndPassword(auth, email, password)
+      await signInWithEmailAndPassword(auth, email, password)
         .then((user) => {
           const userData = user.user;
-          if (userData.emailVerified) {
-            dispach(userLogInfo(userData))
-            localStorage.setItem("userData", JSON.stringify(userLogInfo(user)));
-            navigate("/");
-          } else {
-            toast.error("Please verify your email before signing in.");
-          }
+          dispach(userLogInfo(userData));
+          localStorage.setItem("userData", JSON.stringify(user));
+          navigate("/");
+          toast.error("Please verify your email before signing in.");
         })
         .catch((error) => {
-          const errorCode = error.code
+          const errorCode = error.code;
           console.log(errorCode);
           toast.error("Incorrect Information");
         });
@@ -76,17 +73,17 @@ const Login = () => {
   };
   // handle submit
   //for Google Login
-  const handleGoogle = ()=>{
-    signInWithPopup(auth, provider)
+  const handleGoogle = async () => {
+    await signInWithPopup(auth, provider)
       .then(() => {
-        navigate('/home')
+        navigate("/home");
       })
       .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
         console.log(errorCode);
       });
-  }
+  };
   return (
     <>
       <ToastContainer
@@ -191,7 +188,7 @@ const Login = () => {
                         Sign up
                       </Link>
                     </h5>
-                    <div className=" w-full lg:w-96 sm:text-center text-[13px] text-white sm:text-reg-primary sm:font-bold text-md sm:pb-5 md:pb-0 cursor-pointer">
+                    <div className=" w-full lg:w-96 sm:text-center text-[13px] text-white sm:text-primary sm:font-bold text-md sm:pb-5 md:pb-0 cursor-pointer">
                       <Link to="/forgetPassword">Forget Password</Link>
                     </div>
                   </div>

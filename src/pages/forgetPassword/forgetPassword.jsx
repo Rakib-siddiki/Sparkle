@@ -16,17 +16,17 @@ const ForgetPassword = () => {
   };
   //for  error
   const [emailError, setEmailError] = useState("");
-   
+
   const isValidEmail = (email) => {
-     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-     return emailRegex.test(email);
-   };
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailRegex.test(email);
+  };
 
   // for submmit
   const handleSubmit = async () => {
     if (!email) {
       setEmailError("Enter Your Email Address");
-    }else if (!isValidEmail(email)){
+    } else if (!isValidEmail(email)) {
       setEmailError("Invalid Email Format");
     }
     sendPasswordResetEmail(auth, email)
@@ -40,7 +40,6 @@ const ForgetPassword = () => {
           setEmailError("user not found");
         }
       });
-  
   };
 
   return (

@@ -18,8 +18,16 @@ export default {
         "reg-seconadry": "#808080",
         "login-primary": "#03014C",
         "login-secondry": "#c4bfbf",
-        forgetPass_text: "#37474F",
+        "forgetPass_text": "#37474F",
+        "primary": "#5F35F5",
       },
+      borderRadius: {
+        "20px": "20px",
+      },
+      dropShadow: {
+        "iconDropShadow": '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      },
+      
     },
   },
   plugins: [["prettier-plugin-tailwindcss"]],

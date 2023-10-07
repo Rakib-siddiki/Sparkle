@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword,sendEmailVerification} from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import regImg from "../../assets/reg/reg_Img.png";
 import { GiBullseye, GiBurningEye } from "react-icons/gi";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 const Reg = () => {
   // firebase authentication
-  const auth = getAuth(); 
+  const auth = getAuth();
   // firebase authentication
-  // for redirect 
+  // for redirect
   const navigate = useNavigate();
-  
-  // for redirect 
+
+  // for redirect
 
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
@@ -29,7 +33,6 @@ const Reg = () => {
   const handleEmail = (e) => {
     setEmail(e.target.value);
     setEmailError("");
-    
   };
   const handleFullName = (e) => {
     setFullName(e.target.value);
@@ -43,12 +46,10 @@ const Reg = () => {
   const noSpace = /^(?!.*\s)/; //No whitespace allowed.
   const lentgh = /^.{8,}/; // Minimum length of 8 characters (you can adjust this as well).
 
-  
-
   const handlePassword = (e) => {
     setPassword(e.target.value);
     setPasswordError("");
-    
+
     // I changed the if-else statements to check for the negation of the regex conditions
     if (!lowerCase.test(e.target.value)) {
       setPasswordError("At least one lowercase letter");
@@ -62,13 +63,13 @@ const Reg = () => {
       setPasswordError("No whitespace allowed");
     } else if (!lentgh.test(e.target.value)) {
       setPasswordError("Minimum length of 8 characters");
-    } 
+    }
   };
   const [visible, setVisible] = useState(false);
   const handleEye = () => {
     setVisible(!visible);
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!email) {
       setEmailError("Please Enter Your Email");
     } else if (!isValidEmail(email)) {
@@ -82,29 +83,29 @@ const Reg = () => {
     }
     if (email && fullName && password && isValidEmail) {
       // firbase
-      
-      createUserWithEmailAndPassword(auth, email, password).then(()=>{
-        sendEmailVerification(auth.currentUser).then(() => {
-         toast.success("Registration successful Verify your email");
-         setEmail('')
-         setFullName('')
-         setPassword('')
-         setTimeout(() => {
-           navigate("/login");
-         }, 2500);
+
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          sendEmailVerification(auth.currentUser).then(() => {
+            toast.success("Registration successful Verify your email");
+            setEmail("");
+            setFullName("");
+            setPassword("");
+            setTimeout(() => {
+              navigate("/login");
+            }, 2500);
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          if (errorCode === "auth/email-already-in-use") {
+            setEmailError("this email already exists");
+          }
         });
-        
-      } 
-      ).catch((error)=>{
-        const errorCode = error.code;
-       if (errorCode === "auth/email-already-in-use") {
-         setEmailError("this email already exists");
-       }
-      })
       // firbase
     }
   };
-  
+
   return (
     <>
       <ToastContainer

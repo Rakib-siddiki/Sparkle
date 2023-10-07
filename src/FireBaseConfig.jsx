@@ -10,7 +10,7 @@ const firebaseConfig = {
   projectId: "sparkle-41d78",
   storageBucket: "sparkle-41d78.appspot.com",
   messagingSenderId: "317969415005",
-  appId: "1:317969415005:web:05be1758c459ec630b46b4"
+  appId: "1:317969415005:web:05be1758c459ec630b46b4",
 };
 
 // Initialize Firebase
