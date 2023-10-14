@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import userImg from "../../assets/home/sidebar/user.jpg";
+import userImg from "../../assets/home/user.jpg";
 // icons
 import HomeIcon from "./icons/HomeIcon";
 import LogoutIcon from "./icons/LogoutIcon";

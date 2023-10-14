@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch } from "react-redux";

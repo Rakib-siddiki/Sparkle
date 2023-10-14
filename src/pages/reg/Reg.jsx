@@ -83,7 +83,19 @@ const Reg = () => {
     }
     if (email && fullName && password && isValidEmail) {
       // firbase
-
+      await updateProfile(auth.currentUser, {
+        displayName: fullName,
+        photoURL: "https://example.com/jane-q-user/profile.jpg",
+      })
+        .then(() => {
+          // Profile updated!
+          // ...
+          console.log("ple");
+        })
+        .catch((error) => {
+          // An error occurred
+          // ...
+        });
       await createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
           sendEmailVerification(auth.currentUser).then(() => {
@@ -227,7 +239,7 @@ const Reg = () => {
                     </button>
                     <h5 className=" w-full lg:w-96 sm:text-center text-[13px] text-white sm:text-[#03014C] sm:pb-5 md:pb-0">
                       Already have an account ?
-                      <Link to="/" className="text-[#EA6C00]">
+                      <Link to="/" className="text-[#EA6C00] ml-2">
                         Sign In
                       </Link>
                     </h5>
