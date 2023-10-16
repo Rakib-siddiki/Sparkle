@@ -1,4 +1,4 @@
-import { BsThreeDotsVertical } from "react-icons/Bs";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 import groupImg1 from "../../assets/home/groupLists/groupImg1.png";
 import groupImg2 from "../../assets/home/groupLists/groupImg2.png";
