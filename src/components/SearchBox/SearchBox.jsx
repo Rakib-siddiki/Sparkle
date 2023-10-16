@@ -1,5 +1,5 @@
-import { LuSearch } from "react-icons/Lu";
-import { BsThreeDotsVertical } from "react-icons/Bs";
+import { LuSearch } from "react-icons/lu";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const SearchBox = () => {
   return (
