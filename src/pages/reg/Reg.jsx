@@ -92,9 +92,7 @@ const Reg = () => {
           // Profile updated!
           // ...
         })
-        .catch(() => {
-          
-        });
+        .catch(() => {});
       await createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
           sendEmailVerification(auth.currentUser).then(() => {

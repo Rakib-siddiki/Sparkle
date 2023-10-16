@@ -4,35 +4,34 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import SearchBox from "../../components/searchBox/SearchBox";
 import GroupList from "../../components/GroupList/GroupList";
 import Friends from "../../components/Friends/Friends";
 import UserList from "../../components/UserList/UserList";
 import FriendRequest from "../../components/FriendRequest/FriendRequest";
 import MyGroups from "../../components/MyGroups/MyGroups";
 import BlockedUsers from "../../components/BlockList/BlockList";
+import SearchBox from "../../components/SearchBox/SearchBox";
 import { ColorRing } from "react-loader-spinner";
 const Home = () => {
   const auth = getAuth();
   const [verify, setVerify] = useState(false);
-  const [loading,setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const data = useSelector((state) => state.userInfo.userValue); // getting value from store
   const navigate = useNavigate();
   useEffect(() => {
     if (!data) {
       navigate("/login");
-      setLoading(false)
-
+      setLoading(false);
     } else {
       onAuthStateChanged(auth, (user) => {
-        (user.emailVerified && setVerify(true) || setLoading(false));
+        (user.emailVerified && setVerify(true)) || setLoading(false);
       });
     }
   }, [auth, data, navigate]);
 
   return (
     <div>
-      {loading? (
+      {loading ? (
         <div className="flex justify-center items-center h-screen">
           <ColorRing
             visible={true}
@@ -53,7 +52,7 @@ const Home = () => {
             <div className="flex flex-col md:flex-row justify-between">
               {/* Group List */}
               <div className=" w-full md:w-[32%] h-[355px] flex flex-col justify-between">
-                <SearchBox />
+                <SearchBox/>
                 <GroupList />
               </div>
 
