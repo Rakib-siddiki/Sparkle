@@ -1,4 +1,4 @@
-import { BsThreeDotsVertical } from "react-icons/Bs";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 import friendsImg1 from "../../assets/home/friends/friendsImg1.png";
 import friendsImg2 from "../../assets/home/friends/friendsImg2.png";

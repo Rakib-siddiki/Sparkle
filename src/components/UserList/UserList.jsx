@@ -1,5 +1,5 @@
-import { BsThreeDotsVertical } from "react-icons/Bs";
-import { BiPlusMedical } from "react-icons/Bi";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { BiPlusMedical } from "react-icons/bi";
 
 import friendsImg1 from "../../assets/home/friends/friendsImg1.png";
 import friendsImg2 from "../../assets/home/friends/friendsImg2.png";
