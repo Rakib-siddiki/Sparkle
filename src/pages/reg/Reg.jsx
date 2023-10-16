@@ -3,6 +3,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile,
 } from "firebase/auth";
 import regImg from "../../assets/reg/reg_Img.png";
 import { GiBullseye, GiBurningEye } from "react-icons/gi";
@@ -90,11 +91,9 @@ const Reg = () => {
         .then(() => {
           // Profile updated!
           // ...
-          console.log("ple");
         })
-        .catch((error) => {
-          // An error occurred
-          // ...
+        .catch(() => {
+          
         });
       await createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
