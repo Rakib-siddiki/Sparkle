@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import userImg from "../../assets/home/user.png";
 import { FaCloudUploadAlt } from "react-icons/fa";
 // icons
@@ -11,8 +12,17 @@ import SettingIcon from "./icons/SettingIcon";
 import { getAuth, signOut } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { userLogInfo } from "../../slices/userSlice";
+// uplode settins 
+import UploadSettings from "./UploadSettings";
 
 const Sidebar = () => {
+  // uplod profile picture
+  const [upLoadProfilePicture, setUpLoadProfilePicture] = useState(false);
+  const cancleUpload =()=>{
+    setUpLoadProfilePicture(prev =>!prev)
+  }
+  
+
   const auth = getAuth();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,7 +44,10 @@ const Sidebar = () => {
       <nav className="bg-primary h-full rounded-20px pt-7 pb-10 flex flex-col items-center justify-between">
         <div className="group w-3/4 mx-auto rounded-full overflow-hidden relative ">
           <img src={userImg} alt="userImage" />
-          <div className=" absolute top-0 left-0 w-full h-full group-hover:bg-black/40 duration-300 ease-linear opacity-0 group-hover:opacity-100 flex justify-center items-center z-10">
+          <div
+            onClick={() => setUpLoadProfilePicture(true)}
+            className=" absolute top-0 left-0 w-full h-full group-hover:bg-black/40 duration-300 ease-linear opacity-0 group-hover:opacity-100 flex justify-center items-center z-10"
+          >
             <FaCloudUploadAlt className="text-3xl text-white" />
           </div>
         </div>
@@ -67,6 +80,9 @@ const Sidebar = () => {
           <LogoutIcon />
         </div>
       </nav>
+      {upLoadProfilePicture && (
+        <UploadSettings cancleUpload={cancleUpload}/>
+      )}
     </div>
   );
 };

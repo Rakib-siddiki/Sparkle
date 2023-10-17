@@ -52,7 +52,7 @@ const Home = () => {
             <div className="flex flex-col md:flex-row justify-between">
               {/* Group List */}
               <div className=" w-full md:w-[32%] h-[355px] flex flex-col justify-between">
-                <SearchBox/>
+                <SearchBox />
                 <GroupList />
               </div>
 
