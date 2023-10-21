@@ -9,13 +9,23 @@ import { useRef, useState } from "react";
 // for  alret
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
+// firebase
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadString,
+} from "firebase/storage";
+import { getAuth, updateProfile } from "firebase/auth";
 
 const UploadSettings = ({ cancleUpload }) => {
+  // firebase storage
+  const storage = getStorage();
+  const auth = getAuth();
   //for image
   const [image, setImage] = useState("");
   const [cropData, setCropData] = useState("");
   const cropperRef = useRef();
-
   // for croping function
   const handleImgChange = (e) => {
     e.preventDefault();
@@ -33,6 +43,29 @@ const UploadSettings = ({ cancleUpload }) => {
     };
     reader.readAsDataURL(files[0]);
   };
+  const getCropData = () => {
+    if (typeof cropperRef.current?.cropper !== "undefined") {
+      setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
+      const userId = auth.currentUser.uid;
+      const storageRef = ref(storage, userId);
+      const message4 = cropperRef.current?.cropper
+        .getCroppedCanvas()
+        .toDataURL();
+      uploadString(storageRef, message4, "data_url").then((snapshot) => {
+        console.log("Uploaded a data_url string!");
+        getDownloadURL(storageRef).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+           updateProfile(auth.currentUser, {
+            displayName: "rakib",
+             photoURL: downloadURL,
+           });
+        });
+      });
+    }
+
+   
+  };
+
   // for cancellation
   const handleCancle = () => {
     console.log("ok");
@@ -50,12 +83,13 @@ const UploadSettings = ({ cancleUpload }) => {
       }
     });
   };
+
   return (
     <>
       <div className=" absolute top-0 left-0 z-50 w-full h-screen backdrop-blur-sm bg-black/20 flex flex-col justify-center items-center">
         <div>
           <h2 className=" font-pops bg-slate-100 font-semibold text-xl text-gray-700 px-5 py-3 capitalize">
-            Upload your image{" "}
+            Upload your image
           </h2>
           <div className="p-5 bg-white flex flex-col gap-3 relative">
             <div className="flex justify-around items-center">
@@ -110,7 +144,10 @@ const UploadSettings = ({ cancleUpload }) => {
                   )}
                 </div>
                 <div>
-                  <button className="px-3 py-2 active:scale-95 bg-primary text-white rounded-md font-nunito">
+                  <button
+                    onClick={getCropData}
+                    className="px-3 py-2 active:scale-95 bg-primary text-white rounded-md font-nunito"
+                  >
                     Upload
                   </button>
                   <button

@@ -10,7 +10,7 @@ import NotifiactionIcon from "./icons/NotifiactionIcon";
 import SettingIcon from "./icons/SettingIcon";
 // firebase
 import { getAuth, signOut } from "firebase/auth";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { userLogInfo } from "../../slices/userSlice";
 // uplode settins 
 import UploadSettings from "./UploadSettings";
@@ -39,6 +39,9 @@ const Sidebar = () => {
         console.log(error.code);
       });
   };
+  
+  const data = useSelector((state) => state.userInfo.userValue.photoURL);
+  console.log(data);
   return (
     <div className="h-full">
       <nav className="bg-primary h-full rounded-20px pt-7 pb-10 flex flex-col items-center justify-between">
