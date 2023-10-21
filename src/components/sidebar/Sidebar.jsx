@@ -46,7 +46,7 @@ const Sidebar = () => {
           <img src={userImg} alt="userImage" />
           <div
             onClick={() => setUpLoadProfilePicture(true)}
-            className=" absolute top-0 left-0 w-full h-full group-hover:bg-black/40 duration-300 ease-linear opacity-0 group-hover:opacity-100 flex justify-center items-center z-10"
+            className=" absolute top-0 left-0 w-full h-full group-hover:bg-black/40 duration-300 ease-linear opacity-0 group-hover:opacity-100 flex justify-center items-center z-10 cursor-pointer"
           >
             <FaCloudUploadAlt className="text-3xl text-white" />
           </div>
