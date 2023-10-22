@@ -46,7 +46,7 @@ const Sidebar = () => {
     <div className="h-full">
       <nav className="bg-primary h-full rounded-20px pt-7 pb-10 flex flex-col items-center justify-between">
         <div className="group w-3/4 mx-auto rounded-full overflow-hidden relative ">
-          <img src={userImg} alt="userImage" />
+          <img src={data} alt="userImage" />
           <div
             onClick={() => setUpLoadProfilePicture(true)}
             className=" absolute top-0 left-0 w-full h-full group-hover:bg-black/40 duration-300 ease-linear opacity-0 group-hover:opacity-100 flex justify-center items-center z-10 cursor-pointer"

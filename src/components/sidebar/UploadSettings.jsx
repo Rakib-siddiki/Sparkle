@@ -55,15 +55,15 @@ const UploadSettings = ({ cancleUpload }) => {
         console.log("Uploaded a data_url string!");
         getDownloadURL(storageRef).then((downloadURL) => {
           console.log("File available at", downloadURL);
-           updateProfile(auth.currentUser, {
+          updateProfile(auth.currentUser, {
             displayName: "rakib",
-             photoURL: downloadURL,
-           });
+            photoURL: downloadURL,
+          }).then(() => {
+            cancleUpload();
+          });
         });
       });
     }
-
-   
   };
 
   // for cancellation
