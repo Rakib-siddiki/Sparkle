@@ -17,6 +17,8 @@ import {
   uploadString,
 } from "firebase/storage";
 import { getAuth, updateProfile } from "firebase/auth";
+import { ColorRing } from "react-loader-spinner";
+import { ToastContainer, toast } from "react-toastify";
 
 const UploadSettings = ({ cancleUpload }) => {
   // firebase storage
@@ -26,6 +28,8 @@ const UploadSettings = ({ cancleUpload }) => {
   const [image, setImage] = useState("");
   const [cropData, setCropData] = useState("");
   const cropperRef = useRef();
+
+  const [loading, setLoading] = useState(false);
   // for croping function
   const handleImgChange = (e) => {
     e.preventDefault();
@@ -44,6 +48,8 @@ const UploadSettings = ({ cancleUpload }) => {
     reader.readAsDataURL(files[0]);
   };
   const getCropData = () => {
+    toast.success("Updating Your profile");
+    setLoading(true);
     if (typeof cropperRef.current?.cropper !== "undefined") {
       setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
       const userId = auth.currentUser.uid;
@@ -59,6 +65,7 @@ const UploadSettings = ({ cancleUpload }) => {
             displayName: "rakib",
             photoURL: downloadURL,
           }).then(() => {
+            setLoading(false);
             cancleUpload();
           });
         });
@@ -86,6 +93,19 @@ const UploadSettings = ({ cancleUpload }) => {
 
   return (
     <>
+      <ToastContainer
+        // className={`w-10`}
+        position="top-center"
+        autoClose={1000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="colored"
+      />
       <div className=" absolute top-0 left-0 z-50 w-full h-screen backdrop-blur-sm bg-black/20 flex flex-col justify-center items-center">
         <div>
           <h2 className=" font-pops bg-slate-100 font-semibold text-xl text-gray-700 px-5 py-3 capitalize">
@@ -106,6 +126,7 @@ const UploadSettings = ({ cancleUpload }) => {
                     onChange={handleImgChange}
                     className="my-3 text-gray-700 "
                     type="file"
+                    accept=".jpeg,.jpg,.png"
                   />
                   {image && (
                     <Cropper
@@ -113,7 +134,8 @@ const UploadSettings = ({ cancleUpload }) => {
                       ref={cropperRef}
                       style={{ height: 200, width: "100%" }}
                       zoomTo={0.5}
-                      initialAspectRatio={1}
+                      initialAspectRatio={1} // Set the aspect ratio as needed
+                      aspectRatio={1} // Set the same aspect ratio as initialAspectRatio
                       preview=".img-preview"
                       src={image}
                       viewMode={1}
@@ -136,26 +158,46 @@ const UploadSettings = ({ cancleUpload }) => {
                 <h3 className="font-pops font-medium text-gray-700  text-xl capitalize">
                   Your profile Protrait
                 </h3>
-                <div className="group w-3/4 mx-auto rounded-full overflow-hidden relative ">
+                <div className="group w-28 h-28 mx-auto rounded-full  overflow-hidden relative ">
                   {image ? (
-                    <div className="img-preview w-[100px] h-[100px] mx-auto rounded-full overflow-hidden"></div>
+                    <div className="img-preview w-full h-full overflow-hidden"></div>
                   ) : (
                     <img src={userImg} alt="userImage" />
                   )}
                 </div>
                 <div>
-                  <button
-                    onClick={getCropData}
-                    className="px-3 py-2 active:scale-95 bg-primary text-white rounded-md font-nunito"
-                  >
-                    Upload
-                  </button>
-                  <button
-                    onClick={handleCancle}
-                    className="px-3 py-2 active:scale-95 bg-red-500 text-white rounded-md font-nunito ml-4"
-                  >
-                    Cancle
-                  </button>
+                  {loading ? (
+                    <ColorRing
+                      visible={true}
+                      height="60"
+                      width="60"
+                      ariaLabel="blocks-loading"
+                      wrapperStyle={{}}
+                      wrapperClass="blocks-wrapper"
+                      colors={[
+                        "#b8c480",
+                        "#B2A3B5",
+                        "#F4442E",
+                        "#51E5FF",
+                        "#FFCD4B",
+                      ]}
+                    />
+                  ) : (
+                    <>
+                      <button
+                        onClick={getCropData}
+                        className="px-3 py-2 active:scale-95 bg-primary text-white rounded-md font-nunito"
+                      >
+                        Upload
+                      </button>
+                      <button
+                        onClick={handleCancle}
+                        className="px-3 py-2 active:scale-95 bg-red-500 text-white rounded-md font-nunito ml-4"
+                      >
+                        Cancle
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
