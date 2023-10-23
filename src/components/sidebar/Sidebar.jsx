@@ -41,7 +41,7 @@ const Sidebar = () => {
   };
   
   const data = useSelector((state) => state.userInfo.userValue.photoURL);
-  console.log(data);
+  console.log(data); 
   return (
     <div className="h-full">
       <nav className="bg-primary h-full rounded-20px pt-7 pb-10 flex flex-col items-center justify-between">
@@ -83,9 +83,7 @@ const Sidebar = () => {
           <LogoutIcon />
         </div>
       </nav>
-      {upLoadProfilePicture && (
-        <UploadSettings cancleUpload={cancleUpload}/>
-      )}
+      {upLoadProfilePicture && <UploadSettings cancleUpload={cancleUpload} />}
     </div>
   );
 };

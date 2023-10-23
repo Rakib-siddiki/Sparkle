@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/sidebar/Sidebar";
@@ -12,8 +12,10 @@ import MyGroups from "../../components/MyGroups/MyGroups";
 import BlockedUsers from "../../components/BlockList/BlockList";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { ColorRing } from "react-loader-spinner";
+import { userLogInfo } from "../../slices/userSlice";
 const Home = () => {
   const auth = getAuth();
+  const dispatch =useDispatch()
   const [verify, setVerify] = useState(false);
   const [loading, setLoading] = useState(true);
   const data = useSelector((state) => state.userInfo.userValue); // getting value from store
@@ -25,9 +27,12 @@ const Home = () => {
     } else {
       onAuthStateChanged(auth, (user) => {
         (user.emailVerified && setVerify(true)) || setLoading(false);
+        
+          dispatch(userLogInfo(user));
+          localStorage.setItem("userData", JSON.stringify(user));
       });
     }
-  }, [auth, data, navigate]);
+  }, [auth, data, dispatch, navigate]);
 
   return (
     <div>

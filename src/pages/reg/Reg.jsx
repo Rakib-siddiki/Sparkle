@@ -70,7 +70,7 @@ const Reg = () => {
   const handleEye = () => {
     setVisible(!visible);
   };
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!email) {
       setEmailError("Please Enter Your Email");
     } else if (!isValidEmail(email)) {
@@ -84,22 +84,17 @@ const Reg = () => {
     }
     if (email && fullName && password && isValidEmail) {
       // firbase
-      await updateProfile(auth.currentUser, {
-        displayName: fullName,
-        photoURL: "https://example.com/jane-q-user/profile.jpg",
-      })
-        .then(() => {
-          // Profile updated!
-          // ...
-        })
-        .catch(() => {});
-      await createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          sendEmailVerification(auth.currentUser).then(() => {
+
+      createUserWithEmailAndPassword(auth, email, password).then((user) => {
+          updateProfile(auth.currentUser, {
+            displayName: fullName,
+            photoURL: "./src/assets/user.png",
+          }).then(() => {
             toast.success("Registration successful Verify your email");
             setEmail("");
             setFullName("");
             setPassword("");
+            sendEmailVerification(auth.currentUser);
             setTimeout(() => {
               navigate("/login");
             }, 2500);

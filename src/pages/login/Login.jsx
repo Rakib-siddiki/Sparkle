@@ -8,7 +8,6 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
-  updateProfile,
 } from "firebase/auth";
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -16,7 +15,7 @@ import { userLogInfo } from "../../slices/userSlice";
 
 const Login = () => {
   //from redux-tool-kit
-  const dispach = useDispatch();
+  const dispatch = useDispatch();
 
   const auth = getAuth();
   const provider = new GoogleAuthProvider();
@@ -59,8 +58,7 @@ const Login = () => {
     if (email && password) {
       await signInWithEmailAndPassword(auth, email, password)
         .then((user) => {
-          const userData = user.user;
-          dispach(userLogInfo(userData));
+          dispatch(userLogInfo(user));
           localStorage.setItem("userData", JSON.stringify(user));
           navigate("/");
           toast.error("Please verify your email before signing in.");
