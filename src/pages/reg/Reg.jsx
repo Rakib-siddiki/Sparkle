@@ -5,6 +5,8 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
+import { getDatabase, ref,set } from "firebase/database";
+
 import regImg from "../../assets/reg/reg_Img.png";
 import { GiBullseye, GiBurningEye } from "react-icons/gi";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,6 +14,8 @@ import { ToastContainer, toast } from "react-toastify";
 const Reg = () => {
   // firebase authentication
   const auth = getAuth();
+  const db = getDatabase();
+
   // firebase authentication
   // for redirect
   const navigate = useNavigate();
@@ -85,20 +89,32 @@ const Reg = () => {
     if (email && fullName && password && isValidEmail) {
       // firbase
 
-      createUserWithEmailAndPassword(auth, email, password).then((user) => {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((user) => {
           updateProfile(auth.currentUser, {
             displayName: fullName,
             photoURL: "./src/assets/user.png",
-          }).then(() => {
-            toast.success("Registration successful Verify your email");
-            setEmail("");
-            setFullName("");
-            setPassword("");
-            sendEmailVerification(auth.currentUser);
-            setTimeout(() => {
-              navigate("/login");
-            }, 2500);
-          });
+          })
+            .then(() => {
+              toast.success("Registration successful Verify your email");
+              setEmail("");
+              setFullName("");
+              setPassword("");
+              sendEmailVerification(auth.currentUser);
+              setTimeout(() => {
+                navigate("/login");
+              }, 2500);
+            })
+            .then(() => {
+              const userId = user.user.uid
+              const userName = user.user.displayName
+              const userEmail = user.user.email
+              set(ref(db, "users/" + userId), {
+                username: userName,
+                email: userEmail,
+              });
+              console.log(db)
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
