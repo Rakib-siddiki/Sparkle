@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import userImg from "../../assets/home/user.png";
 import { FaCloudUploadAlt } from "react-icons/fa";
 // icons
 import HomeIcon from "./icons/HomeIcon";
@@ -40,19 +39,22 @@ const Sidebar = () => {
       });
   };
   
-  const data = useSelector((state) => state.userInfo.userValue.photoURL);
-  console.log(data); 
+  const data = useSelector((state) => state.userInfo.userValue);
+  // console.log(data); 
   return (
     <div className="h-full">
       <nav className="bg-primary h-full rounded-20px pt-7 pb-10 flex flex-col items-center justify-between">
         <div className="group w-3/4 mx-auto rounded-full overflow-hidden relative ">
-          <img src={data} alt="userImage" />
+          <img src={data.photoURL} alt="userImage" />
           <div
             onClick={() => setUpLoadProfilePicture(true)}
             className=" absolute top-0 left-0 w-full h-full group-hover:bg-black/40 duration-300 ease-linear opacity-0 group-hover:opacity-100 flex justify-center items-center z-10 cursor-pointer"
           >
             <FaCloudUploadAlt className="text-3xl text-white" />
           </div>
+        </div>
+        <div>
+          <h1 className="mt-1 font-semibold text-white text-xl capitalize ">{data.displayName}</h1>
         </div>
         <ul className="w-full mb-20">
           <li className="relative mb-14 text-5xl cursor-pointer h-[80px] before:content-[''] before:h-full before:w-[80%] before:bg-white before:absolute before:top-0 before:right-0  before:rounded-l-20px before:transition-all before:duration-300 before:ease-linear  after:content-[''] after:h-20 after:w-[8px] after:bg-primary after:absolute after:top-[50%] after:right-0 after:translate-y-[-50%] after:rounded-l-20px after:transition-all after:duration-300 after:ease-linear after:drop-shadow-iconDropShadow hover:before:w-[84] text-primary mt-8">

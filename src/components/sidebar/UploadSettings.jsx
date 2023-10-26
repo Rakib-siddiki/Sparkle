@@ -62,7 +62,6 @@ const UploadSettings = ({ cancleUpload }) => {
         getDownloadURL(storageRef).then((downloadURL) => {
           console.log("File available at", downloadURL);
           updateProfile(auth.currentUser, {
-            displayName: "rakib",
             photoURL: downloadURL,
           }).then(() => {
             setLoading(false);
