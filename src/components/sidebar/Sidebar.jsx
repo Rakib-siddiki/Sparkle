@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import userImg from "../../assets/home/user.png";
 import { FaCloudUploadAlt } from "react-icons/fa";
 // icons
 import HomeIcon from "./icons/HomeIcon";
