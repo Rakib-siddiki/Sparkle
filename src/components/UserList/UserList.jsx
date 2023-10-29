@@ -1,23 +1,52 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiPlusMedical } from "react-icons/bi";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
 
 import friendsImg1 from "../../assets/home/friends/friendsImg1.png";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
+// for userList 
 const UserList = () => {
   const [userData,setUserData] = useState([])
+  const [friendRequestData,setFriendRequestData] = useState([])
   const db =getDatabase();
+  const data = useSelector(state => state.userInfo.userValue)
+  // console.log(data.uid);
   useEffect(()=>{
     const userLists = ref(db, "users/");
     onValue(userLists, (snapshot) => {
       let arr =[];
       snapshot.forEach(item=>{
-        const userInfo = item.val()
-        arr.push(userInfo)
-        console.log(arr);
+        // console.log(userID);
+        if (data.uid !== item.key) {
+          arr.push({ ...item.val(), userId: item.key });
+        }
+        // console.log(arr);
       })
       setUserData(arr)
+    });
+  },[data.uid, db])
+
+  const sendRequest =(item)=>{
+  set(push(ref(db, "friendRequest/")), {
+    senderName: data.displayName,
+    senderId: data.uid,
+    recevierName: item.username,
+    recevierID: item.userId,
+  });
+  }
+
+  useEffect(()=>{
+    const friendRequestRef = ref(db, "friendRequest/");
+    onValue(friendRequestRef, (snapshot) => {
+      let arr = []
+      snapshot.forEach(item=>{
+        // console.log(item.val());
+        arr.push(item.val().senderId+ item.val().recevierID)
+        // console.log(arr);
+      })
+      setFriendRequestData(arr)
     });
   },[db])
   
@@ -31,8 +60,11 @@ const UserList = () => {
           </div>
         </div>
         <ul className=" h-[86%] overflow-y-auto">
-          {userData.map((item,i) => (
-            <li key={i} className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]">
+          {userData.map((item, i) => (
+            <li
+              key={i}
+              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
+            >
               <div className="flex items-center">
                 <div className="mr-3.5">
                   <img
@@ -42,15 +74,34 @@ const UserList = () => {
                   />
                 </div>
                 <div>
-                  <h5 className="font-pops text-sm font-semibold">{item.username}</h5>
+                  <h5 className="font-pops text-sm font-semibold">
+                    {item.username}
+                  </h5>
                   <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
                     Today, 8:56pm
                   </h5>
                 </div>
               </div>
-              <div className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14">
-                <BiPlusMedical className="" />
-              </div>
+              {friendRequestData.includes(
+                data.uid + item.userId
+              ) ||
+              friendRequestData.includes(
+                item.userId+data.uid
+              ) ? (
+                <div
+                  
+                  className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14"
+                >
+                  Pending
+                </div>
+              ) : (
+                <div
+                  onClick={() => sendRequest(item)}
+                  className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14"
+                >
+                  <BiPlusMedical className="" />
+                </div>
+              )}
             </li>
           ))}
         </ul>
