@@ -10,10 +10,8 @@ const FriendRequest = () => {
   useEffect(() => {
     const friendListRef = ref(db, "friendRequest/");
     onValue(friendListRef, (snapshot) => {
-      console.log(snapshot.val());
       let arr = [];
       snapshot.forEach((item) => {
-        // console.log("userId", data.uid, "receiverId", item.val().receiverId);
 
         if (data.uid === item.val().receiverId) {
           arr.push(item.val());
@@ -24,7 +22,6 @@ const FriendRequest = () => {
   }, [data.uid, db]);
 
   const acceptRequest=(item)=>{
-    console.log(item);
     set(push(ref(db, "accepted/")), {
       ...item
     }).then(()=>{
@@ -50,7 +47,6 @@ const FriendRequest = () => {
             >
               <div className="flex items-center">
                 <div className="mr-3.5">
-                  {console.log(item)}
                   <img
                     className="w-[70px] h-[70px] rounded-full object-cover"
                     src={item.senderProfile_picture}

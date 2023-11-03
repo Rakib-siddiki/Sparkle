@@ -11,17 +11,14 @@ const UserList = () => {
   const [isAccepted, setIsAccepted] = useState([]);
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
-  // console.log(data.uid);
   useEffect(() => {
     const userLists = ref(db, "users/");
     onValue(userLists, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        // console.log(userID);
         if (data.uid !== item.key) {
           arr.push({ ...item.val(), userId: item.key });
         }
-        // console.log(arr);
       });
       setUserData(arr);
     });
@@ -36,7 +33,6 @@ const UserList = () => {
       receiverId: item.userId,
       recevierProfile_picture: item.profile_picture,
     });
-    console.log(item.profile_picture)
   };
 
   useEffect(() => {
@@ -44,9 +40,7 @@ const UserList = () => {
     onValue(friendRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        // console.log(item.val().senderId + item.val().receiverId);
         arr.push(item.val().senderId + item.val().receiverId);
-        // console.log(arr);
       });
       setFriendRequestData(arr);
     });

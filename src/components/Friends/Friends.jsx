@@ -61,9 +61,9 @@ const Friends = () => {
                   </p>
                 </div>
               </div>
-              <h5 className="font-pops text-[10px] font-medium text-[#00000080]">
-                Today, 8:56pm
-              </h5>
+              <button className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize">
+                Block
+              </button>
             </li>
           ))}
         </ul>
