@@ -31,10 +31,12 @@ const UserList = () => {
     set(push(ref(db, "friendRequest/")), {
       senderName: data.displayName,
       senderId: data.uid,
+      senderProfile_picture: data.photoURL,
       recevierName: item.username,
       receiverId: item.userId,
-      profile_picture: data.photoURL,
+      recevierProfile_picture: item.profile_picture,
     });
+    console.log(item.profile_picture)
   };
 
   useEffect(() => {

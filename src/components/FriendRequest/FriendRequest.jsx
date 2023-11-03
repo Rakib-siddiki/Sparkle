@@ -10,6 +10,7 @@ const FriendRequest = () => {
   useEffect(() => {
     const friendListRef = ref(db, "friendRequest/");
     onValue(friendListRef, (snapshot) => {
+      console.log(snapshot.val());
       let arr = [];
       snapshot.forEach((item) => {
         // console.log("userId", data.uid, "receiverId", item.val().receiverId);
@@ -49,9 +50,10 @@ const FriendRequest = () => {
             >
               <div className="flex items-center">
                 <div className="mr-3.5">
+                  {console.log(item)}
                   <img
                     className="w-[70px] h-[70px] rounded-full object-cover"
-                    src={item.profile_picture}
+                    src={item.senderProfile_picture}
                     alt="profile_picture"
                   />
                 </div>

@@ -43,7 +43,9 @@ const Friends = () => {
                   <img
                     className="w-[54px] h-[54px] rounded-full object-cover"
                     src={
-                      item.profile_picture
+                      data.uid == item.senderId
+                        ? item.recevierProfile_picture
+                        : item.senderProfile_picture
                     }
                     alt="friendsImg1"
                   />
