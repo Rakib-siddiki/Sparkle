@@ -109,9 +109,12 @@ const Reg = () => {
               const userId = user.user.uid
               const userName = user.user.displayName
               const userEmail = user.user.email
+              const photoURL = user.user.photoURL
+              console.log("🚀 > file: Reg.jsx:113 > .then > photoURL:", photoURL)
               set(ref(db, "users/" + userId), {
                 username: userName,
                 email: userEmail,
+                profile_picture: photoURL,
               });
               console.log(db)
             });
