@@ -14,7 +14,8 @@ const FriendRequest = () => {
       snapshot.forEach((item) => {
 
         if (data.uid === item.val().receiverId) {
-          arr.push(item.val());
+          arr.push({...item.val(),userId:item.key});
+          console.log("🚀 > file: FriendRequest.jsx:18 > snapshot.forEach > arr:", arr)
         }
       });
       setRequestList(arr);
@@ -24,9 +25,7 @@ const FriendRequest = () => {
   const acceptRequest=(item)=>{
     set(push(ref(db, "accepted/")), {
       ...item
-    }).then(()=>{
-      remove(ref(db, "friendRequest/"));
-    })
+    }).then(() => remove(ref(db, "friendRequest/" + item.userId)))
   }
 
   return (

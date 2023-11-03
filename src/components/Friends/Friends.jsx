@@ -3,6 +3,9 @@ import {
   getDatabase,
   ref,
   onValue,
+  set,
+  push,
+  remove,
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -17,12 +20,17 @@ const Friends = () => {
       let arr = [];
       snapshot.forEach((item) => {
         if (data.uid == item.val().receiverId || data.uid == item.val().senderId) {
-          arr.push({ ...item.val(),userId:item.key });
+          arr.push({ ...item.val(),id:item.key });
         }
       });
       setFriendList(arr)
     });
   }, [data.uid, db]);
+  const blockedUsers=(item)=>{
+set(push(ref(db, "blockedUsers/")), {
+  ...item,
+}).then(() => remove(ref(db, "accepted/" +item.id)));
+  }
   return (
     <>
       <div className=" w-[32%] h-[355px] xxl:h-[489px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -61,7 +69,7 @@ const Friends = () => {
                   </p>
                 </div>
               </div>
-              <button className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize">
+              <button onClick={()=>blockedUsers(item)} className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize">
                 Block
               </button>
             </li>
