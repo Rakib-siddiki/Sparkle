@@ -118,13 +118,13 @@ const UploadSettings = ({ cancleUpload }) => {
         pauseOnHover={false}
         theme="colored"
       />
-      <div className=" absolute top-0 left-0 z-50 w-full h-screen backdrop-blur-sm bg-black/20 flex flex-col justify-center items-center">
-        <div>
+      <div className=" hidden absolute top-0 left-0 z-50 w-full h-screen backdrop-blur-xs bg-black/20 md:flex flex-col justify-center items-center">
+        <div className="w-full md:w-fit">
           <h2 className=" font-pops bg-slate-100 font-semibold text-xl text-gray-700 px-5 py-3 capitalize">
             Upload your image
           </h2>
           <div className="p-5 bg-white flex flex-col gap-3 relative">
-            <div className="flex justify-around items-center">
+            <div className="md:flex justify-around items-center">
               {/* left  */}
               <div>
                 <div className="w-96">
@@ -213,6 +213,81 @@ const UploadSettings = ({ cancleUpload }) => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      {/* =============================== */}
+      <div className=" md:hidden w-screen h-screen bg-black/5 fixed top-0 left-0 z-[110]">
+        <div
+          className={`py-5 md:py-8 px-4 md:px-6 w-10/12 md:w-[500px] bg-white rounded-xl shadow-uploadImg absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] z-50 }`}
+        >
+          <h2 className="font-poppins text-2xl md:text-[35px] font-semibold mb-2">
+            Upload Profile Photo
+          </h2>
+
+          {image ? (
+            <div className="img-preview w-full h-full overflow-hidden"></div>
+          ) : (
+            <img src={userImg} alt="userImage" />
+          )}
+
+          <input
+            onChange={handleImgChange}
+            className="mb-3 font-poppins text-base font-medium cursor-pointer ml-3 mt-2"
+            type="file"
+          />
+          {image && (
+            <Cropper
+              ref={cropperRef}
+              style={{ height: 200, width: "70%", margin: "0 auto" }}
+              zoomTo={0.5}
+              initialAspectRatio={1}
+              preview=".img-preview"
+              src={image}
+              viewMode={1}
+              minCropBoxHeight={10}
+              minCropBoxWidth={10}
+              background={false}
+              responsive={true}
+              autoCropArea={1}
+              checkOrientation={false}
+              guides={true}
+            />
+          )}
+          <div className="flex justify-end mt-6">
+            <button
+              onClick={getCropData}
+              className="py-1.5 md:py-2.5 w-[90px] md:w-[110px] font-nunito text-lg text-white font-semibold text-center bg-green-700 rounded-[9px] hover:bg-[#009534] duration-300 mr-3 md:mr-5 relative"
+            >
+              {loading ? (
+                <div className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
+                  <ColorRing
+                    visible={true}
+                    height="45"
+                    width="45"
+                    ariaLabel="blocks-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="blocks-wrapper"
+                    colors={[
+                      "#ffffff",
+                      "#ffffff",
+                      "#ffffff",
+                      "#ffffff",
+                      "#ffffff",
+                    ]}
+                  />
+                </div>
+              ) : (
+                <h3>Upload</h3>
+              )}
+            </button>
+
+            <button
+              onClick={handleCancle}
+              className="py-1.5 md:py-2.5 w-[90px] md:w-[110px] font-nunito text-lg text-white font-semibold text-center bg-red-500 rounded-[9px] hover:bg-[#AD0000] duration-300"
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>

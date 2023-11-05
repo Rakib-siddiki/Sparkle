@@ -25,6 +25,9 @@ export default {
       borderRadius: {
         "20px": "20px",
       },
+      backdropBlur: {
+        xs: '2px',
+      },
       dropShadow: {
         iconDropShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
         CardShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",

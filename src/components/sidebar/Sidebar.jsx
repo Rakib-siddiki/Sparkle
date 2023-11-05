@@ -55,7 +55,7 @@ const Sidebar = () => {
     setShowMenu((prev) => !prev);
   };
   const HambarMenuClose = () => {
-    setShowMenu(false);
+    setShowMenu((prev) => !prev);
   };
 
   return (
@@ -64,7 +64,7 @@ const Sidebar = () => {
         <nav className="bg-primary h-fit md:h-full rounded-t-20px md:rounded-20px md:py-4 xl:py-7 px-1 xl:px-0 md:flex flex-col items-center justify-between fixed md:static w-full left-0 bottom-0 z-[70]">
           <div className="hidden md:block">
             <div
-              onClick={upLoadProfilePicture}
+              onClick={() => setUpLoadProfilePicture(true)}
               className="w-[65px] h-[65px] xl:w-[100px] xl:h-[100px] rounded-full overflow-hidden cursor-pointer relative after:content-[''] after:absolute after:h-full after:w-full after:bg-transparent after:top-0 after:left-0 after:duration-200 hover:after:bg-[#00000069] text-[35px] text-transparent hover:text-white mx-auto"
             >
               <FaCloudUploadAlt className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] duration-200 z-10" />
@@ -141,9 +141,10 @@ const Sidebar = () => {
           <div className="flex items-center justify-between p-2.5 pt-5 sm:p-1.5">
             <div className="flex items-center">
               <div
-                onClick={upLoadProfilePicture}
-                className="w-[55px] h-[55px] rounded-full overflow-hidden cursor-pointer mr-2.5"
+                onClick={() => {setUpLoadProfilePicture(true), setShowMenu(prev=>!prev) }}
+                className="w-[55px] h-[55px] rounded-full overflow-hidden cursor-pointer mr-2.5 xl:w-[100px] xl:h-[100px]  relative after:content-[''] after:absolute after:h-full after:w-full after:bg-transparent after:top-0 after:left-0 after:duration-200 hover:after:bg-[#00000069] text-[35px] text-transparent hover:text-white mx-auto"
               >
+                <FaCloudUploadAlt className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] duration-200 text-xl z-10" />
                 <img
                   className="w-full h-full"
                   src={data?.photoURL}
@@ -214,10 +215,11 @@ const Sidebar = () => {
         </div>
         <div
           onClick={HambarMenuClose}
-          className={`w-full h-full bg-errorBg fixed top-0 left-0 z-[80] ${
+          className={`w-full h-full bg-black/5 fixed top-0 left-0 z-[80] ${
             showMenu ? "scale-1" : "scale-0"
           }`}
         ></div>
+        {upLoadProfilePicture && <UploadSettings cancleUpload={cancleUpload} />}
       </div>
     </>
   );
