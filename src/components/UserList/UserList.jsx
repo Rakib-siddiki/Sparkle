@@ -51,21 +51,21 @@ const UserList = () => {
     let arr = [];
     onValue(isAcceptedRef, (snapshot) => {
       snapshot.forEach((item) => {
-        arr.push(item.val().senderId + item.val().receiverId);        
+        arr.push(item.val().senderId + item.val().receiverId);
       });
-      setIsAccepted(arr)
+      setIsAccepted(arr);
     });
   }, [db]);
   return (
     <>
-      <div className=" w-[32%] h-[355px] xxl:h-[490px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
+      <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
         <div className="flex justify-between mb-5">
-          <h3 className="font-pops text-xl font-semibold">User List</h3>
+          <h3 className="font-poppins text-xl font-semibold">User List</h3>
           <div className="text-2xl cursor-pointer text-primary">
             <BsThreeDotsVertical />
           </div>
         </div>
-        <ul className=" h-[86%] overflow-y-auto">
+        <ul className="eraseBorder h-[86%] overflow-y-auto relative">
           {userData.map((item, i) => (
             <li
               key={i}
@@ -90,7 +90,7 @@ const UserList = () => {
               </div>
               {isAccepted.includes(data.uid + item.userId) ||
               isAccepted.includes(item.userId + data.uid) ? (
-                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize" >
+                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
                   friend
                 </div>
               ) : friendRequestData.includes(data.uid + item.userId) ||

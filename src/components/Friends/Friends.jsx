@@ -13,34 +13,37 @@ import { useEffect, useState } from "react";
 const Friends = () => {
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
-  const [friendList,setFriendList]=useState([])
+  const [friendList, setFriendList] = useState([]);
   useEffect(() => {
     const friendListRef = ref(db, "accepted/");
     onValue(friendListRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (data.uid == item.val().receiverId || data.uid == item.val().senderId) {
-          arr.push({ ...item.val(),id:item.key });
+        if (
+          data.uid == item.val().receiverId ||
+          data.uid == item.val().senderId
+        ) {
+          arr.push({ ...item.val(), id: item.key });
         }
       });
-      setFriendList(arr)
+      setFriendList(arr);
     });
   }, [data.uid, db]);
-  const blockedUsers=(item)=>{
-set(push(ref(db, "blockedUsers/")), {
-  ...item,
-}).then(() => remove(ref(db, "accepted/" +item.id)));
-  }
+  const blockedUsers = (item) => {
+    set(push(ref(db, "blockedUsers/")), {
+      ...item,
+    }).then(() => remove(ref(db, "accepted/" + item.id)));
+  };
   return (
     <>
-      <div className=" w-[32%] h-[355px] xxl:h-[489px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
+      <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
         <div className="flex justify-between mb-5">
-          <h3 className="font-pops text-xl font-semibold">Friends</h3>
+          <h3 className="font-poppins text-xl font-semibold">Friends</h3>
           <div className="text-2xl cursor-pointer text-primary">
             <BsThreeDotsVertical />
           </div>
         </div>
-        <ul className=" h-[86%] overflow-y-auto">
+        <ul className="eraseBorder h-[86%] overflow-y-auto">
           {friendList.map((item, i) => (
             <li
               key={i}
@@ -69,7 +72,10 @@ set(push(ref(db, "blockedUsers/")), {
                   </p>
                 </div>
               </div>
-              <button onClick={()=>blockedUsers(item)} className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize">
+              <button
+                onClick={() => blockedUsers(item)}
+                className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize"
+              >
                 Block
               </button>
             </li>

@@ -15,7 +15,7 @@ import { ColorRing } from "react-loader-spinner";
 import { userLogInfo } from "../../slices/userSlice";
 const Home = () => {
   const auth = getAuth();
-  const dispatch =useDispatch()
+  const dispatch = useDispatch();
   const [verify, setVerify] = useState(false);
   const [loading, setLoading] = useState(true);
   const data = useSelector((state) => state.userInfo.userValue); // getting value from store
@@ -27,9 +27,9 @@ const Home = () => {
     } else {
       onAuthStateChanged(auth, (user) => {
         (user.emailVerified && setVerify(true)) || setLoading(false);
-        
-          dispatch(userLogInfo(user));
-          localStorage.setItem("userData", JSON.stringify(user));
+
+        dispatch(userLogInfo(user));
+        localStorage.setItem("userData", JSON.stringify(user));
       });
     }
   }, [auth, data, dispatch, navigate]);
@@ -49,49 +49,51 @@ const Home = () => {
           />
         </div>
       ) : verify && data ? (
-        <section className="h-screen px-5 py-5 grid grid-cols-1 md:grid-cols-9 gap-5 xl:gap-10">
-          <div className="h-full col-span-1 ">
-            <Sidebar></Sidebar>
+        <section className="h-screen md:max-h-screen  pt-16 p-2.5 md:p-3 xl:p-5 md:grid grid-cols-9 gap-10 lg:landscape:gap-5 xl:landscape:gap-10">
+          <div className="col-span-1">
+            <Sidebar />
           </div>
-          <div className="w-full col-span-8 flex flex-col">
-            <div className="flex flex-col md:flex-row justify-between">
-              {/* Group List */}
-              <div className=" w-full md:w-[32%] h-[355px] flex flex-col justify-between">
+          {/* <div className="md:h-full col-span-1 fixed md:static w-full left-0 bottom-0 z-[70]">
+                     <Sidebar />
+                  </div> */}
+
+          <div className="w-full h-full md:col-span-8 flex flex-wrap justify-between content-between">
+            {/* Group List */}
+            <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
+              <div className="h-full flex flex-col justify-between">
                 <SearchBox />
                 <GroupList />
               </div>
-
-              {/* Friends */}
-              <Friends />
-
-              {/* User List */}
-              <UserList />
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between  ">
-              {/* Friend Request */}
-              <FriendRequest />
+            {/* Friends */}
+            <Friends />
 
-              {/* My Groups */}
-              <MyGroups />
+            {/* User List */}
+            <UserList />
 
-              {/* Blocked Users */}
-              <BlockedUsers />
-            </div>
+            {/* Friend Request */}
+            <FriendRequest />
+
+            {/* My Groups */}
+            <MyGroups />
+
+            {/* Blocked Users */}
+            <BlockedUsers />
           </div>
         </section>
       ) : (
         <>
-          <div className="flex flex-col justify-center items-center h-screen bg-primary gap-5">
-            <h1 className=" font-semibold text-white text-5xl ">
-              Please Verify Your account Before Expolore😉
+          <div className="h-screen bg-primary flex flex-col justify-center items-center">
+            <h1 className="font-nunito text-[85px] text-white font-bold mb-5">
+              Please Verify Your Email
             </h1>
             <button
-              onClick={() => navigate("/login")}
-              className="bg-white p-4 rounded-md "
+              onClick={handleLogOut}
+              className="py-5 px-7 font-nunito text-xl text-black font-semibold text-center bg-white rounded-[9px] hover:text-white hover:bg-[#FF9A00] duration-300"
+              type="button"
             >
-              {" "}
-              back to login
+              Go Back to Login
             </button>
           </div>
         </>

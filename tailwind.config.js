@@ -7,6 +7,7 @@ export default {
         nunito: ["Nunito", "sans-serif"],
         pops: ["Poppins", "sans-serif"],
         open: ["Open Sans", "sans-serif"],
+        lobster: ["Lobster", "sans-serif"],
       },
       backgroundImage: {
         "reg-img": "url(./assets/reg/reg_Img.png)",

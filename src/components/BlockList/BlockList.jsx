@@ -1,5 +1,12 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  push,
+  remove,
+} from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -7,35 +14,35 @@ const BlockedUsers = () => {
   const data = useSelector((state) => state.userInfo.userValue);
 
   const db = getDatabase();
-  const[blocklist,setBlockList] = useState([]);
-  useEffect(()=>{
+  const [blocklist, setBlockList] = useState([]);
+  useEffect(() => {
     const blockListRef = ref(db, "blockedUsers/");
     onValue(blockListRef, (snapshot) => {
-      let arr = []
-      snapshot.forEach(item=>{
-        arr.push({...item.val(),id:item.key});
-      })
-      setBlockList(arr)
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push({ ...item.val(), id: item.key });
+      });
+      setBlockList(arr);
     });
-  },[db])
-  const unblockUser=(item)=>{
+  }, [db]);
+  const unblockUser = (item) => {
     console.log(item);
     set(push(ref(db, "accepted/")), {
       ...item,
-    }).then(()=>{
-      remove(ref(db, "blockedUsers/" + item.id))
-    })
-  }
+    }).then(() => {
+      remove(ref(db, "blockedUsers/" + item.id));
+    });
+  };
   return (
     <>
-      <div className=" w-[32%] h-[355px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
+      <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
         <div className="flex justify-between mb-5">
-          <h3 className="font-pops text-xl font-semibold">Blocked Users</h3>
+          <h3 className="font-poppins text-xl font-semibold">Block List</h3>
           <div className="text-2xl cursor-pointer text-primary">
             <BsThreeDotsVertical />
           </div>
         </div>
-        <ul className=" h-[86%] overflow-y-auto">
+        <ul className="eraseBorder h-[86%] overflow-y-auto">
           {blocklist.map((item, i) => (
             <li
               key={i}
