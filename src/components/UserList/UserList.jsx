@@ -1,55 +1,61 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { BiPlusMedical } from "react-icons/bi";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
-
-import friendsImg1 from "../../assets/home/friends/friendsImg1.png";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-// for userList 
+// for userList
 const UserList = () => {
-  const [userData,setUserData] = useState([])
-  const [friendRequestData,setFriendRequestData] = useState([])
-  const db =getDatabase();
-  const data = useSelector(state => state.userInfo.userValue)
-  // console.log(data.uid);
-  useEffect(()=>{
+  const [userData, setUserData] = useState([]);
+  const [friendRequestData, setFriendRequestData] = useState([]);
+  const [isAccepted, setIsAccepted] = useState([]);
+  const db = getDatabase();
+  const data = useSelector((state) => state.userInfo.userValue);
+  useEffect(() => {
     const userLists = ref(db, "users/");
     onValue(userLists, (snapshot) => {
-      let arr =[];
-      snapshot.forEach(item=>{
-        // console.log(userID);
+      let arr = [];
+      snapshot.forEach((item) => {
         if (data.uid !== item.key) {
           arr.push({ ...item.val(), userId: item.key });
         }
-        // console.log(arr);
-      })
-      setUserData(arr)
+      });
+      setUserData(arr);
     });
-  },[data.uid, db])
+  }, [data.uid, db]);
 
-  const sendRequest =(item)=>{
-  set(push(ref(db, "friendRequest/")), {
-    senderName: data.displayName,
-    senderId: data.uid,
-    recevierName: item.username,
-    recevierID: item.userId,
-  });
-  }
+  const sendRequest = (item) => {
+    set(push(ref(db, "friendRequest/")), {
+      senderName: data.displayName,
+      senderId: data.uid,
+      senderProfile_picture: data.photoURL,
+      recevierName: item.username,
+      receiverId: item.userId,
+      recevierProfile_picture: item.profile_picture,
+    });
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     const friendRequestRef = ref(db, "friendRequest/");
     onValue(friendRequestRef, (snapshot) => {
-      let arr = []
-      snapshot.forEach(item=>{
-        // console.log(item.val());
-        arr.push(item.val().senderId+ item.val().recevierID)
-        // console.log(arr);
-      })
-      setFriendRequestData(arr)
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push(item.val().senderId + item.val().receiverId);
+      });
+      setFriendRequestData(arr);
     });
-  },[db])
-  
+  }, [db]);
+
+  useEffect(() => {
+    const isAcceptedRef = ref(db, "accepted/");
+    let arr = [];
+    onValue(isAcceptedRef, (snapshot) => {
+      snapshot.forEach((item) => {
+        arr.push(item.val().senderId + item.val().receiverId);        
+      });
+      setIsAccepted(arr)
+    });
+  }, [db]);
   return (
     <>
       <div className=" w-[32%] h-[355px] xxl:h-[490px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -69,8 +75,8 @@ const UserList = () => {
                 <div className="mr-3.5">
                   <img
                     className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={friendsImg1}
-                    alt="friendsImg1"
+                    src={item.profile_picture}
+                    alt="profile_picture"
                   />
                 </div>
                 <div>
@@ -82,16 +88,14 @@ const UserList = () => {
                   </h5>
                 </div>
               </div>
-              {friendRequestData.includes(
-                data.uid + item.userId
-              ) ||
-              friendRequestData.includes(
-                item.userId+data.uid
-              ) ? (
-                <div
-                  
-                  className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14"
-                >
+              {isAccepted.includes(data.uid + item.userId) ||
+              isAccepted.includes(item.userId + data.uid) ? (
+                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize" >
+                  friend
+                </div>
+              ) : friendRequestData.includes(data.uid + item.userId) ||
+                friendRequestData.includes(item.userId + data.uid) ? (
+                <div className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14">
                   Pending
                 </div>
               ) : (

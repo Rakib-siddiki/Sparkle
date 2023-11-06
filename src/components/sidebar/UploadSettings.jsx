@@ -19,15 +19,21 @@ import {
 import { getAuth, updateProfile } from "firebase/auth";
 import { ColorRing } from "react-loader-spinner";
 import { ToastContainer, toast } from "react-toastify";
+import { getDatabase, ref as databaseRef, set } from "firebase/database";
+import { useSelector } from "react-redux";
 
 const UploadSettings = ({ cancleUpload }) => {
+  //database
+  const db = getDatabase();
   // firebase storage
   const storage = getStorage();
   const auth = getAuth();
   //for image
   const [image, setImage] = useState("");
+  // eslint-disable-next-line no-unused-vars
   const [cropData, setCropData] = useState("");
   const cropperRef = useRef();
+  const data = useSelector((state) => state.userInfo.userValue);
 
   const [loading, setLoading] = useState(false);
   // for croping function
@@ -57,12 +63,19 @@ const UploadSettings = ({ cancleUpload }) => {
       const message4 = cropperRef.current?.cropper
         .getCroppedCanvas()
         .toDataURL();
+      // eslint-disable-next-line no-unused-vars
       uploadString(storageRef, message4, "data_url").then((snapshot) => {
         console.log("Uploaded a data_url string!");
         getDownloadURL(storageRef).then((downloadURL) => {
           console.log("File available at", downloadURL);
           updateProfile(auth.currentUser, {
             photoURL: downloadURL,
+          }).then(()=>{
+            set(databaseRef(db, "users/" + data.uid), {
+              username: data.displayName,
+              email: data.email,
+              profile_picture: data.photoURL,
+            })
           }).then(() => {
             setLoading(false);
             cancleUpload();
