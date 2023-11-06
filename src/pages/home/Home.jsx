@@ -66,20 +66,21 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Friends */}
-            <Friends />
-
-            {/* User List */}
-            <UserList />
-
-            {/* Friend Request */}
-            <FriendRequest />
-
-            {/* My Groups */}
-            <MyGroups />
-
-            {/* Blocked Users */}
-            <BlockedUsers />
+            <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
+              <Friends />
+            </div>
+            <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
+              <UserList />
+            </div>
+            <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
+              <FriendRequest />
+            </div>
+            <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
+              <MyGroups />
+            </div>
+            <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px] ">
+              <BlockedUsers />
+            </div>
           </div>
         </section>
       ) : (
