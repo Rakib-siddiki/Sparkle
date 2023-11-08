@@ -57,7 +57,7 @@ const Home = () => {
                      <Sidebar />
                   </div> */}
 
-          <div className="w-full h-full md:col-span-8 flex flex-wrap justify-between content-between">
+          <div className="w-full h-full md:col-span-8 flex flex-wrap justify-between md:content-between xl:content-around">
             {/* Group List */}
             <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
               <div className="h-full flex flex-col justify-between">

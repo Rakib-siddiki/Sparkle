@@ -23,7 +23,7 @@ const GroupList = () => {
                 alt="g1.png"
               />
               <div className="">
-                <h5 className="font-pops text-base md:text-[18px] font-semibold">
+                <h5 className="font-pops text-base md:text-lg font-semibold">
                   Friends Reunion
                 </h5>
                 <p className="font-pops text-xs md:text-base font-medium text-[#4D4D4DBF]">
@@ -45,7 +45,7 @@ const GroupList = () => {
                 alt="g3.png"
               />
               <div className="">
-                <h5 className="font-pops text-base md:text-[18px] font-semibold">
+                <h5 className="font-pops text-base md:text-lg font-semibold">
                   Crazy Cousins
                 </h5>
                 <p className="font-pops text-xs md:text-base font-medium text-[#4D4D4DBF]">
@@ -67,7 +67,7 @@ const GroupList = () => {
                 alt="g1.png"
               />
               <div className="">
-                <h5 className="font-pops text-base md:text-[18px] font-semibold">
+                <h5 className="font-pops text-base md:text-lg font-semibold">
                   Crazy Cousins
                 </h5>
                 <p className="font-pops text-xs md:text-base font-medium text-[#4D4D4DBF]">
