@@ -192,11 +192,11 @@ const Reg = () => {
                         className="relative sm:text-reg-primary bg-transparent border-b-2 sm:bg-white pr-10 portrait:pr-5 sm:landscape:pr-8  py-3 xl:py-6 sm:pl-5 sm:pr-10  md:portrait:pr-8 xl:pl-10 sm:rounded-lg w-60 sm:w-full lg:w-96 sm:border border-solid border-login-secondry sm:border-reg-seconadry focus:outline-none sm:text-reg-pripamry text-white xl:text-base font-semibold"
                         type="text"
                         value={fullName}
-                        placeholder="Enter your full name"
+                        placeholder="Enter your Surname"
                         onChange={handleFullName}
                       />
                       <p className="absolute top-[-20px] left-0 sm:left-3 xl:left-7 bg-transparent text-xl text-white sm:text-reg-seconadry sm:bg-white xl:px-3 sm:px-2">
-                        Full Name
+                        Surname
                       </p>
                       {fullNameError && (
                         <div className="absolute top-16 xl:top-[86px] left-0">
@@ -224,7 +224,7 @@ const Reg = () => {
                       {/* eye btn  */}
                       <span
                         onClick={handleEye}
-                        className="absolute top-4 right-28 sm:top-4 sm:right-2 xl:top-7 lg:top-4 lg:right-12 xl:right-14  text-[#E25822]  lg:text-lg xl:text-xl "
+                        className="absolute top-4 right-28 sm:top-4 sm:right-2 xl:top-7 lg:top-4 lg:right-12 xl:right-14  text-[#E25822] lg:text-lg xl:text-xl cursor-pointer "
                       >
                         {visible ? <GiBullseye /> : <GiBurningEye />}
                       </span>

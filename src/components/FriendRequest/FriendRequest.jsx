@@ -21,10 +21,6 @@ const FriendRequest = () => {
       snapshot.forEach((item) => {
         if (data.uid === item.val().receiverId) {
           arr.push({ ...item.val(), userId: item.key });
-          console.log(
-            "🚀 > file: FriendRequest.jsx:18 > snapshot.forEach > arr:",
-            arr
-          );
         }
       });
       setRequestList(arr);

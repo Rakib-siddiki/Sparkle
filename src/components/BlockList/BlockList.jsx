@@ -16,22 +16,52 @@ const BlockedUsers = () => {
   const db = getDatabase();
   const [blocklist, setBlockList] = useState([]);
   useEffect(() => {
-    const blockListRef = ref(db, "blockedUsers/");
-    onValue(blockListRef, (snapshot) => {
+    const blocklistRef = ref(db, "blockedUsers/");
+    onValue(blocklistRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        arr.push({ ...item.val(), id: item.key });
+        // console.log("🚀 > file: BlockList.jsx:23 > snapshot.forEach > item:", item.val())
+        const blockedById =
+          data.uid == item.val().blockedById && item.val().blockedById;
+        const blockedUserId =
+          data.uid == item.val().blockedById
+            ? item.val().blockedUserId
+            : item.val().blockedUserId;
+        const UserName =
+          data.uid == item.val().blockedById
+            ? item.val().blockedUserName
+            : item.val().blockedBy;
+        const profile =
+          data.uid == item.val().blockedById
+            ? item.val().blockedUserProfile
+            : item.val().blockedByProfile;
+        if (
+          data.uid == item.val().blockedById ||
+          data.uid == item.val().blockedUserId
+        ) {
+          arr.push({
+            blockedUserId: blockedUserId,
+            blockedById: blockedById,
+            UserName: UserName,
+            profile: profile,
+            id: item.key,
+          });
+        }
+        setBlockList(arr);
       });
-      setBlockList(arr);
     });
-  }, [db]);
+  }, []);
   const unblockUser = (item) => {
-    console.log(item);
+    console.log("🚀 > file: BlockList.jsx:49 > unblockUser > item:", item);
     set(push(ref(db, "accepted/")), {
-      ...item,
-    }).then(() => {
-      remove(ref(db, "blockedUsers/" + item.id));
-    });
+      recevierProfile_picture: item.profile,
+      receiverId: item.blockedUserId,
+      recevierName: item.UserName,
+      senderProfile_picture: data.photoURL,
+      senderId: data.uid,
+      senderName: data.displayName,
+      userId: item.id,
+    }).then(() => {remove(ref(db, "blockedUsers/" + item.id))});
   };
   return (
     <>
@@ -52,33 +82,32 @@ const BlockedUsers = () => {
                 <div className="mr-3.5">
                   <img
                     className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={
-                      data.uid == item.senderId
-                        ? item.recevierProfile_picture
-                        : item.senderProfile_picture
-                    }
+                    src={item.profile}
                     alt="friendsImg1"
                   />
                 </div>
                 <div className="">
                   <h5 className="font-pops text-sm font-semibold">
-                    {" "}
-                    {data.uid == item.senderId
-                      ? item.recevierName
-                      : item.senderName}
+                    {item.UserName}
                   </h5>
                   <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
                     Today, 8:56pm
                   </h5>
                 </div>
+                {console.log(
+                  "🚀 > file: BlockList.jsx:67 > BlockedUsers > item:",
+                  item
+                )}
               </div>
               <div className="mr-9">
-                <button
-                  onClick={() => unblockUser(item)}
-                  className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
-                >
-                  Unblock
-                </button>
+                {item.blockedById && (
+                  <button
+                    onClick={() => unblockUser(item)}
+                    className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
+                  >
+                    Unblock
+                  </button>
+                )}
               </div>
             </li>
           ))}

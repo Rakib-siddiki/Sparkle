@@ -30,8 +30,20 @@ const Friends = () => {
     });
   }, [data.uid, db]);
   const blockedUsers = (item) => {
+    const blockedUserId = data.uid == item.senderId ? item.receiverId : item.senderId;
+    const blockedById = data.uid == item.senderId ? item.senderId : item.receiverId;
+    const blockedUserName = data.uid == item.senderId ? item.recevierName : item.senderName;
+    const blockedBy = data.uid == item.senderId ? item.senderName : item.recevierName;
+    const blockedUserProfile = data.uid == item.senderId ? item.recevierProfile_picture : item.senderProfile_picture;
+    const blockedByProfile = data.uid == item.senderId? item.senderProfile_picture: item.recevierProfile_picture;
+
     set(push(ref(db, "blockedUsers/")), {
-      ...item,
+      blockedUserId: blockedUserId,
+      blockedById: blockedById,
+      blockedUserName: blockedUserName,
+      blockedBy: blockedBy,
+      blockedUserProfile: blockedUserProfile,
+      blockedByProfile: blockedByProfile,
     }).then(() => remove(ref(db, "accepted/" + item.id)));
   };
   return (
