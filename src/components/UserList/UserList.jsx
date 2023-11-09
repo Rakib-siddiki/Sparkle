@@ -59,8 +59,8 @@ const UserList = () => {
   }, [db]);
   useEffect(() => {
     const ifBlockedRef = ref(db, "blockedUsers/");
-    let arr = [];
     onValue(ifBlockedRef, (snapshot) => {
+      let arr = [];
       snapshot.forEach((item) => {
         // console.log("🚀 > file: UserList.jsx:64 > snapshot.forEach > item:", item.val())
         arr.push(item.val().blockById + item.val().blockId);
