@@ -9,9 +9,10 @@ const UserList = () => {
   const [userData, setUserData] = useState([]);
   const [friendRequestData, setFriendRequestData] = useState([]);
   const [isAccepted, setIsAccepted] = useState([]);
-  const db = getDatabase();
-  const data = useSelector((state) => state.userInfo.userValue);
-  useEffect(() => {
+   const [isBlocked, setIfBlocked] = useState([]);
+   const db = getDatabase();
+   const data = useSelector((state) => state.userInfo.userValue);
+   useEffect(() => {
     const userLists = ref(db, "users/");
     onValue(userLists, (snapshot) => {
       let arr = [];
@@ -34,7 +35,7 @@ const UserList = () => {
       recevierProfile_picture: item.profile_picture,
     });
   };
-
+//get Friend request lists data
   useEffect(() => {
     const friendRequestRef = ref(db, "friendRequest/");
     onValue(friendRequestRef, (snapshot) => {
@@ -45,7 +46,7 @@ const UserList = () => {
       setFriendRequestData(arr);
     });
   }, [db]);
-
+  // get accepted lists data
   useEffect(() => {
     const isAcceptedRef = ref(db, "accepted/");
     let arr = [];
@@ -56,6 +57,20 @@ const UserList = () => {
       setIsAccepted(arr);
     });
   }, [db]);
+  // get BlockedList data
+  useEffect(()=>{
+    const ifBlockedRef = ref(db, "blockedUsers/");
+    onValue(ifBlockedRef, (snapshot) => {
+      let arr = []
+      snapshot.forEach(item=>{
+        arr.push(item.val().blockedUserId + item.val().blockedById);
+        console.log("🚀 > file: UserList.jsx:64 > onValue > arr:", item.val())
+      })
+      setIfBlocked(arr)
+    console.log("🚀 > file: UserList.jsx:13 > UserList > isBlocked:", isBlocked)
+    });
+    
+  },[])
   return (
     <>
       <div className="w-full  h-full  pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -87,9 +102,18 @@ const UserList = () => {
                     Today, 8:56pm
                   </h5>
                 </div>
+                {console.log(
+                  "🚀 > file: UserList.jsx:85 > UserList > item:",
+                  item
+                )}
               </div>
-              {isAccepted.includes(data.uid + item.userId) ||
-              isAccepted.includes(item.userId + data.uid) ? (
+              {isBlocked.includes(data.uid + item.userId) ||
+              isBlocked.includes(item.userId + data.uid) ? (
+                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
+                  blocked
+                </div>
+              ) : isAccepted.includes(data.uid + item.userId) ||
+                isAccepted.includes(item.userId + data.uid) ? (
                 <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
                   friend
                 </div>

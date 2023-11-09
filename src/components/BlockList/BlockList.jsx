@@ -47,8 +47,8 @@ const BlockedUsers = () => {
             id: item.key,
           });
         }
-        setBlockList(arr);
       });
+      setBlockList(arr);
     });
   }, []);
   const unblockUser = (item) => {
