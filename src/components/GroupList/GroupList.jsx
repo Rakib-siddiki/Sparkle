@@ -3,15 +3,27 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import groupImg1 from "../../assets/home/groupLists/groupImg1.png";
 import groupImg2 from "../../assets/home/groupLists/groupImg2.png";
 import groupImg3 from "../../assets/home/groupLists/groupImg3.png";
+import { useState } from "react";
+import PopUp from "./PopUp";
 
 const GroupList = () => {
+   const [showPopUp,setShowPopUp]=useState(false)
+const handleShow=()=> {
+  setShowPopUp(prev=>!prev)
+}
   return (
     <>
       <div className="h-[77%] xxl:h-[338px] pt-3 xxl:mt-10 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
         <div className="flex justify-between mb-1">
           <h3 className="font-pops text-xl font-semibold">Groups List</h3>
-          <div className="text-2xl cursor-pointer text-primary">
-            <BsThreeDotsVertical />
+          <div>
+            <p
+              onClick={handleShow}
+              className="text-md cursor-pointer font-semibold font-pops capitalize text-primary"
+            >
+              Create Group
+            </p>
+            {showPopUp && <PopUp handleShow={handleShow} />}
           </div>
         </div>
         <ul className=" h-[88%] overflow-y-auto">
