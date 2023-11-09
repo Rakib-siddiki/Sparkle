@@ -9,6 +9,7 @@ const UserList = () => {
   const [userData, setUserData] = useState([]);
   const [friendRequestData, setFriendRequestData] = useState([]);
   const [isAccepted, setIsAccepted] = useState([]);
+  const [ifBlocked, setIfBlocked] = useState([]);
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
   useEffect(() => {
@@ -56,6 +57,17 @@ const UserList = () => {
       setIsAccepted(arr)
     });
   }, [db]);
+  useEffect(() => {
+    const ifBlockedRef = ref(db, "blockedUsers/");
+    let arr = [];
+    onValue(ifBlockedRef, (snapshot) => {
+      snapshot.forEach((item) => {
+        // console.log("🚀 > file: UserList.jsx:64 > snapshot.forEach > item:", item.val())
+        arr.push(item.val().blockById + item.val().blockId);
+      });
+      setIfBlocked(arr);
+    });
+  }, [db]);
   return (
     <>
       <div className=" w-[32%] h-[355px] xxl:h-[490px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -88,9 +100,15 @@ const UserList = () => {
                   </h5>
                 </div>
               </div>
-              {isAccepted.includes(data.uid + item.userId) ||
-              isAccepted.includes(item.userId + data.uid) ? (
-                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize" >
+              {console.log(item)}
+              {ifBlocked.includes(data.uid + item.userId) ||
+              ifBlocked.includes(item.userId + data.uid) ? (
+                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
+                  blocked
+                </div>
+              ) : isAccepted.includes(data.uid + item.userId) ||
+                isAccepted.includes(item.userId + data.uid) ? (
+                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
                   friend
                 </div>
               ) : friendRequestData.includes(data.uid + item.userId) ||
@@ -106,6 +124,7 @@ const UserList = () => {
                   <BiPlusMedical className="" />
                 </div>
               )}
+              {/* {} */}
             </li>
           ))}
         </ul>

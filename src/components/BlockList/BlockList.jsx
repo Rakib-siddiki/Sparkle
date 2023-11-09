@@ -1,31 +1,65 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  push,
+  remove,
+} from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const BlockedUsers = () => {
   const data = useSelector((state) => state.userInfo.userValue);
+  console.log("🚀 > file: BlockList.jsx:15 > BlockedUsers > data:", data.PhotoURL)
 
   const db = getDatabase();
-  const[blocklist,setBlockList] = useState([]);
-  useEffect(()=>{
+  const [blocklist, setBlockList] = useState([]);
+  useEffect(() => {
     const blockListRef = ref(db, "blockedUsers/");
     onValue(blockListRef, (snapshot) => {
-      let arr = []
-      snapshot.forEach(item=>{
-        arr.push({...item.val(),id:item.key});
-      })
-      setBlockList(arr)
+      let arr = [];
+      snapshot.forEach((item) => {
+        console.log(
+          "🚀 > file: BlockList.jsx:16 > onValue > item:",
+          item.val()
+        );
+        if (data.uid == item.val().blockId|| data.uid == item.val().blockById) {
+          if (data.uid == item.val().blockById) {
+            arr.push({
+              id: item.key,
+              block: item.val().block,
+              blockId: item.val().blockId,
+              profile_Picture: item.val().blockProfile,
+            });
+          } else {
+            arr.push({
+              id: item.key,
+              block: item.val().blockBy,
+              blockById: item.val().blockById,
+              profile_Picture: item.val().blockByProfile,
+            });
+          }
+        }
+      });
+      setBlockList(arr);
+      console.log(blocklist);
     });
-  },[db])
-  const unblockUser=(item)=>{
+  }, [db]);
+  const unblockUser = (item) => {
     console.log(item);
     set(push(ref(db, "accepted/")), {
-      ...item,
-    }).then(()=>{
-      remove(ref(db, "blockedUsers/" + item.id))
-    })
-  }
+      senderProfile_picture: item.profile_Picture,
+      senderName: item.block,
+      senderId: item.blockId,
+      recevierProfile_picture: data.photoURL,
+      recevierName: data.displayName,
+      receiverId: data.uid,
+    }).then(() => {
+      remove(ref(db, "blockedUsers/" + item.id));
+    });
+  };
   return (
     <>
       <div className=" w-[32%] h-[355px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -45,20 +79,13 @@ const BlockedUsers = () => {
                 <div className="mr-3.5">
                   <img
                     className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={
-                      data.uid == item.senderId
-                        ? item.recevierProfile_picture
-                        : item.senderProfile_picture
-                    }
+                    src={item.profile_Picture}
                     alt="friendsImg1"
                   />
                 </div>
                 <div className="">
                   <h5 className="font-pops text-sm font-semibold">
-                    {" "}
-                    {data.uid == item.senderId
-                      ? item.recevierName
-                      : item.senderName}
+                    {item.block}
                   </h5>
                   <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
                     Today, 8:56pm
@@ -66,12 +93,14 @@ const BlockedUsers = () => {
                 </div>
               </div>
               <div className="mr-9">
-                <button
-                  onClick={() => unblockUser(item)}
-                  className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
-                >
-                  Unblock
-                </button>
+                {!item.blockById && (
+                  <button
+                    onClick={() => unblockUser(item)}
+                    className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
+                  >
+                    Unblock
+                  </button>
+                )}
               </div>
             </li>
           ))}

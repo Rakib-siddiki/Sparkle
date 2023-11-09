@@ -13,24 +13,44 @@ import { useEffect, useState } from "react";
 const Friends = () => {
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
-  const [friendList,setFriendList]=useState([])
+  const [friendList, setFriendList] = useState([]);
   useEffect(() => {
     const friendListRef = ref(db, "accepted/");
     onValue(friendListRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (data.uid == item.val().receiverId || data.uid == item.val().senderId) {
-          arr.push({ ...item.val(),id:item.key });
+        if (
+          data.uid == item.val().receiverId ||
+          data.uid == item.val().senderId
+        ) {
+          arr.push({ ...item.val(), id: item.key });
         }
       });
-      setFriendList(arr)
+      setFriendList(arr);
     });
   }, [data.uid, db]);
-  const blockedUsers=(item)=>{
-set(push(ref(db, "blockedUsers/")), {
-  ...item,
-}).then(() => remove(ref(db, "accepted/" +item.id)));
-  }
+  const blockedUsers = (item) => {
+    console.log(item);
+    if (data.uid === item.senderId) {
+      set(push(ref(db, "blockedUsers/")), {
+        block: item.recevierName,
+        blockId: item.receiverId,
+        blockProfile: item.recevierProfile_picture,
+        blockBy: item.senderName,
+        blockById: item.senderId,
+        blockByProfile: item.senderProfile_picture,
+      }).then(() => remove(ref(db, "accepted/" + item.id)));
+    } else {
+      set(push(ref(db, "blockedUsers/")), {
+        block: item.senderName,
+        blockId: item.senderId,
+        blockProfile: item.senderProfile_picture,
+        blockBy: item.recevierName,
+        blockById: item.receiverId,
+        blockByProfile: item.recevierProfile_picture,
+      }).then(() => remove(ref(db, "accepted/" + item.id)));
+    }
+  };
   return (
     <>
       <div className=" w-[32%] h-[355px] xxl:h-[489px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -69,7 +89,10 @@ set(push(ref(db, "blockedUsers/")), {
                   </p>
                 </div>
               </div>
-              <button onClick={()=>blockedUsers(item)} className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize">
+              <button
+                onClick={() => blockedUsers(item)}
+                className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize"
+              >
                 Block
               </button>
             </li>
