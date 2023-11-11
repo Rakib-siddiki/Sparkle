@@ -23,9 +23,10 @@ const PopUp = ({ handleShow }) => {
     setTitleError("");
   };
   const sendGroupData = () => {
-    if (!groupName) {
+    if (!groupName ) {
       setNameError("Enter your Group Name");
-    }else if(!groupTitle){
+    }
+    if(!groupTitle){
       setTitleError("Enter your Group Title");
     }
      else if(groupName.trim()&& groupTitle.trim()) {
@@ -87,7 +88,7 @@ const PopUp = ({ handleShow }) => {
                 type="text"
                 placeholder="Enter Your Group Title"
                 className={`p-3 rounded-sm w-96 my-3 outline-none text-reg-seconadry border ${
-                  nameError ? ` border-red-500` : ` border-reg-seconadry`
+                  titleError ? ` border-red-500` : ` border-reg-seconadry`
                 }`}
                 onChange={(e) => handleTitleChange(e)}
                 onKeyDown={handleKeyPress}
