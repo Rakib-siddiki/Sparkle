@@ -15,11 +15,11 @@ const PopUp = ({ handleShow }) => {
   console.log("🚀 > file: PopUp.jsx:8 > PopUp > error:", nameError);
 
   const handleNameChange = (e) => {
-    setGroupName(e.target.value.trim());
+    setGroupName(e.target.value);
     setNameError("");
   };
   const handleTitleChange = (e) => {
-    setGroupTitle(e.target.value.trim());
+    setGroupTitle(e.target.value);
     setTitleError("");
   };
   const sendGroupData = () => {
@@ -28,7 +28,7 @@ const PopUp = ({ handleShow }) => {
     }else if(!groupTitle){
       setTitleError("Enter your Group Title");
     }
-     else {
+     else if(groupName.trim()&& groupTitle.trim()) {
       set(push(ref(db, "grouplist/")), {
         groupName: groupName,
         groupTitle: groupTitle,

@@ -1,7 +1,7 @@
 import groupImg1 from "../../assets/home/groupLists/groupImg1.png";
 import { useEffect, useState } from "react";
 import PopUp from "./PopUp";
-import { getDatabase, onValue, ref } from "firebase/database";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 
 const GroupList = () => {
@@ -9,19 +9,23 @@ const GroupList = () => {
 
   const db = getDatabase();
   const [grouplist, setGrouplist] = useState([]);
+  const [groupJoinRequest, setGroupJoinRequest] = useState([]);
   const [showPopUp, setShowPopUp] = useState(false);
   const handleShow = () => {
     setShowPopUp((prev) => !prev);
   };
 // get user lists
   useEffect(() => {
-    const starCountRef = ref(db, "grouplist/");
-    onValue(starCountRef, (snapshot) => {
+    const groupListRef = ref(db, "grouplist/");
+    onValue(groupListRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
         {
           console.log(item.val());
-          if (data.uid !== item.val().adminId) {
+          if (
+            data.uid !== item.val().adminId &&
+            data.uid !== item.val().othersGroupId
+          ) {
             arr.push({ ...item.val(), id: item.key });
           }
         }
@@ -29,6 +33,28 @@ const GroupList = () => {
       setGrouplist(arr);
     });
   }, [data.uid, db]);
+
+  const handleJoin =(item)=> {
+    set(push(ref(db, "groupJoinRequest/")), {
+      ...item,senderId:data.uid,senderName:data.displayName,
+    });
+  }
+  // get group join request
+  useEffect(()=>{
+    const groupJoinRequestRef = ref(db, "groupJoinRequest/");
+
+    onValue(groupJoinRequestRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+        {
+          arr.push(item.val().senderId + item.val().id);
+          
+          
+        }
+      });
+      setGroupJoinRequest(arr);
+    });
+  },[data.uid, db])
   return (
     <>
       <div className="h-[77%] xxl:h-[338px] pt-3 xxl:mt-10 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -68,9 +94,19 @@ const GroupList = () => {
                 </div>
               </div>
               <div className="">
-                <button  className=" active:scale-90 font-pops text-xl font-semibold text-white px-[22px] py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300">
-                  Join
-                </button>
+                {groupJoinRequest.includes(data.uid + item.id) ||
+                groupJoinRequest.includes(item.id + data.uid) ? (
+                  <div className="inline-block p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white">
+                    Pending
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => handleJoin(item)}
+                    className=" active:scale-90 font-pops text-xl font-semibold text-white px-[22px] py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
+                  >
+                    Join
+                  </button>
+                )}
               </div>
             </li>
           ))}
