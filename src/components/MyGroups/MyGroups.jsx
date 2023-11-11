@@ -19,10 +19,10 @@ const MyGroups = () => {
         if (
           data.uid == item.val().adminId
         ) {
-          arr.push({ ...item.val(), id: item.key });
+          arr.push({ ...item.val(), id:item.key });
         }
          if (data.uid == item.val().othersGroupId) {
-           arr.push({ ...item.val(), id: item.key });
+           arr.push({ ...item.val(), id:item.key });
          }
       })
 
@@ -35,8 +35,9 @@ const MyGroups = () => {
     onValue(getJoinRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
+        console.log("🚀 > file: MyGroups.jsx:38 > snapshot.forEach > item:", item.val())
         if (data.uid == item.val().adminId) {
-          arr.push({ ...item.val(), id: item.key });
+          arr.push({ ...item.val(), JoinId:item.key});
         }
       });
 
@@ -45,13 +46,15 @@ const MyGroups = () => {
   }, [data.uid, db]);
   // Acepting group request
   const acceptGroupRequest = (item) => {
-    set(push(ref(db, "grouplist/")), {
+    console.log("🚀 > file: MyGroups.jsx:48 > acceptGroupRequest > item:", item.id)
+    set((ref(db, "grouplist/" + item.id)), {
       admin: item.admin,
       adminId: item.senderId,
       othersGroupId: item.adminId,
       groupName: item.groupName,
       groupTitle: item.groupTitle,
-    }).then(() => remove(ref(db, "grouplist/")));
+      id: item.id,
+    }).then(() => remove(ref(db, "groupJoinRequest/" + item.JoinId)));
   };
   return (
     <>

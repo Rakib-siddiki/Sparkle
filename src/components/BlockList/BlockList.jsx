@@ -44,9 +44,8 @@ const BlockedUsers = () => {
         }
       });
       setBlockList(arr);
-      console.log(blocklist);
     });
-  }, [db]);
+  }, [data.uid, db]);
   const unblockUser = (item) => {
     console.log(item);
     set(push(ref(db, "accepted/")), {
