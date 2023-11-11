@@ -7,29 +7,25 @@ const CreatePopUp = ({ handleShow }) => {
 
   const db = getDatabase();
   const [groupName, setGroupName] = useState("");
-  console.log("🚀 > file: CreatePopUp.jsx:6 > CreatePopUp > groupName:", groupName);
   const [groupTitle, setGroupTitle] = useState("");
-  console.log("🚀 > file: CreatePopUp.jsx:7 > CreatePopUp > groupTitle:", groupTitle);
-  const [nameError, setNameError] = useState('');
-  const [titleError, setTitleError] = useState('');
-  console.log("🚀 > file: CreatePopUp.jsx:8 > CreatePopUp > error:", nameError);
-
+  const [nameError, setNameError] = useState(false);
+  const [titleError, setTitleError] = useState(false);
   const handleNameChange = (e) => {
     setGroupName(e.target.value);
     setNameError("");
   };
   const handleTitleChange = (e) => {
-    console.log('ok');
     setGroupTitle(e.target.value);
     setTitleError("");
   };
   const sendGroupData = () => {
-    if (!groupName.trim()) {
+    if (!groupName) {
       setNameError("Enter your Group Name");
-    } else if (!groupTitle.trim()) {
+    }
+    if (!groupTitle) {
       setTitleError("Enter your Group Title");
-    } else {
-      set(push(ref(db, "groupList/")), {
+    } else if (groupName.trim() && groupTitle.trim()) {
+      set(push(ref(db, "grouplist/")), {
         groupName: groupName,
         groupTitle: groupTitle,
         adminId: data.uid,
