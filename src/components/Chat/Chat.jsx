@@ -9,9 +9,9 @@ const Chat = () => {
       <div className="w-full h-full rounded-custom shadow-homeCardShadow pl-12 pr-7 grid grid-rows-13">
         <div className="row-span-2 flex items-center justify-between border-b-[1px] border-solid border-[#00000040]">
           <div className="flex items-center">
-            <div className=" inline-block relative mr-3.5 after:content-[''] after:h-[17px] after:w-[17px] after:bg-[#00FF75] after:absolute after:bottom-0.5 after:right-0.5 after:rounded-full after:border-solid after:border-white after:border-2 after:drop-shadow-navIconDropShadow">
+            <div className=" inline-block relative mr-3.5 after:content-[''] after:h-[17px] after:w-[17px] after:bg-[#00FF75] after:absolute after:bottom-0.5 after:right-0.5 after:rounded-full after:border-solid after:border-white after:border-2 after:drop-shadow-iconDropShadow">
               <img
-                className="w-[75px] h-[75px] rounded-full object-cover drop-shadow-navIconDropShadow"
+                className="w-[75px] h-[75px] rounded-full object-cover drop-shadow-iconDropShadow"
                 src={groupImg1}
                 alt="Ellipse2.png"
               />

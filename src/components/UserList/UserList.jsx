@@ -64,13 +64,11 @@ const UserList = () => {
       let arr = []
       snapshot.forEach(item=>{
         arr.push(item.val().blockedUserId + item.val().blockedById);
-        console.log("🚀 > file: UserList.jsx:64 > onValue > arr:", item.val())
       })
       setIfBlocked(arr)
-    console.log("🚀 > file: UserList.jsx:13 > UserList > isBlocked:", isBlocked)
     });
     
-  },[])
+  },[db])
   return (
     <>
       <div className="w-full  h-full  pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -102,10 +100,6 @@ const UserList = () => {
                     Today, 8:56pm
                   </h5>
                 </div>
-                {console.log(
-                  "🚀 > file: UserList.jsx:85 > UserList > item:",
-                  item
-                )}
               </div>
               {isBlocked.includes(data.uid + item.userId) ||
               isBlocked.includes(item.userId + data.uid) ? (

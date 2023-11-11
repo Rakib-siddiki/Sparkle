@@ -90,7 +90,7 @@ const Home = () => {
               Please Verify Your Email
             </h1>
             <button
-              onClick={handleLogOut}
+              onClick={()=>(navigate('/login'))}
               className="py-5 px-7 font-nunito text-xl text-black font-semibold text-center bg-white rounded-[9px] hover:text-white hover:bg-[#FF9A00] duration-300"
               type="button"
             >

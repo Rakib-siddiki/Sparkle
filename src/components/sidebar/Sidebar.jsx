@@ -101,11 +101,14 @@ const Sidebar = () => {
               </div>
             </li>
             {/* <li className="h-12 relative text-5xl text-[#BAD1FF] cursor-pointer before:content-[''] before:h-[80px] before:w-0 before:bg-white before:absolute before:top-[50%] before:right-0 before:translate-y-[-50%] before:rounded-l-20px before:transition-all before:duration-300 before:ease-linear after:content-[''] after:h-[80px] after:w-0 after:bg-primary after:absolute after:top-[50%] after:right-0 after:translate-y-[-50%] after:rounded-l-20px after:transition-all after:duration-300 after:ease-linear  hover:before:w-[84%] hover:after:w-[8px] hover:bg-primary">
-                  <SlSettings className='absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] transition-all duration-300 ease-linear drop-shadow-navIconDropShadow' />
+                  <SlSettings className='absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] transition-all duration-300 ease-linear drop-shadow-iconDropShadow' />
                </li> */}
           </ul>
-          <div className="text-3xl md:text-4xl xl:text-5xl text-white drop-shadow-navIconDropShadow cursor-pointer hidden md:block">
-            <LogoutIcon onClick={handleLogOut} />
+          <div
+            onClick={handleLogOut}
+            className="text-3xl md:text-4xl xl:text-5xl text-white drop-shadow-iconDropShadow cursor-pointer hidden md:block"
+          >
+            <LogoutIcon />
           </div>
         </nav>
 
@@ -141,7 +144,9 @@ const Sidebar = () => {
           <div className="flex items-center justify-between p-2.5 pt-5 sm:p-1.5">
             <div className="flex items-center">
               <div
-                onClick={() => {setUpLoadProfilePicture(true), setShowMenu(prev=>!prev) }}
+                onClick={() => {
+                  setUpLoadProfilePicture(true), setShowMenu((prev) => !prev);
+                }}
                 className="w-[55px] h-[55px] rounded-full overflow-hidden cursor-pointer mr-2.5 xl:w-[100px] xl:h-[100px]  relative after:content-[''] after:absolute after:h-full after:w-full after:bg-transparent after:top-0 after:left-0 after:duration-200 hover:after:bg-[#00000069] text-[35px] text-transparent hover:text-white mx-auto"
               >
                 <FaCloudUploadAlt className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] duration-200 text-xl z-10" />

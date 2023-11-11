@@ -13,7 +13,7 @@ const ChatFriends = () => {
         <ul className="eraseBorder h-[86%] overflow-y-auto">
           <li className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]">
             <div className="flex items-center">
-              <div className="relative mr-3.5 after:content-[''] after:h-[15px] after:w-[15px] after:bg-[#00FF75] after:absolute after:bottom-0 after:right-0 after:rounded-full after:border-solid after:border-white after:border-2 after:drop-shadow-navIconDropShadow">
+              <div className="relative mr-3.5 after:content-[''] after:h-[15px] after:w-[15px] after:bg-[#00FF75] after:absolute after:bottom-0 after:right-0 after:rounded-full after:border-solid after:border-white after:border-2 after:drop-shadow-iconDropShadow">
                 <img
                   className="w-[54px] h-[54px] rounded-full object-cover"
                   src="images/friends/Ellipse2.png"
