@@ -86,7 +86,7 @@ const Reg = () => {
     if (!password) {
       setPasswordError("Plese Enter Your password");
     }
-    if (email && fullName && password && isValidEmail) {
+    if (email && fullName.trim() && password && isValidEmail) {
       // firbase
 
       createUserWithEmailAndPassword(auth, email, password)
