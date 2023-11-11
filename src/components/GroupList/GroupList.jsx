@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import PopUp from "./PopUp";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
-import NoData from "./noDataToShow/NoData";
-
+import NoData from "../noDataToShow/NoData";
+import LoadingSpinner from "../handleloading/LoadingSpinner";
 const GroupList = () => {
   const data = useSelector((state) => state.userInfo.userValue); // getting value from store
 
   const db = getDatabase();
+  const [loading, setLoading] = useState(true);
+
   const [grouplist, setGrouplist] = useState([]);
   const [groupJoinRequest, setGroupJoinRequest] = useState([]);
   const [showPopUp, setShowPopUp] = useState(false);
@@ -32,6 +34,7 @@ const GroupList = () => {
         }
       });
       setGrouplist(arr);
+      setLoading(false);
     });
   }, [data.uid, db]);
 
@@ -72,8 +75,10 @@ const GroupList = () => {
           </div>
         </div>
         <ul className=" h-[88%] overflow-y-auto">
-          {grouplist.length === 0 ? (
-            <NoData/>
+          {loading ? (
+            <LoadingSpinner />
+          ) : grouplist.length === 0 ? (
+            <NoData />
           ) : (
             grouplist.map((item, i) => (
               <li

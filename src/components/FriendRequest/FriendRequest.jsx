@@ -9,9 +9,11 @@ import {
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import NoData from "../GroupList/noDataToShow/NoData";
+import NoData from "../noDataToShow/NoData";
+import LoadingSpinner from "../handleloading/LoadingSpinner";
 
 const FriendRequest = () => {
+  const [loading, setLoading] = useState(true);
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
   const [requestList, setRequestList] = useState([]);
@@ -22,13 +24,10 @@ const FriendRequest = () => {
       snapshot.forEach((item) => {
         if (data.uid === item.val().receiverId) {
           arr.push({ ...item.val(), userId: item.key });
-          console.log(
-            "🚀 > file: FriendRequest.jsx:18 > snapshot.forEach > arr:",
-            arr
-          );
         }
       });
       setRequestList(arr);
+      setLoading(false)
     });
   }, [data.uid, db]);
 
@@ -49,7 +48,7 @@ const FriendRequest = () => {
         </div>
 
         <ul className=" h-[88%] overflow-y-auto">
-          {requestList.length === 0 ? (
+          {loading?<LoadingSpinner/>:requestList.length === 0 ? (
             <NoData />
           ) : (
             requestList.map((item, i) => (

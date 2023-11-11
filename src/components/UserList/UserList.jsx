@@ -3,10 +3,13 @@ import { BiPlusMedical } from "react-icons/bi";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import NoData from "../GroupList/noDataToShow/NoData";
+import NoData from "../noDataToShow/NoData";
+import LoadingSpinner from "../handleloading/LoadingSpinner";
 
 // for userList
 const UserList = () => {
+  const [loading, setLoading] = useState(true);
+
   const [userData, setUserData] = useState([]);
   const [friendRequestData, setFriendRequestData] = useState([]);
   const [isAccepted, setIsAccepted] = useState([]);
@@ -23,6 +26,7 @@ const UserList = () => {
         }
       });
       setUserData(arr);
+      setLoading(false);
     });
   }, [data.uid, db]);
 
@@ -79,7 +83,9 @@ const UserList = () => {
           </div>
         </div>
         <ul className=" h-[86%] overflow-y-auto">
-          {userData.length === 0 ? (
+          {loading ? (
+            <LoadingSpinner/>
+          ) : userData.length === 0 ? (
             <NoData />
           ) : (
             userData.map((item, i) => (

@@ -9,9 +9,11 @@ import {
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import NoData from "../GroupList/noDataToShow/NoData";
-
+import NoData from "../noDataToShow/NoData";
+import LoadingSppiner from "../handleloading/LoadingSpinner";
 const Friends = () => {
+  const [loading, setLoading] = useState(true);
+
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
   const [friendList, setFriendList] = useState([]);
@@ -28,6 +30,7 @@ const Friends = () => {
         }
       });
       setFriendList(arr);
+      setLoading(false);
     });
   }, [data.uid, db]);
   const blockedUsers = (item) => {
@@ -62,7 +65,9 @@ const Friends = () => {
           </div>
         </div>
         <ul className=" h-[86%] overflow-y-auto">
-          {friendList.length === 0 ? (
+          {loading ? (
+            <LoadingSppiner />
+          ) : friendList.length === 0 ? (
             <NoData />
           ) : (
             friendList.map((item, i) => (

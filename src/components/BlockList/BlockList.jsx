@@ -9,15 +9,12 @@ import {
 } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import NoData from "../GroupList/noDataToShow/NoData";
+import NoData from "../noDataToShow/NoData";
+import LoadingSpinner from "../handleloading/LoadingSpinner";
 
 const BlockedUsers = () => {
+  const [loading, setLoading] = useState(true);
   const data = useSelector((state) => state.userInfo.userValue);
-  console.log(
-    "🚀 > file: BlockList.jsx:15 > BlockedUsers > data:",
-    data.PhotoURL
-  );
-
   const db = getDatabase();
   const [blocklist, setBlockList] = useState([]);
   useEffect(() => {
@@ -25,10 +22,6 @@ const BlockedUsers = () => {
     onValue(blockListRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        console.log(
-          "🚀 > file: BlockList.jsx:16 > onValue > item:",
-          item.val()
-        );
         if (
           data.uid == item.val().blockId ||
           data.uid == item.val().blockById
@@ -51,6 +44,7 @@ const BlockedUsers = () => {
         }
       });
       setBlockList(arr);
+      setLoading(false)
     });
   }, [data.uid, db]);
   const unblockUser = (item) => {
@@ -76,7 +70,7 @@ const BlockedUsers = () => {
           </div>
         </div>
         <ul className=" h-[86%] overflow-y-auto">
-          {blocklist.length === 0 ? (
+          {loading?<LoadingSpinner/>:blocklist.length === 0 ? (
             <NoData />
           ) : (
             blocklist.map((item, i) => (
