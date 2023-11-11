@@ -9,10 +9,14 @@ import {
 } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import NoData from "../GroupList/noDataToShow/NoData";
 
 const BlockedUsers = () => {
   const data = useSelector((state) => state.userInfo.userValue);
-  console.log("🚀 > file: BlockList.jsx:15 > BlockedUsers > data:", data.PhotoURL)
+  console.log(
+    "🚀 > file: BlockList.jsx:15 > BlockedUsers > data:",
+    data.PhotoURL
+  );
 
   const db = getDatabase();
   const [blocklist, setBlockList] = useState([]);
@@ -25,7 +29,10 @@ const BlockedUsers = () => {
           "🚀 > file: BlockList.jsx:16 > onValue > item:",
           item.val()
         );
-        if (data.uid == item.val().blockId|| data.uid == item.val().blockById) {
+        if (
+          data.uid == item.val().blockId ||
+          data.uid == item.val().blockById
+        ) {
           if (data.uid == item.val().blockById) {
             arr.push({
               id: item.key,
@@ -69,40 +76,44 @@ const BlockedUsers = () => {
           </div>
         </div>
         <ul className=" h-[86%] overflow-y-auto">
-          {blocklist.map((item, i) => (
-            <li
-              key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="mr-3.5">
-                  <img
-                    className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={item.profile_Picture}
-                    alt="friendsImg1"
-                  />
+          {blocklist.length === 0 ? (
+            <NoData />
+          ) : (
+            blocklist.map((item, i) => (
+              <li
+                key={i}
+                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
+              >
+                <div className="flex items-center">
+                  <div className="mr-3.5">
+                    <img
+                      className="w-[54px] h-[54px] rounded-full object-cover"
+                      src={item.profile_Picture}
+                      alt="friendsImg1"
+                    />
+                  </div>
+                  <div className="">
+                    <h5 className="font-pops text-sm font-semibold">
+                      {item.block}
+                    </h5>
+                    <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
+                      Today, 8:56pm
+                    </h5>
+                  </div>
                 </div>
-                <div className="">
-                  <h5 className="font-pops text-sm font-semibold">
-                    {item.block}
-                  </h5>
-                  <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
-                    Today, 8:56pm
-                  </h5>
+                <div className="mr-9">
+                  {!item.blockById && (
+                    <button
+                      onClick={() => unblockUser(item)}
+                      className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
+                    >
+                      Unblock
+                    </button>
+                  )}
                 </div>
-              </div>
-              <div className="mr-9">
-                {!item.blockById && (
-                  <button
-                    onClick={() => unblockUser(item)}
-                    className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
-                  >
-                    Unblock
-                  </button>
-                )}
-              </div>
-            </li>
-          ))}
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </>

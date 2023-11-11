@@ -3,6 +3,7 @@ import { BiPlusMedical } from "react-icons/bi";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import NoData from "../GroupList/noDataToShow/NoData";
 
 // for userList
 const UserList = () => {
@@ -52,9 +53,9 @@ const UserList = () => {
     let arr = [];
     onValue(isAcceptedRef, (snapshot) => {
       snapshot.forEach((item) => {
-        arr.push(item.val().senderId + item.val().receiverId);        
+        arr.push(item.val().senderId + item.val().receiverId);
       });
-      setIsAccepted(arr)
+      setIsAccepted(arr);
     });
   }, [db]);
   useEffect(() => {
@@ -78,55 +79,59 @@ const UserList = () => {
           </div>
         </div>
         <ul className=" h-[86%] overflow-y-auto">
-          {userData.map((item, i) => (
-            <li
-              key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="mr-3.5">
-                  <img
-                    className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={item.profile_picture}
-                    alt="profile_picture"
-                  />
+          {userData.length === 0 ? (
+            <NoData />
+          ) : (
+            userData.map((item, i) => (
+              <li
+                key={i}
+                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
+              >
+                <div className="flex items-center">
+                  <div className="mr-3.5">
+                    <img
+                      className="w-[54px] h-[54px] rounded-full object-cover"
+                      src={item.profile_picture}
+                      alt="profile_picture"
+                    />
+                  </div>
+                  <div>
+                    <h5 className="font-pops text-sm font-semibold">
+                      {item.username}
+                    </h5>
+                    <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
+                      Today, 8:56pm
+                    </h5>
+                  </div>
                 </div>
-                <div>
-                  <h5 className="font-pops text-sm font-semibold">
-                    {item.username}
-                  </h5>
-                  <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
-                    Today, 8:56pm
-                  </h5>
-                </div>
-              </div>
-              {console.log(item)}
-              {ifBlocked.includes(data.uid + item.userId) ||
-              ifBlocked.includes(item.userId + data.uid) ? (
-                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
-                  blocked
-                </div>
-              ) : isAccepted.includes(data.uid + item.userId) ||
-                isAccepted.includes(item.userId + data.uid) ? (
-                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
-                  friend
-                </div>
-              ) : friendRequestData.includes(data.uid + item.userId) ||
-                friendRequestData.includes(item.userId + data.uid) ? (
-                <div className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14">
-                  Pending
-                </div>
-              ) : (
-                <div
-                  onClick={() => sendRequest(item)}
-                  className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14"
-                >
-                  <BiPlusMedical className="" />
-                </div>
-              )}
-              {/* {} */}
-            </li>
-          ))}
+                {console.log(item)}
+                {ifBlocked.includes(data.uid + item.userId) ||
+                ifBlocked.includes(item.userId + data.uid) ? (
+                  <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
+                    blocked
+                  </div>
+                ) : isAccepted.includes(data.uid + item.userId) ||
+                  isAccepted.includes(item.userId + data.uid) ? (
+                  <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
+                    friend
+                  </div>
+                ) : friendRequestData.includes(data.uid + item.userId) ||
+                  friendRequestData.includes(item.userId + data.uid) ? (
+                  <div className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14">
+                    Pending
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => sendRequest(item)}
+                    className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14"
+                  >
+                    <BiPlusMedical className="" />
+                  </div>
+                )}
+                {/* {} */}
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </>

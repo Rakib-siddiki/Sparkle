@@ -1,9 +1,10 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
+import { getDatabase, ref, onValue, set, remove } from "firebase/database";
 
 import friendsImg1 from "../../assets/home/friends/friendsImg1.png";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import NoData from "../GroupList/noDataToShow/NoData";
 const MyGroups = () => {
   const [myGroups, setMyGroups] = useState([]);
   const [getJoinRequest, setGetJoinRequest] = useState([]);
@@ -15,16 +16,17 @@ const MyGroups = () => {
     onValue(myGroupsRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        console.log("🚀 > file: MyGroups.jsx:18 > snapshot.forEach > item:", item.val())
-        if (
-          data.uid == item.val().adminId
-        ) {
-          arr.push({ ...item.val(), id:item.key });
+        console.log(
+          "🚀 > file: MyGroups.jsx:18 > snapshot.forEach > item:",
+          item.val()
+        );
+        if (data.uid == item.val().adminId) {
+          arr.push({ ...item.val(), id: item.key });
         }
-         if (data.uid == item.val().othersGroupId) {
-           arr.push({ ...item.val(), id:item.key });
-         }
-      })
+        if (data.uid == item.val().othersGroupId) {
+          arr.push({ ...item.val(), id: item.key });
+        }
+      });
 
       setMyGroups(arr);
     });
@@ -35,9 +37,12 @@ const MyGroups = () => {
     onValue(getJoinRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        console.log("🚀 > file: MyGroups.jsx:38 > snapshot.forEach > item:", item.val())
+        console.log(
+          "🚀 > file: MyGroups.jsx:38 > snapshot.forEach > item:",
+          item.val()
+        );
         if (data.uid == item.val().adminId) {
-          arr.push({ ...item.val(), JoinId:item.key});
+          arr.push({ ...item.val(), JoinId: item.key });
         }
       });
 
@@ -46,8 +51,11 @@ const MyGroups = () => {
   }, [data.uid, db]);
   // Acepting group request
   const acceptGroupRequest = (item) => {
-    console.log("🚀 > file: MyGroups.jsx:48 > acceptGroupRequest > item:", item.id)
-    set((ref(db, "grouplist/" + item.id)), {
+    console.log(
+      "🚀 > file: MyGroups.jsx:48 > acceptGroupRequest > item:",
+      item.id
+    );
+    set(ref(db, "grouplist/" + item.id), {
       admin: item.admin,
       adminId: item.senderId,
       othersGroupId: item.adminId,
@@ -67,33 +75,37 @@ const MyGroups = () => {
         </div>
 
         <ul className=" h-[86%] overflow-y-auto">
-          {myGroups.map((item, i) => (
-            <li
-              key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="relative mr-3.5">
-                  <img
-                    className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={friendsImg1}
-                    alt="friendsImg1"
-                  />
+          {myGroups.length === 0 ? (
+            <NoData />
+          ) : (
+            myGroups.map((item, i) => (
+              <li
+                key={i}
+                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
+              >
+                <div className="flex items-center">
+                  <div className="relative mr-3.5">
+                    <img
+                      className="w-[54px] h-[54px] rounded-full object-cover"
+                      src={friendsImg1}
+                      alt="friendsImg1"
+                    />
+                  </div>
+                  <div className="">
+                    <h5 className="font-pops text-sm font-semibold">
+                      {item.groupName}
+                    </h5>
+                    <p className="font-pops text-xs font-medium text-[#4D4D4DBF] mt-0.5">
+                      {item.groupTitle}
+                    </p>
+                  </div>
                 </div>
-                <div className="">
-                  <h5 className="font-pops text-sm font-semibold">
-                    {item.groupName}
-                  </h5>
-                  <p className="font-pops text-xs font-medium text-[#4D4D4DBF] mt-0.5">
-                    {item.groupTitle}
-                  </p>
-                </div>
-              </div>
-              <h5 className="font-pops text-[10px] font-medium text-[#00000080]">
-                Today, 8:56pm
-              </h5>
-            </li>
-          ))}
+                <h5 className="font-pops text-[10px] font-medium text-[#00000080]">
+                  Today, 8:56pm
+                </h5>
+              </li>
+            ))
+          )}
           {getJoinRequest.map((item, i) => (
             <li
               key={i}

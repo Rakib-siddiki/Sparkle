@@ -9,6 +9,7 @@ import {
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import NoData from "../GroupList/noDataToShow/NoData";
 
 const Friends = () => {
   const db = getDatabase();
@@ -61,42 +62,46 @@ const Friends = () => {
           </div>
         </div>
         <ul className=" h-[86%] overflow-y-auto">
-          {friendList.map((item, i) => (
-            <li
-              key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="relative mr-3.5 ">
-                  <img
-                    className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={
-                      data.uid == item.senderId
-                        ? item.recevierProfile_picture
-                        : item.senderProfile_picture
-                    }
-                    alt="friendsImg1"
-                  />
-                </div>
-                <div>
-                  <h5 className="font-pops text-sm font-semibold">
-                    {data.uid == item.senderId
-                      ? item.recevierName
-                      : item.senderName}
-                  </h5>
-                  <p className="font-pops text-xs font-medium text-[#4D4D4DBF] mt-0.5">
-                    Dinner ?
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => blockedUsers(item)}
-                className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize"
+          {friendList.length === 0 ? (
+            <NoData />
+          ) : (
+            friendList.map((item, i) => (
+              <li
+                key={i}
+                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
               >
-                Block
-              </button>
-            </li>
-          ))}
+                <div className="flex items-center">
+                  <div className="relative mr-3.5 ">
+                    <img
+                      className="w-[54px] h-[54px] rounded-full object-cover"
+                      src={
+                        data.uid == item.senderId
+                          ? item.recevierProfile_picture
+                          : item.senderProfile_picture
+                      }
+                      alt="friendsImg1"
+                    />
+                  </div>
+                  <div>
+                    <h5 className="font-pops text-sm font-semibold">
+                      {data.uid == item.senderId
+                        ? item.recevierName
+                        : item.senderName}
+                    </h5>
+                    <p className="font-pops text-xs font-medium text-[#4D4D4DBF] mt-0.5">
+                      Dinner ?
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => blockedUsers(item)}
+                  className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize"
+                >
+                  Block
+                </button>
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </>

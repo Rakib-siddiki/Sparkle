@@ -1,7 +1,15 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  push,
+  remove,
+} from "firebase/database";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import NoData from "../GroupList/noDataToShow/NoData";
 
 const FriendRequest = () => {
   const db = getDatabase();
@@ -12,21 +20,23 @@ const FriendRequest = () => {
     onValue(friendListRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-
         if (data.uid === item.val().receiverId) {
-          arr.push({...item.val(),userId:item.key});
-          console.log("🚀 > file: FriendRequest.jsx:18 > snapshot.forEach > arr:", arr)
+          arr.push({ ...item.val(), userId: item.key });
+          console.log(
+            "🚀 > file: FriendRequest.jsx:18 > snapshot.forEach > arr:",
+            arr
+          );
         }
       });
       setRequestList(arr);
     });
   }, [data.uid, db]);
 
-  const acceptRequest=(item)=>{
+  const acceptRequest = (item) => {
     set(push(ref(db, "accepted/")), {
-      ...item
-    }).then(() => remove(ref(db, "friendRequest/" + item.userId)))
-  }
+      ...item,
+    }).then(() => remove(ref(db, "friendRequest/" + item.userId)));
+  };
 
   return (
     <>
@@ -39,35 +49,42 @@ const FriendRequest = () => {
         </div>
 
         <ul className=" h-[88%] overflow-y-auto">
-          {requestList.map((item, i) => (
-            <li
-              key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="mr-3.5">
-                  <img
-                    className="w-[70px] h-[70px] rounded-full object-cover"
-                    src={item.senderProfile_picture}
-                    alt="profile_picture"
-                  />
+          {requestList.length === 0 ? (
+            <NoData />
+          ) : (
+            requestList.map((item, i) => (
+              <li
+                key={i}
+                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
+              >
+                <div className="flex items-center">
+                  <div className="mr-3.5">
+                    <img
+                      className="w-[70px] h-[70px] rounded-full object-cover"
+                      src={item.senderProfile_picture}
+                      alt="profile_picture"
+                    />
+                  </div>
+                  <div className="">
+                    <h5 className="font-pops text-lg font-semibold">
+                      {item.senderName}
+                    </h5>
+                    <p className="font-pops text-sm font-medium text-[#4D4D4DBF] mt-0.5">
+                      Dinner?
+                    </p>
+                  </div>
                 </div>
-                <div className="">
-                  <h5 className="font-pops text-lg font-semibold">
-                    {item.senderName}
-                  </h5>
-                  <p className="font-pops text-sm font-medium text-[#4D4D4DBF] mt-0.5">
-                    Dinner?
-                  </p>
+                <div className="mr-9">
+                  <button
+                    onClick={() => acceptRequest(item)}
+                    className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
+                  >
+                    Accept
+                  </button>
                 </div>
-              </div>
-              <div className="mr-9">
-                <button onClick={()=>acceptRequest(item)} className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300">
-                  Accept
-                </button>
-              </div>
-            </li>
-          ))}
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </>
