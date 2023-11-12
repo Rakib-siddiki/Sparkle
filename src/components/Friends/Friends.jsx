@@ -9,10 +9,13 @@ import {
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import NoData from "../noDataToShow/NoData";
+import LoadingSpinner from "../loading/LoadingSpinner";
 
 const Friends = () => {
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
+  const [loading, setLoading] = useState(true);
   const [friendList, setFriendList] = useState([]);
   useEffect(() => {
     const friendListRef = ref(db, "accepted/");
@@ -27,6 +30,7 @@ const Friends = () => {
         }
       });
       setFriendList(arr);
+      setLoading(false);
     });
   }, [data.uid, db]);
   const blockedUsers = (item) => {
@@ -56,7 +60,11 @@ const Friends = () => {
           </div>
         </div>
         <ul className="eraseBorder h-[86%] overflow-y-auto">
-          {friendList.map((item, i) => (
+          {loading ? (
+            <LoadingSpinner />
+          ) : friendList.length === 0 ? (
+            <NoData />
+          ) : (friendList.map((item, i) => (
             <li
               key={i}
               className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
@@ -91,7 +99,7 @@ const Friends = () => {
                 Block
               </button>
             </li>
-          ))}
+          )))}
         </ul>
       </div>
     </>

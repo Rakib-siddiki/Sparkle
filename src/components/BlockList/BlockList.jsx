@@ -9,10 +9,12 @@ import {
 } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import LoadingSpinner from "../loading/LoadingSpinner";
+import NoData from "../noDataToShow/NoData";
 
 const BlockedUsers = () => {
   const data = useSelector((state) => state.userInfo.userValue);
-
+  const [loading, setLoading] = useState(true);
   const db = getDatabase();
   const [blocklist, setBlockList] = useState([]);
   useEffect(() => {
@@ -49,8 +51,9 @@ const BlockedUsers = () => {
         }
       });
       setBlockList(arr);
+      setLoading(false);
     });
-  }, []);
+  }, [data.uid, db]);
   const unblockUser = (item) => {
     console.log("🚀 > file: BlockList.jsx:49 > unblockUser > item:", item);
     set(push(ref(db, "accepted/")), {
@@ -61,7 +64,9 @@ const BlockedUsers = () => {
       senderId: data.uid,
       senderName: data.displayName,
       userId: item.id,
-    }).then(() => {remove(ref(db, "blockedUsers/" + item.id))});
+    }).then(() => {
+      remove(ref(db, "blockedUsers/" + item.id));
+    });
   };
   return (
     <>
@@ -73,7 +78,11 @@ const BlockedUsers = () => {
           </div>
         </div>
         <ul className="eraseBorder h-[86%] overflow-y-auto">
-          {blocklist.map((item, i) => (
+          {loading ? (
+            <LoadingSpinner/>
+          ) : blocklist.length === 0 ? (
+            <NoData/>
+          ) : (blocklist.map((item, i) => (
             <li
               key={i}
               className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
@@ -110,7 +119,7 @@ const BlockedUsers = () => {
                 )}
               </div>
             </li>
-          ))}
+          )))}
         </ul>
       </div>
     </>

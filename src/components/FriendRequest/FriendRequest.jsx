@@ -9,10 +9,13 @@ import {
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import LoadingSpinner from "../loading/LoadingSpinner";
+import NoData from "../noDataToShow/NoData";
 
 const FriendRequest = () => {
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
+  const [loading, setLoading] = useState(true);
   const [requestList, setRequestList] = useState([]);
   useEffect(() => {
     const friendListRef = ref(db, "friendRequest/");
@@ -24,6 +27,7 @@ const FriendRequest = () => {
         }
       });
       setRequestList(arr);
+      setLoading(false);
     });
   }, [data.uid, db]);
 
@@ -44,7 +48,11 @@ const FriendRequest = () => {
         </div>
 
         <ul className="eraseBorder h-[88%] overflow-y-auto">
-          {requestList.map((item, i) => (
+          {loading ? (
+            <LoadingSpinner/>
+          ) : requestList.length === 0 ? (
+            <NoData/>
+          ) : (requestList.map((item, i) => (
             <li
               key={i}
               className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
@@ -75,7 +83,7 @@ const FriendRequest = () => {
                 </button>
               </div>
             </li>
-          ))}
+          )))}
         </ul>
       </div>
     </>

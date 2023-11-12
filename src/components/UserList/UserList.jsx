@@ -3,13 +3,16 @@ import { BiPlusMedical } from "react-icons/bi";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import LoadingSpinner from "../loading/LoadingSpinner";
+import NoData from "../noDataToShow/NoData";
 
 // for userList
 const UserList = () => {
   const [userData, setUserData] = useState([]);
   const [friendRequestData, setFriendRequestData] = useState([]);
   const [isAccepted, setIsAccepted] = useState([]);
-   const [isBlocked, setIfBlocked] = useState([]);
+  const [isBlocked, setIfBlocked] = useState([]);
+  const [loading, setLoading] = useState(true);
    const db = getDatabase();
    const data = useSelector((state) => state.userInfo.userValue);
    useEffect(() => {
@@ -22,6 +25,7 @@ const UserList = () => {
         }
       });
       setUserData(arr);
+      setLoading(false);
     });
   }, [data.uid, db]);
 
@@ -79,7 +83,11 @@ const UserList = () => {
           </div>
         </div>
         <ul className="eraseBorder h-[86%] overflow-y-auto relative">
-          {userData.map((item, i) => (
+          {loading ? (
+            <LoadingSpinner />
+          ) : userData.length === 0 ? (
+            <NoData />
+          ) : (userData.map((item, i) => (
             <li
               key={i}
               className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
@@ -125,7 +133,7 @@ const UserList = () => {
                 </div>
               )}
             </li>
-          ))}
+          )))}
         </ul>
       </div>
     </>

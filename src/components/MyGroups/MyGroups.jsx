@@ -4,9 +4,12 @@ import friendsImg1 from "../../assets/home/friends/friendsImg1.png";
 import { getDatabase, ref, onValue, set, remove } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import NoData from "../noDataToShow/NoData";
+import LoadingSpinner from "../loading/LoadingSpinner";
 const MyGroups = () => {
   const db = getDatabase();
   const [myGroups, setMyGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [groupJoinRequest, setGroupJoinRequest] = useState([]);
    const data = useSelector((state) => state.userInfo.userValue);
 
@@ -23,6 +26,7 @@ const MyGroups = () => {
         }
       });
       setMyGroups(arr);
+      setLoading(false);
     });
   }, [data.uid,db]);
 
@@ -62,7 +66,11 @@ const MyGroups = () => {
         </div>
 
         <ul className="eraseBorder h-[86%] overflow-y-auto">
-          {myGroups.map((item, i) => (
+          {loading ? (
+            <LoadingSpinner />
+          ) : myGroups.length === 0 ? (
+            <NoData />
+          ) : (myGroups.map((item, i) => (
             <li
               key={i}
               className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
@@ -88,7 +96,7 @@ const MyGroups = () => {
                 Today, 8:56pm
               </h5>
             </li>
-          ))}
+          )))}
           {groupJoinRequest.map((item, i) => (
             <li
               key={i}
