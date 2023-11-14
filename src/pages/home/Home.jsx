@@ -20,6 +20,10 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const data = useSelector((state) => state.userInfo.userValue); // getting value from store
   const navigate = useNavigate();
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+
   useEffect(() => {
     if (!data) {
       navigate("/login");
@@ -57,26 +61,26 @@ const Home = () => {
             <div className="flex flex-col md:flex-row justify-between">
               {/* Group List */}
               <div className=" w-full md:w-[32%] h-[355px] flex flex-col justify-between">
-                <SearchBox />
-                <GroupList />
+                <SearchBox onSearch={(query) => setSearchQuery(query)} />
+                <GroupList searchQuery={searchQuery} />
               </div>
 
               {/* Friends */}
-              <Friends />
+              <Friends searchQuery={searchQuery} />
 
               {/* User List */}
-              <UserList />
+              <UserList searchQuery={searchQuery} />
             </div>
 
             <div className="flex flex-col md:flex-row justify-between  ">
               {/* Friend Request */}
-              <FriendRequest />
+              <FriendRequest searchQuery={searchQuery} />
 
               {/* My Groups */}
-              <MyGroups />
+              <MyGroups searchQuery={searchQuery} />
 
               {/* Blocked Users */}
-              <BlockedUsers />
+              <BlockedUsers searchQuery={searchQuery} />
             </div>
           </div>
         </section>

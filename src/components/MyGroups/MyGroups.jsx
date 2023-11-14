@@ -6,11 +6,17 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../handleloading/LoadingSpinner";
+import { PropTypes } from "prop-types";
+const MyGroups = ({ searchQuery }) => {
 
-const MyGroups = () => {
+  MyGroups.propTypes = {
+    searchQuery: PropTypes.string.isRequired,
+  };
+  
+
   const [loading, setLoading] = useState(true);
 
-  const [myGroups, setMyGroups] = useState([]);
+  const [myGroupsList, setMyGroupsList] = useState([]);
   const [getJoinRequest, setGetJoinRequest] = useState([]);
   const data = useSelector((state) => state.userInfo.userValue); // getting value from store
   const db = getDatabase();
@@ -20,10 +26,6 @@ const MyGroups = () => {
     onValue(myGroupsRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        console.log(
-          "🚀 > file: MyGroups.jsx:18 > snapshot.forEach > item:",
-          item.val()
-        );
         if (data.uid == item.val().adminId) {
           arr.push({ ...item.val(), id: item.key });
         }
@@ -32,7 +34,7 @@ const MyGroups = () => {
         }
       });
 
-      setMyGroups(arr);
+      setMyGroupsList(arr);
       setLoading(false);
     });
   }, [data.uid, db]);
@@ -42,10 +44,6 @@ const MyGroups = () => {
     onValue(getJoinRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        console.log(
-          "🚀 > file: MyGroups.jsx:38 > snapshot.forEach > item:",
-          item.val()
-        );
         if (data.uid == item.val().adminId) {
           arr.push({ ...item.val(), JoinId: item.key });
         }
@@ -56,10 +54,6 @@ const MyGroups = () => {
   }, [data.uid, db]);
   // Acepting group request
   const acceptGroupRequest = (item) => {
-    console.log(
-      "🚀 > file: MyGroups.jsx:48 > acceptGroupRequest > item:",
-      item.id
-    );
     set(ref(db, "grouplist/" + item.id), {
       admin: item.admin,
       adminId: item.senderId,
@@ -69,6 +63,11 @@ const MyGroups = () => {
       id: item.id,
     }).then(() => remove(ref(db, "groupJoinRequest/" + item.JoinId)));
   };
+
+  // search method filltering 
+  const fillterdMyGroups = myGroupsList.filter((item) =>
+    item.groupName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return (
     <>
       <div className="w-[32%] h-[355px] pt-5 pb-1.5 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -82,10 +81,42 @@ const MyGroups = () => {
         <ul className=" h-[86%] overflow-y-auto">
           {loading ? (
             <LoadingSpinner />
-          ) : myGroups.length === 0 ? (
+          ) : myGroupsList.length === 0 ? (
             <NoData />
+          ) : searchQuery ? (
+            fillterdMyGroups.length > 0 ? (
+              fillterdMyGroups.map((item, i) => (
+                <li
+                  key={i}
+                  className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
+                >
+                  <div className="flex items-center">
+                    <div className="relative mr-3.5">
+                      <img
+                        className="w-[54px] h-[54px] rounded-full object-cover"
+                        src={friendsImg1}
+                        alt="friendsImg1"
+                      />
+                    </div>
+                    <div className="">
+                      <h5 className="font-pops text-sm font-semibold">
+                        {item.groupName}
+                      </h5>
+                      <p className="font-pops text-xs font-medium text-[#4D4D4DBF] mt-0.5">
+                        {item.groupTitle}
+                      </p>
+                    </div>
+                  </div>
+                  <h5 className="font-pops text-[10px] font-medium text-[#00000080]">
+                    Today, 8:56pm
+                  </h5>
+                </li>
+              ))
+            ) : (
+              <NoData />
+            )
           ) : (
-            myGroups.map((item, i) => (
+            myGroupsList.map((item, i) => (
               <li
                 key={i}
                 className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"

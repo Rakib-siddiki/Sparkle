@@ -5,9 +5,13 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../handleloading/LoadingSpinner";
+import { PropTypes } from "prop-types";
 
 // for userList
-const UserList = () => {
+const UserList = ({ searchQuery } ) => {
+ UserList.propTypes = {
+   searchQuery: PropTypes.string.isRequired,
+ };
   const [loading, setLoading] = useState(true);
 
   const [userData, setUserData] = useState([]);
@@ -67,12 +71,18 @@ const UserList = () => {
     onValue(ifBlockedRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        // console.log("🚀 > file: UserList.jsx:64 > snapshot.forEach > item:", item.val())
         arr.push(item.val().blockById + item.val().blockId);
       });
       setIfBlocked(arr);
     });
   }, [db]);
+
+  // search method filltering
+
+  const filteredUser = userData.filter((item) =>
+    item.username.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
       <div className=" w-[32%] h-[355px] xxl:h-[490px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -84,10 +94,59 @@ const UserList = () => {
         </div>
         <ul className=" h-[86%] overflow-y-auto">
           {loading ? (
-            <LoadingSpinner/>
+            <LoadingSpinner />
           ) : userData.length === 0 ? (
             <NoData />
-          ) : (
+          ) : searchQuery ? filteredUser.length> 0? (
+            filteredUser.map((item, i) => (
+              <li
+                key={i}
+                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
+              >
+                <div className="flex items-center">
+                  <div className="mr-3.5">
+                    <img
+                      className="w-[54px] h-[54px] rounded-full object-cover"
+                      src={item.profile_picture}
+                      alt="profile_picture"
+                    />
+                  </div>
+                  <div>
+                    <h5 className="font-pops text-sm font-semibold">
+                      {item.username}
+                    </h5>
+                    <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
+                      Today, 8:56pm
+                    </h5>
+                  </div>
+                </div>
+                {ifBlocked.includes(data.uid + item.userId) ||
+                ifBlocked.includes(item.userId + data.uid) ? (
+                  <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
+                    blocked
+                  </div>
+                ) : isAccepted.includes(data.uid + item.userId) ||
+                  isAccepted.includes(item.userId + data.uid) ? (
+                  <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
+                    friend
+                  </div>
+                ) : friendRequestData.includes(data.uid + item.userId) ||
+                  friendRequestData.includes(item.userId + data.uid) ? (
+                  <div className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14">
+                    Pending
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => sendRequest(item)}
+                    className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14"
+                  >
+                    <BiPlusMedical className="" />
+                  </div>
+                )}
+                {/* {} */}
+              </li>
+            ))
+          ):(<NoData/> ): (
             userData.map((item, i) => (
               <li
                 key={i}
@@ -110,7 +169,6 @@ const UserList = () => {
                     </h5>
                   </div>
                 </div>
-                {console.log(item)}
                 {ifBlocked.includes(data.uid + item.userId) ||
                 ifBlocked.includes(item.userId + data.uid) ? (
                   <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
