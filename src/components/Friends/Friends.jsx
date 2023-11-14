@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import NoData from "../noDataToShow/NoData";
 import LoadingSppiner from "../handleloading/LoadingSpinner";
 import PropTypes from "prop-types";
+import { fillterdFriend } from "../reUseAble/Searching";
 const Friends = ({ searchQuery }) => {
   Friends.propTypes = {
     searchQuery: PropTypes.string.isRequired,
@@ -62,11 +63,7 @@ const Friends = ({ searchQuery }) => {
   };
 
   // search method filltering
-  const fillterdFriendList = friendList.filter((item) =>
-    data.uid == item.senderId
-      ? item.recevierName.toLowerCase().includes(searchQuery.toLowerCase())
-      : item.senderName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const fillterdFriendList = fillterdFriend(friendList,searchQuery,data.uid)
   return (
     <>
       <div className=" w-[32%] h-[355px] xxl:h-[489px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../handleloading/LoadingSpinner";
 import { PropTypes } from "prop-types";
+import { fillterdMyGroups } from "../reUseAble/Searching";
 const MyGroups = ({ searchQuery }) => {
 
   MyGroups.propTypes = {
@@ -65,9 +66,7 @@ const MyGroups = ({ searchQuery }) => {
   };
 
   // search method filltering 
-  const fillterdMyGroups = myGroupsList.filter((item) =>
-    item.groupName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const fillterdMyGroupsList = fillterdMyGroups(myGroupsList,searchQuery)
   return (
     <>
       <div className="w-[32%] h-[355px] pt-5 pb-1.5 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -84,8 +83,8 @@ const MyGroups = ({ searchQuery }) => {
           ) : myGroupsList.length === 0 ? (
             <NoData />
           ) : searchQuery ? (
-            fillterdMyGroups.length > 0 ? (
-              fillterdMyGroups.map((item, i) => (
+            fillterdMyGroupsList.length > 0 ? (
+              fillterdMyGroupsList.map((item, i) => (
                 <li
                   key={i}
                   className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"

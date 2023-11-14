@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../handleloading/LoadingSpinner";
 import { PropTypes } from "prop-types";
+import { filteredUser } from "../reUseAble/Searching";
 
 // for userList
 const UserList = ({ searchQuery } ) => {
@@ -79,9 +80,7 @@ const UserList = ({ searchQuery } ) => {
 
   // search method filltering
 
-  const filteredUser = userData.filter((item) =>
-    item.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredUserList = filteredUser(userData,searchQuery)
 
   return (
     <>
@@ -97,8 +96,8 @@ const UserList = ({ searchQuery } ) => {
             <LoadingSpinner />
           ) : userData.length === 0 ? (
             <NoData />
-          ) : searchQuery ? filteredUser.length> 0? (
-            filteredUser.map((item, i) => (
+          ) : searchQuery ? filteredUserList.length> 0? (
+            filteredUserList.map((item, i) => (
               <li
                 key={i}
                 className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"

@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../handleloading/LoadingSpinner";
 import PropTypes from "prop-types"; // Import PropTypes
+import { filteredGroups} from "../reUseAble/Searching";
 const GroupList = ({ searchQuery }) => {
   GroupList.propTypes = {
     searchQuery: PropTypes.string.isRequired,
@@ -65,9 +66,7 @@ const GroupList = ({ searchQuery }) => {
 
 
   // search method filltering
-  const filteredGroups = grouplist.filter((group) =>
-    group.groupName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredGroupsList = filteredGroups(grouplist,searchQuery)
   return (
     <>
       <div className="h-[77%] xxl:h-[338px] pt-3 xxl:mt-10 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -89,9 +88,9 @@ const GroupList = ({ searchQuery }) => {
           ) : grouplist.length === 0 ? (
             <NoData />
           ) : searchQuery ? (
-            filteredGroups.length > 0 ? (
+            filteredGroupsList.length > 0 ? (
               // Render user information here based on the filtered group data
-              filteredGroups.map((item, i) => (
+              filteredGroupsList.map((item, i) => (
                 // Render user information based on the filtered group data
                 <li
                   key={i}

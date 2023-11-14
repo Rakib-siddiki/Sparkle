@@ -12,12 +12,11 @@ import { useEffect, useState } from "react";
 import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../handleloading/LoadingSpinner";
 import { PropTypes } from "prop-types";
+import { filteredFriendRequest } from "../reUseAble/Searching";
 const FriendRequest = ({ searchQuery }) => {
-
   FriendRequest.propTypes = {
     searchQuery: PropTypes.string.isRequired,
   };
-
 
   const [loading, setLoading] = useState(true);
   const db = getDatabase();
@@ -44,7 +43,7 @@ const FriendRequest = ({ searchQuery }) => {
   };
 
   // Search method filltering
-  const filteredFriendReq = requestList.filter(item=>item.senderName.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredFriendReq = filteredFriendRequest(requestList,searchQuery)
   return (
     <>
       <div className="w-[32%] h-[355px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">

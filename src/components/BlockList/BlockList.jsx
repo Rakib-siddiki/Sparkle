@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../handleloading/LoadingSpinner";
 import PropTypes from "prop-types"; // Import PropTypes
+import { filteredBlockUsers } from "../reUseAble/Searching";
 
 const BlockedUsers = ({searchQuery}) => {
   BlockedUsers.propTypes = {
@@ -66,10 +67,8 @@ const BlockedUsers = ({searchQuery}) => {
     });
   };
 
-  const filteredBlockUsers = blocklist.filter((item) =>
-    item.block.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  console.log("🚀 > file: BlockList.jsx:72 > BlockedUsers > filteredBlockUsers:", filteredBlockUsers)
+  const filteredBlockUsersList = filteredBlockUsers(blocklist,searchQuery)
+  console.log("🚀 > file: BlockList.jsx:72 > BlockedUsers > filteredBlockUsersList:", filteredBlockUsersList)
   return (
     <>
       <div className=" w-[32%] h-[355px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -85,8 +84,8 @@ const BlockedUsers = ({searchQuery}) => {
           ) : blocklist.length === 0 ? (
             <NoData />
           ) : searchQuery ? (
-            filteredBlockUsers.length > 0 ? (
-              filteredBlockUsers.map((item, i) => (
+            filteredBlockUsersList.length > 0 ? (
+              filteredBlockUsersList.map((item, i) => (
                 <li
                   key={i}
                   className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
