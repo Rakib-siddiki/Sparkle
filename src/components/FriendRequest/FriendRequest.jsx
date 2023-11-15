@@ -13,11 +13,8 @@ import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../handleloading/LoadingSpinner";
 import { PropTypes } from "prop-types";
 import { filteredFriendRequest } from "../reUseAble/Searching";
+import FriendReqListItem from "../reUseAble/listItems/FriendReqListItem";
 const FriendRequest = ({ searchQuery }) => {
-  FriendRequest.propTypes = {
-    searchQuery: PropTypes.string.isRequired,
-  };
-
   const [loading, setLoading] = useState(true);
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
@@ -43,7 +40,7 @@ const FriendRequest = ({ searchQuery }) => {
   };
 
   // Search method filltering
-  const filteredFriendReq = filteredFriendRequest(requestList,searchQuery)
+  const filteredFriendReq = filteredFriendRequest(requestList, searchQuery);
   return (
     <>
       <div className="w-[32%] h-[355px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -62,72 +59,22 @@ const FriendRequest = ({ searchQuery }) => {
           ) : searchQuery ? (
             filteredFriendReq.length > 0 ? (
               filteredFriendReq.map((item, i) => (
-                <li
+                <FriendReqListItem
                   key={i}
-                  className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-                >
-                  <div className="flex items-center">
-                    <div className="mr-3.5">
-                      <img
-                        className="w-[70px] h-[70px] rounded-full object-cover"
-                        src={item.senderProfile_picture}
-                        alt="profile_picture"
-                      />
-                    </div>
-                    <div className="">
-                      <h5 className="font-pops text-lg font-semibold">
-                        {item.senderName}
-                      </h5>
-                      <p className="font-pops text-sm font-medium text-[#4D4D4DBF] mt-0.5">
-                        Dinner?
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mr-9">
-                    <button
-                      onClick={() => acceptRequest(item)}
-                      className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
-                    >
-                      Accept
-                    </button>
-                  </div>
-                </li>
+                  item={item}
+                  acceptRequest={acceptRequest}
+                />
               ))
             ) : (
               <NoData />
             )
           ) : (
             requestList.map((item, i) => (
-              <li
+              <FriendReqListItem
                 key={i}
-                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-              >
-                <div className="flex items-center">
-                  <div className="mr-3.5">
-                    <img
-                      className="w-[70px] h-[70px] rounded-full object-cover"
-                      src={item.senderProfile_picture}
-                      alt="profile_picture"
-                    />
-                  </div>
-                  <div className="">
-                    <h5 className="font-pops text-lg font-semibold">
-                      {item.senderName}
-                    </h5>
-                    <p className="font-pops text-sm font-medium text-[#4D4D4DBF] mt-0.5">
-                      Dinner?
-                    </p>
-                  </div>
-                </div>
-                <div className="mr-9">
-                  <button
-                    onClick={() => acceptRequest(item)}
-                    className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
-                  >
-                    Accept
-                  </button>
-                </div>
-              </li>
+                item={item}
+                acceptRequest={acceptRequest}
+              />
             ))
           )}
         </ul>
@@ -135,5 +82,7 @@ const FriendRequest = ({ searchQuery }) => {
     </>
   );
 };
-
+FriendRequest.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
 export default FriendRequest;

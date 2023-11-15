@@ -13,11 +13,8 @@ import NoData from "../noDataToShow/NoData";
 import LoadingSppiner from "../handleloading/LoadingSpinner";
 import PropTypes from "prop-types";
 import { fillterdFriend } from "../reUseAble/Searching";
+import FriendListItem from "../reUseAble/listItems/FriendListItem";
 const Friends = ({ searchQuery }) => {
-  Friends.propTypes = {
-    searchQuery: PropTypes.string.isRequired,
-  };
-
   const [loading, setLoading] = useState(true);
 
   const db = getDatabase();
@@ -63,7 +60,7 @@ const Friends = ({ searchQuery }) => {
   };
 
   // search method filltering
-  const fillterdFriendList = fillterdFriend(friendList,searchQuery,data.uid)
+  const fillterdFriendList = fillterdFriend(friendList, searchQuery, data.uid);
   return (
     <>
       <div className=" w-[32%] h-[355px] xxl:h-[489px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -81,80 +78,24 @@ const Friends = ({ searchQuery }) => {
           ) : searchQuery ? (
             fillterdFriendList.length > 0 ? (
               fillterdFriendList.map((item, i) => (
-                <li
+                <FriendListItem
                   key={i}
-                  className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-                >
-                  <div className="flex items-center">
-                    <div className="relative mr-3.5 ">
-                      <img
-                        className="w-[54px] h-[54px] rounded-full object-cover"
-                        src={
-                          data.uid == item.senderId
-                            ? item.recevierProfile_picture
-                            : item.senderProfile_picture
-                        }
-                        alt="friendsImg1"
-                      />
-                    </div>
-                    <div>
-                      <h5 className="font-pops text-sm font-semibold">
-                        {data.uid == item.senderId
-                          ? item.recevierName
-                          : item.senderName}
-                      </h5>
-                      <p className="font-pops text-xs font-medium text-[#4D4D4DBF] mt-0.5">
-                        Dinner ?
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => blockedUsers(item)}
-                    className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize"
-                  >
-                    Block
-                  </button>
-                </li>
+                  item={item}
+                  data={data}
+                  blockedUsers={blockedUsers}
+                />
               ))
             ) : (
               <NoData />
             )
           ) : (
             friendList.map((item, i) => (
-              <li
+              <FriendListItem
                 key={i}
-                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-              >
-                <div className="flex items-center">
-                  <div className="relative mr-3.5 ">
-                    <img
-                      className="w-[54px] h-[54px] rounded-full object-cover"
-                      src={
-                        data.uid == item.senderId
-                          ? item.recevierProfile_picture
-                          : item.senderProfile_picture
-                      }
-                      alt="friendsImg1"
-                    />
-                  </div>
-                  <div>
-                    <h5 className="font-pops text-sm font-semibold">
-                      {data.uid == item.senderId
-                        ? item.recevierName
-                        : item.senderName}
-                    </h5>
-                    <p className="font-pops text-xs font-medium text-[#4D4D4DBF] mt-0.5">
-                      Dinner ?
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => blockedUsers(item)}
-                  className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize"
-                >
-                  Block
-                </button>
-              </li>
+                item={item}
+                data={data}
+                blockedUsers={blockedUsers}
+              />
             ))
           )}
         </ul>
@@ -162,5 +103,7 @@ const Friends = ({ searchQuery }) => {
     </>
   );
 };
-
+Friends.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
 export default Friends;

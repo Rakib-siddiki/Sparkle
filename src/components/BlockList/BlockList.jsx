@@ -13,6 +13,7 @@ import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../handleloading/LoadingSpinner";
 import PropTypes from "prop-types"; // Import PropTypes
 import { filteredBlockUsers } from "../reUseAble/Searching";
+import BlockListItemItem from "../reUseAble/listItems/BlockListItemItem";
 
 const BlockedUsers = ({searchQuery}) => {
   BlockedUsers.propTypes = {
@@ -68,7 +69,6 @@ const BlockedUsers = ({searchQuery}) => {
   };
 
   const filteredBlockUsersList = filteredBlockUsers(blocklist,searchQuery)
-  console.log("🚀 > file: BlockList.jsx:72 > BlockedUsers > filteredBlockUsersList:", filteredBlockUsersList)
   return (
     <>
       <div className=" w-[32%] h-[355px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -86,76 +86,22 @@ const BlockedUsers = ({searchQuery}) => {
           ) : searchQuery ? (
             filteredBlockUsersList.length > 0 ? (
               filteredBlockUsersList.map((item, i) => (
-                <li
+                <BlockListItemItem
                   key={i}
-                  className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-                >
-                  <div className="flex items-center">
-                    <div className="mr-3.5">
-                      <img
-                        className="w-[54px] h-[54px] rounded-full object-cover"
-                        src={item.profile_Picture}
-                        alt="friendsImg1"
-                      />
-                    </div>
-                    <div className="">
-                      <h5 className="font-pops text-sm font-semibold">
-                        {item.block}
-                      </h5>
-                      <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
-                        Today, 8:56pm
-                      </h5>
-                    </div>
-                  </div>
-                  <div className="mr-9">
-                    {!item.blockById && (
-                      <button
-                        onClick={() => unblockUser(item)}
-                        className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
-                      >
-                        Unblock
-                      </button>
-                    )}
-                  </div>
-                </li>
+                  item={item}
+                  unblockUser={unblockUser}
+                />
               ))
             ) : (
               <NoData />
             )
           ) : (
             blocklist.map((item, i) => (
-              <li
+              <BlockListItemItem
                 key={i}
-                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-              >
-                <div className="flex items-center">
-                  <div className="mr-3.5">
-                    <img
-                      className="w-[54px] h-[54px] rounded-full object-cover"
-                      src={item.profile_Picture}
-                      alt="friendsImg1"
-                    />
-                  </div>
-                  <div className="">
-                    <h5 className="font-pops text-sm font-semibold">
-                      {item.block}
-                    </h5>
-                    <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
-                      Today, 8:56pm
-                    </h5>
-                  </div>
-                </div>
-                <div className="mr-9">
-                  {!item.blockById && (
-                    <button
-                      onClick={() => unblockUser(item)}
-                      className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
-                    >
-                      Unblock
-                    </button>
-                  )}
-                </div>
-              </li>
+                item={item}
+                unblockUser={unblockUser}
+              />
             ))
           )}
         </ul>
