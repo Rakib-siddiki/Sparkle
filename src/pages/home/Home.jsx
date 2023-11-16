@@ -51,11 +51,8 @@ const Home = () => {
       ) : verify && data ? (
         <section className="h-screen md:max-h-screen  pt-16 p-2.5 md:p-3 xl:p-5 md:grid grid-cols-9 gap-10 lg:landscape:gap-5 xl:landscape:gap-10">
           <div className="col-span-1">
-            <Sidebar />
+            <Sidebar active="home" />
           </div>
-          {/* <div className="md:h-full col-span-1 fixed md:static w-full left-0 bottom-0 z-[70]">
-                     <Sidebar />
-                  </div> */}
 
           <div className="w-full h-full md:col-span-8 flex flex-wrap justify-between md:content-between xl:content-around">
             {/* Group List */}

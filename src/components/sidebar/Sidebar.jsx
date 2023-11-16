@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 // icons
@@ -22,7 +22,8 @@ import { GiThreeFriends } from "react-icons/gi";
 import { PiUserListBold } from "react-icons/pi";
 import { MdOutlineBlock } from "react-icons/md";
 
-const Sidebar = () => {
+import PropTypes from "prop-types";
+const Sidebar = ({active}) => {
   // uplod profile picture
   const [upLoadProfilePicture, setUpLoadProfilePicture] = useState(false);
   const cancleUpload = () => {
@@ -75,21 +76,37 @@ const Sidebar = () => {
             </h2>
           </div>
           <ul className="w-full md:mb-12 flex md:block justify-between items-center px-2 md:px-0">
-            <li className="hidden md:block h-12 relative mb-12 text-3xl md:text-4xl xl:text-5xl text-primary cursor-pointer before:content-[''] before:h-[70px] before:xl:h-[80px] before:w-[84%] before:bg-white before:absolute before:top-[50%] before:right-0 before:translate-y-[-50%] before:rounded-l-20px before:transition-all before:duration-300 before:ease-linear after:content-[''] after:h-[70px] after:xl:h-[80px] after:w-[8px] after:bg-primary after:absolute after:top-[50%] after:right-0 after:translate-y-[-50%] after:rounded-l-20px after:transition-all after:duration-300 after:ease-linear  hover:bg-primary">
-              <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] transition-all duration-300 ease-linear">
-                <HomeIcon />
+            <Link to={"/"}>
+              <div
+                className={`hidden md:block h-12 relative mb-12 text-3xl md:text-4xl xl:text-5xl text-[#BAD1FF] cursor-pointer before:content-[''] before:h-[70px] before:xl:h-[80px] before:w-[84%] ${
+                  active == "home"
+                    ? "before:bg-white text-primary"
+                    : `bg-transparen`
+                }  before:absolute before:top-[50%] before:right-0 before:translate-y-[-50%] before:rounded-l-20px before:transition-all before:duration-300 before:ease-linear after:content-[''] after:h-[70px] after:xl:h-[80px] after:w-[8px] after:bg-primary after:absolute after:top-[50%] after:right-0 after:translate-y-[-50%] after:rounded-l-20px after:transition-all after:duration-300 after:ease-linear  hover:bg-primary`}
+              >
+                <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] transition-all duration-300 ease-linear">
+                  <HomeIcon />
+                </div>
               </div>
-            </li>
+            </Link>
             <li className="w-full mx-3.5 sm:landscape:mx-12 md:landscape:mx-0 md:mx-0 h-[75px] md:h-12 md:hidden relative md:mb-12 text-3xl md:text-5xl text-primary cursor-pointer before:content-[''] before:h-[80%] before:w-full before:bg-white before:absolute before:bottom-0 before:right-0 before:rounded-t-lg before:transition-all before:duration-300 before:ease-linear after:content-[''] after:h-2.5 after:w-full after:bg-primary after:absolute after:bottom-0 after:right-0 after:rounded-t-lg after:transition-all after:duration-300 after:ease-linear ">
               <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] transition-all duration-300 ease-linear">
                 <HomeIcon />
               </div>
             </li>
-            <li className="w-full mx-3.5 sm:landscape:mx-12 md:landscape:mx-0 md:mx-0 h-[75px] md:h-12 relative md:mb-12 text-3xl md:text-4xl xl:text-5xl text-[#BAD1FF] cursor-pointer">
-              <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] transition-all duration-300 ease-linear">
-                <MessageIcon />
+            <Link to={"/message"}>
+              <div
+                className={`w-full mx-3.5 sm:landscape:mx-12 md:landscape:mx-0 md:mx-0 h-[75px] md:h-12 relative md:mb-12 text-3xl md:text-4xl xl:text-5xl text-[#BAD1FF] cursor-pointer before:content-[''] before:h-[70px] before:xl:h-[80px] before:w-[84%] ${
+                  active == "message"
+                    ? "before:bg-white text-primary"
+                    : `bg-transparent`
+                }  before:absolute before:top-[50%] before:right-0 before:translate-y-[-50%] before:rounded-l-20px before:transition-all before:duration-300 before:ease-linear after:content-[''] after:h-[70px] after:xl:h-[80px] after:w-[8px] after:bg-primary after:absolute after:top-[50%] after:right-0 after:translate-y-[-50%] after:rounded-l-20px after:transition-all after:duration-300 after:ease-linear  hover:bg-primary`}
+              >
+                <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] transition-all duration-300 ease-linear">
+                  <MessageIcon />
+                </div>
               </div>
-            </li>
+            </Link>
             <li className="w-full mx-3.5 sm:landscape:mx-12 md:landscape:mx-0 md:mx-0 h-[75px] md:h-12 relative md:mb-12 text-3xl md:text-4xl xl:text-[60px] text-[#BAD1FF] cursor-pointer">
               <div className="absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] transition-all duration-300 ease-linear">
                 <NotifiactionIcon />
@@ -100,9 +117,6 @@ const Sidebar = () => {
                 <SettingIcon />
               </div>
             </li>
-            {/* <li className="h-12 relative text-5xl text-[#BAD1FF] cursor-pointer before:content-[''] before:h-[80px] before:w-0 before:bg-white before:absolute before:top-[50%] before:right-0 before:translate-y-[-50%] before:rounded-l-20px before:transition-all before:duration-300 before:ease-linear after:content-[''] after:h-[80px] after:w-0 after:bg-primary after:absolute after:top-[50%] after:right-0 after:translate-y-[-50%] after:rounded-l-20px after:transition-all after:duration-300 after:ease-linear  hover:before:w-[84%] hover:after:w-[8px] hover:bg-primary">
-                  <SlSettings className='absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] transition-all duration-300 ease-linear drop-shadow-iconDropShadow' />
-               </li> */}
           </ul>
           <div
             onClick={handleLogOut}
@@ -229,5 +243,7 @@ const Sidebar = () => {
     </>
   );
 };
-
+Sidebar.propTypes={
+  active:PropTypes.string.isRequired,
+}
 export default Sidebar;

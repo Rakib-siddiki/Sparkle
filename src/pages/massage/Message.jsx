@@ -1,4 +1,4 @@
-import React from "react";
+
 import Chat from "../../components/Chat/Chat";
 import ChatFriends from "../../components/Friends/Friends";
 import Groups from "../../components/GroupList/GroupList";
@@ -10,7 +10,7 @@ const Message = () => {
     <>
       <section className="h-screen pt-16 p-2.5 md:p-3 xl:p-5 md:grid grid-cols-9 gap-10 lg:landscape:gap-5 xl:landscape:gap-10">
         <div className="col-span-1">
-          <Sidebar />
+          <Sidebar active="message" />
         </div>
 
         <div className="w-full h-full  md:col-span-8 grid grid-cols-12 gap-7">
@@ -22,7 +22,7 @@ const Message = () => {
               </div>
             </div>
             <div className="w-full h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px] ">
-              <ChatFriends />
+              <ChatFriends active={"message"} />
             </div>
           </div>
           <div className="col-span-8 ">

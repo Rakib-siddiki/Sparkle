@@ -2,8 +2,44 @@ import { HiDotsVertical } from "react-icons/hi";
 import { FaPaperPlane } from "react-icons/fa";
 import { BsFillEmojiLaughingFill, BsFillCameraFill } from "react-icons/bs";
 import groupImg1 from "../../assets/home/groupLists/groupImg1.png";
+import img from '../../assets/login/login_img.jpg'
+import ModalImage from "react-modal-image";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
 
 const Chat = () => {
+  const activeData = useSelector((state) => state.activeChat.activeValue);
+  const db=getDatabase()
+  console.log("🚀 > file: Chat.jsx:11 > Chat > activeData:", activeData.status)
+   const [message,setMessage]=useState('')
+  const [showMessage,setShowMessage]=useState([])
+   const handleMessageSend =()=> {
+    if (activeData.status == 'single') {
+      set(push(ref(db, "chatting/")), {
+        status: "single",
+        message:message
+      });
+      setMessage('')
+    }
+   }
+   
+  useEffect(() => {
+    const friendListRef = ref(db, "chatting/");
+    onValue(friendListRef, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {         
+          arr.push(item.val().message);
+          console.log("🚀 > file: Chat.jsx:33 > snapshot.forEach > arr:", arr)
+      });
+      setShowMessage(arr)
+    });
+  }, [db]);
+  const handleKeyDown =(e)=> {
+    if (e.target.key === "Enter") {
+      handleMessageSend()
+    }
+  }
   return (
     <>
       <div className="w-full h-full rounded-custom shadow-homeCardShadow pl-12 pr-7 grid grid-rows-13">
@@ -17,7 +53,9 @@ const Chat = () => {
               />
             </div>
             <div className="ml-8">
-              <h2 className="font-popstext-2xl font-semibold">Raghav</h2>
+              <h2 className="font-popstext-2xl font-semibold">
+                {activeData.name}
+              </h2>
               <p className="font-popstext-sm text-[#000000D9]">Online</p>
             </div>
           </div>
@@ -26,67 +64,62 @@ const Chat = () => {
           </div>
         </div>
         <div className="row-span-9 py-4">
-          <div className="sunnyy h-[480px] min-h-full max-h-full overflow-y-auto">
+          <div className=" h-[480px] min-h-full max-h-full overflow-y-scroll">
+            {/* reacivier msg  */}
             <div className="mt-8">
-              <h4 className="message inline-block max-w-[85%] py-[13px] px-[27px] rounded-e-10px rounded-t-10px bg-[#F1F1F1] font-popstext-base font-medium tracking-wide ml-6 relative before:content-[''] before:absolute before:left-0 before:bottom-0 before:-translate-x-1/2 before:rounded-[5px] before:border-solid before:border-t-22 before:border-r-22 before:border-b-20 before:border-l-28 before:border-t-transparent before:border-r-transparent before:border-b-[#F1F1F1] before:border-l-transparent">
+              <h4 className=" inline-block max-w-[85%] py-[13px] px-[27px] rounded-e-10px rounded-t-10px bg-[#F1F1F1] font-popstext-base font-medium tracking-wide ml-6 relative before:content-[''] before:absolute before:left-0 before:bottom-0 before:-translate-x-1/2 before:rounded-[5px] before:border-solid before:border-t-22 before:border-r-22 before:border-b-20 before:border-l-28 before:border-t-transparent before:border-r-transparent before:border-b-[#F1F1F1] before:border-l-transparent">
                 Hello...
               </h4>
-              <p className="font-popstext-xs font-medium text-[#00000040] mt-2">
+              <p className="font-pops text-xs font-medium text-[#00000040] mt-2">
                 Today, 2:13pm
               </p>
             </div>
-            <div className="mt-8">
-              <h4 className="message inline-block max-w-[85%] py-[13px] px-[27px] rounded-e-10px rounded-t-10px bg-[#F1F1F1] font-popstext-base font-medium tracking-wide ml-6 relative before:content-[''] before:absolute before:left-0 before:bottom-0 before:-translate-x-1/2 before:rounded-[5px] before:border-solid before:border-t-22 before:border-r-22 before:border-b-20 before:border-l-28 before:border-t-transparent before:border-r-transparent before:border-b-[#F1F1F1] before:border-l-transparent">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam
-                nemo ad non reiciendis ipsam repellat alias placeat, quaerat eum
-                animi. Vel, harum culpa maiores distinctio facilis excepturi
-                soluta provident, neque nisi, non similique fuga amet qui. Aut,
-                voluptatem. Quibusdam voluptates natus temporibus, blanditiis
-                eum ea.
-              </h4>
-              <p className="font-popstext-xs font-medium text-[#00000040] mt-2">
+            {/* Reciver img  */}
+            <div className="w-52 mt-2 rounded-sm overflow-hidden">
+              <ModalImage small={img} large={img} alt="image" />
+              <p className="font-pops text-xs font-medium text-[#00000040] mt-2">
                 Today, 2:13pm
               </p>
             </div>
-            <div className="mt-8">
-              <h4 className="message inline-block max-w-[85%] py-[13px] px-[27px] rounded-e-10px rounded-t-10px bg-[#F1F1F1] font-popstext-base font-medium tracking-wide ml-6 relative before:content-[''] before:absolute before:left-0 before:bottom-0 before:-translate-x-1/2 before:rounded-[5px] before:border-solid before:border-t-22 before:border-r-22 before:border-b-20 before:border-l-28 before:border-t-transparent before:border-r-transparent before:border-b-[#F1F1F1] before:border-l-transparent">
-                I am doing well. Can we meet up tomorrow?
-              </h4>
-              <p className="font-popstext-xs font-medium text-[#00000040] mt-2">
-                Today, 2:13pm
-              </p>
+
+            {/* sender img  */}
+            <div className="flex flex-col items-end">
+              <div className="w-52 mt-2 rounded-sm overflow-hidden text-right">
+                <ModalImage small={img} large={img} alt="image" />
+                <p className="font-pops text-xs font-medium text-[#00000040] mt-2">
+                  Today, 2:13pm
+                </p>
+              </div>
             </div>
-            <div className="mt-8 flex flex-col items-end">
-              <h4 className="inline-block max-w-[85%] py-[13px] px-[27px] rounded-e-10px rounded-10px bg-primary font-popstext-base font-medium text-white tracking-wide mr-6 relative before:content-[''] before:absolute before:right-0 before:bottom-0 before:translate-x-[20px] before:rounded-[5px] before:border-solid before:border-t-22 before:border-r-22 before:border-b-20 before:border-l-28 before:border-t-transparent before:border-r-transparent before:border-b-primary before:border-l-transparent">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
-                mollitia corporis obcaecati sequi quidem temporibus, reiciendis
-                illum aperiam impedit incidunt modi odio quam nostrum neque at
-                consectetur repellat architecto omnis!
-              </h4>
-              <h3 className="font-popstext-xs font-medium text-[#00000040] mt-2">
-                Today, 2:13pm
-              </h3>
-            </div>
-            <div className="mt-8 flex flex-col items-end">
-              <h4 className="inline-block max-w-[85%] py-[13px] px-[27px] rounded-e-10px rounded-10px bg-primary font-popstext-base font-medium text-white tracking-wide mr-6 relative before:content-[''] before:absolute before:right-0 before:bottom-0 before:translate-x-[20px] before:rounded-[5px] before:border-solid before:border-t-22 before:border-r-22 before:border-b-20 before:border-l-28 before:border-t-transparent before:border-r-transparent before:border-b-primary before:border-l-transparent">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi
-                mollitia corporis obcaecati sequi quidem temporibus, reiciendis
-                illum aperiam impedit incidunt modi odio quam nostrum neque at
-                consectetur repellat architecto omnis!
-              </h4>
-              <h3 className="font-popstext-xs font-medium text-[#00000040] mt-2">
-                Today, 2:13pm
-              </h3>
-            </div>
+            {/* senderMsg */}
+            {showMessage.map((item, i) => (
+                  <div key={i} className="mt-4 flex flex-col items-end">
+                    <h4 className="inline-block max-w-[85%] py-[13px] px-[27px] rounded-e-10px rounded-10px bg-primary font-popstext-base font-medium text-white tracking-wide mr-6 relative before:content-[''] before:absolute before:right-0 before:bottom-0 before:translate-x-[20px] before:rounded-[5px] before:border-solid before:border-t-22 before:border-r-22 before:border-b-20 before:border-l-28 before:border-t-transparent before:border-r-transparent before:border-b-primary before:border-l-transparent">
+                      {item}
+                    </h4>
+                    <h3 className="font-pops text-xs font-medium text-[#00000040] mt-2">
+                      Today, 2:13pm
+                    </h3>
+                  </div>
+                ))}
           </div>
         </div>
         <div className="row-span-2 flex items-center border-t-[1px] border-solid border-[#00000040]">
-          <form action="" className="flex w-full">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+            action=""
+            className="flex w-full"
+          >
             <div className="relative w-full">
-              <textarea
+              <input
+              value={message}
+                onKeyDown={handleKeyDown}
+                onChange={(e) => setMessage(e.target.value)}
                 className="w-full focus:outline-none rounded-10px h-[60px] py-4 pl-4 pr-24 bg-[#F1F1F1] font-popstext-lg resize-none"
                 placeholder="Message"
-              ></textarea>
+              ></input>
               <div className="flex items-center absolute top-1/2 right-5 -translate-y-1/2 text-[#00000080]">
                 <BsFillEmojiLaughingFill className="text-[22px] mr-4 cursor-pointer" />
                 <BsFillCameraFill className="text-2xl cursor-pointer" />
@@ -94,6 +127,7 @@ const Chat = () => {
             </div>
             <button
               type="button"
+              onClick={handleMessageSend}
               className="text-lg bg-primary text-white w-[60px] h-[60px] flex items-center justify-center rounded-10px ml-5"
             >
               <FaPaperPlane />
