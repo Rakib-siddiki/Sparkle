@@ -1,23 +1,27 @@
 import { useState } from "react";
 import { getDatabase, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
+
 // eslint-disable-next-line react/prop-types
 const CreatePopUp = ({ handleShow }) => {
-  const data = useSelector((state) => state.userInfo.userValue); // getting value from store
+  const data = useSelector((state) => state.userInfo.userValue);
 
   const db = getDatabase();
   const [groupName, setGroupName] = useState("");
   const [groupTitle, setGroupTitle] = useState("");
   const [nameError, setNameError] = useState(false);
   const [titleError, setTitleError] = useState(false);
+
   const handleNameChange = (e) => {
     setGroupName(e.target.value);
     setNameError("");
   };
+
   const handleTitleChange = (e) => {
     setGroupTitle(e.target.value);
     setTitleError("");
   };
+
   const sendGroupData = () => {
     if (!groupName) {
       setNameError("Enter your Group Name");
@@ -33,11 +37,13 @@ const CreatePopUp = ({ handleShow }) => {
       }).then(() => handleShow());
     }
   };
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       sendGroupData();
     }
   };
+
   return (
     <>
       <section>

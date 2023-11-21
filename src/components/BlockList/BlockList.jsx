@@ -11,8 +11,10 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import LoadingSpinner from "../loading/LoadingSpinner";
 import NoData from "../noDataToShow/NoData";
-
-const BlockedUsers = () => {
+import { filteredBlockUsers } from "../reUseAble/Searching";
+import PropTypes from "prop-types"; // Import PropTypes
+import BlockListItemItem from "../reUseAble/listItems/BlockListItemItem";
+const BlockedUsers = ({searchQuery}) => {
   const data = useSelector((state) => state.userInfo.userValue);
   const [loading, setLoading] = useState(true);
   const db = getDatabase();
@@ -68,6 +70,9 @@ const BlockedUsers = () => {
       remove(ref(db, "blockedUsers/" + item.id));
     });
   };
+  // search method for blockUsers
+  const filteredBlockUsersList = filteredBlockUsers(blocklist, searchQuery);
+
   return (
     <>
       <div className="w-full h-full pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -77,53 +82,38 @@ const BlockedUsers = () => {
             <BsThreeDotsVertical />
           </div>
         </div>
-        <ul className="eraseBorder h-[86%] overflow-y-auto">
+        <ul className=" h-[86%] overflow-y-auto">
           {loading ? (
-            <LoadingSpinner/>
+            <LoadingSpinner />
           ) : blocklist.length === 0 ? (
-            <NoData/>
-          ) : (blocklist.map((item, i) => (
-            <li
-              key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="mr-3.5">
-                  <img
-                    className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={item.profile}
-                    alt="friendsImg1"
-                  />
-                </div>
-                <div className="">
-                  <h5 className="font-pops text-sm font-semibold">
-                    {item.UserName}
-                  </h5>
-                  <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
-                    Today, 8:56pm
-                  </h5>
-                </div>
-                {console.log(
-                  "🚀 > file: BlockList.jsx:67 > BlockedUsers > item:",
-                  item
-                )}
-              </div>
-              <div className="mr-9">
-                {item.blockedById && (
-                  <button
-                    onClick={() => unblockUser(item)}
-                    className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
-                  >
-                    Unblock
-                  </button>
-                )}
-              </div>
-            </li>
-          )))}
+            <NoData />
+          ) : searchQuery ? (
+            filteredBlockUsersList.length > 0 ? (
+              filteredBlockUsersList.map((item, i) => (
+                <BlockListItemItem
+                  key={i}
+                  item={item}
+                  unblockUser={unblockUser}
+                />
+              ))
+            ) : (
+              <NoData />
+            )
+          ) : (
+            blocklist.map((item, i) => (
+              <BlockListItemItem
+                key={i}
+                item={item}
+                unblockUser={unblockUser}
+              />
+            ))
+          )}
         </ul>
       </div>
     </>
   );
 };
-
+BlockedUsers.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
 export default BlockedUsers;

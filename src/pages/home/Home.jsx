@@ -13,6 +13,8 @@ import BlockedUsers from "../../components/BlockList/BlockList";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import { ColorRing } from "react-loader-spinner";
 import { userLogInfo } from "../../slices/userSlice";
+
+
 const Home = () => {
   const auth = getAuth();
   const dispatch = useDispatch();
@@ -20,6 +22,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const data = useSelector((state) => state.userInfo.userValue); // getting value from store
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     if (!data) {
       navigate("/login");
@@ -58,25 +61,25 @@ const Home = () => {
             {/* Group List */}
             <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
               <div className="h-full flex flex-col justify-between">
-                <SearchBox />
-                <GroupList />
+                <SearchBox onSearch={(query) => setSearchQuery(query)} />
+                <GroupList searchQuery={searchQuery} />
               </div>
             </div>
 
             <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
-              <Friends />
+              <Friends searchQuery={searchQuery} />
             </div>
             <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
-              <UserList />
+              <UserList searchQuery={searchQuery} />
             </div>
             <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
-              <FriendRequest />
+              <FriendRequest searchQuery={searchQuery} />
             </div>
             <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px]">
-              <MyGroups />
+              <MyGroups searchQuery={searchQuery} />
             </div>
             <div className="w-full md:w-[32%] h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px] ">
-              <BlockedUsers />
+              <BlockedUsers searchQuery={searchQuery} />
             </div>
           </div>
         </section>
@@ -87,7 +90,7 @@ const Home = () => {
               Please Verify Your Email
             </h1>
             <button
-              onClick={()=>(navigate('/login'))}
+              onClick={() => navigate("/login")}
               className="py-5 px-7 font-nunito text-xl text-black font-semibold text-center bg-white rounded-[9px] hover:text-white hover:bg-[#FF9A00] duration-300"
               type="button"
             >

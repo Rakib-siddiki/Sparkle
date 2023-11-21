@@ -11,8 +11,11 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../loading/LoadingSpinner";
 import NoData from "../noDataToShow/NoData";
+import { filteredFriendRequest } from "../reUseAble/Searching";
+import { PropTypes } from "prop-types";
+import FriendReqListItem from "../reUseAble/listItems/FriendReqListItem";
 
-const FriendRequest = () => {
+const FriendRequest = ({searchQuery}) => {
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
   const [loading, setLoading] = useState(true);
@@ -37,6 +40,9 @@ const FriendRequest = () => {
     }).then(() => remove(ref(db, "friendRequest/" + item.userId)));
   };
 
+  // Search method filltering
+  const filteredFriendReq = filteredFriendRequest(requestList, searchQuery);
+
   return (
     <>
       <div className="w-full  h-full  pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -47,47 +53,38 @@ const FriendRequest = () => {
           </div>
         </div>
 
-        <ul className="eraseBorder h-[88%] overflow-y-auto">
+        <ul className=" h-[88%] overflow-y-auto">
           {loading ? (
-            <LoadingSpinner/>
+            <LoadingSpinner />
           ) : requestList.length === 0 ? (
-            <NoData/>
-          ) : (requestList.map((item, i) => (
-            <li
-              key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="mr-3.5">
-                  <img
-                    className="w-[70px] h-[70px] rounded-full object-cover"
-                    src={item.senderProfile_picture}
-                    alt="profile_picture"
-                  />
-                </div>
-                <div className="">
-                  <h5 className="font-pops text-lg font-semibold">
-                    {item.senderName}
-                  </h5>
-                  <p className="font-pops text-sm font-medium text-[#4D4D4DBF] mt-0.5">
-                    Dinner?
-                  </p>
-                </div>
-              </div>
-              <div className="mr-9">
-                <button
-                  onClick={() => acceptRequest(item)}
-                  className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"
-                >
-                  Accept
-                </button>
-              </div>
-            </li>
-          )))}
+            <NoData />
+          ) : searchQuery ? (
+            filteredFriendReq.length > 0 ? (
+              filteredFriendReq.map((item, i) => (
+                <FriendReqListItem
+                  key={i}
+                  item={item}
+                  acceptRequest={acceptRequest}
+                />
+              ))
+            ) : (
+              <NoData />
+            )
+          ) : (
+            requestList.map((item, i) => (
+              <FriendReqListItem
+                key={i}
+                item={item}
+                acceptRequest={acceptRequest}
+              />
+            ))
+          )}
         </ul>
       </div>
     </>
   );
 };
-
+FriendRequest.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
 export default FriendRequest;

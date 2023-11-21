@@ -1,60 +1,68 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-
-import friendsImg1 from "../../assets/home/friends/friendsImg1.png";
 import { getDatabase, ref, onValue, set, remove } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../loading/LoadingSpinner";
-const MyGroups = () => {
-  const db = getDatabase();
-  const [myGroups, setMyGroups] = useState([]);
+import { PropTypes } from "prop-types";
+import { fillterdMyGroups } from "../reUseAble/Searching";
+import MyGroupListItem from "../reUseAble/listItems/MyGroupListItem";
+const MyGroups = ({ searchQuery }) => {
   const [loading, setLoading] = useState(true);
-  const [groupJoinRequest, setGroupJoinRequest] = useState([]);
-   const data = useSelector((state) => state.userInfo.userValue);
 
-// getting my group
+  const [myGroupsList, setMyGroupsList] = useState([]);
+  const [getJoinRequest, setGetJoinRequest] = useState([]);
+  const data = useSelector((state) => state.userInfo.userValue); // getting value from store
+  const db = getDatabase();
+  // my own group
   useEffect(() => {
-    const myGroupsRef = ref(db, "groupList");
+    const myGroupsRef = ref(db, "grouplist/");
     onValue(myGroupsRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (data.uid == item.val().adminId ) {          
-          arr.push({ ...item.val()});
-        }else if (data.uid == item.val().newJoinId) {
-          arr.push({ ...item.val() });
+        if (data.uid == item.val().adminId) {
+          arr.push({ ...item.val(), id: item.key });
+        }
+        if (data.uid == item.val().othersGroupId) {
+          arr.push({ ...item.val(), id: item.key });
         }
       });
-      setMyGroups(arr);
+
+      setMyGroupsList(arr);
       setLoading(false);
     });
-  }, [data.uid,db]);
-
-  //get group join request
+  }, [data.uid, db]);
+  //  get groupJoinRequests
   useEffect(() => {
-    const groupJoinRequestRef = ref(db, "groupJoinRequest");
-    onValue(groupJoinRequestRef, (snapshot) => {
+    const getJoinRequestRef = ref(db, "groupJoinRequest/");
+    onValue(getJoinRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (data.uid == item.val().adminId ) {
+        if (data.uid == item.val().adminId) {
           arr.push({ ...item.val(), JoinId: item.key });
         }
       });
-      setGroupJoinRequest(arr);
+
+      setGetJoinRequest(arr);
     });
   }, [data.uid, db]);
- 
-  // makeing accept function
-  const acceptGroupReq = (item) => {
-    console.log("🚀 > file: MyGroups.jsx:44 > acceptGroupReq > item:", item)
-    set(ref(db, "groupList/" + item.listId), {
+  // Acepting group request
+  const acceptGroupRequest = (item) => {
+    set(ref(db, "grouplist/" + item.id), {
+      admin: item.admin,
+      adminId: item.senderId,
+      othersGroupId: item.adminId,
       groupName: item.groupName,
       groupTitle: item.groupTitle,
-      adminId: item.adminId,
-      admin: item.admin,
-      newJoinId: item.senderId,
+      id: item.id,
     }).then(() => remove(ref(db, "groupJoinRequest/" + item.JoinId)));
   };
+  const cancleGroupRequest = (item) => {
+    remove(ref(db, "groupJoinRequest/" + item.JoinId));
+  };
+
+  // search method filltering
+  const fillterdMyGroupsList = fillterdMyGroups(myGroupsList, searchQuery);
   return (
     <>
       <div className="w-full  h-full  pt-5 pb-1.5 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -65,71 +73,39 @@ const MyGroups = () => {
           </div>
         </div>
 
-        <ul className="eraseBorder h-[86%] overflow-y-auto">
+        <ul className=" h-[86%] overflow-y-auto">
           {loading ? (
             <LoadingSpinner />
-          ) : myGroups.length === 0 ? (
+          ) : myGroupsList.length === 0 ? (
             <NoData />
-          ) : (myGroups.map((item, i) => (
-            <li
+          ) : searchQuery ? (
+            fillterdMyGroupsList.length > 0 ? (
+              fillterdMyGroupsList.map((item, i) => (
+                <MyGroupListItem type="myGroupList" key={i} item={item} />
+              ))
+            ) : (
+              <NoData />
+            )
+          ) : (
+            myGroupsList.map((item, i) => (
+              <MyGroupListItem type="myGroupList" key={i} item={item} />
+            ))
+          )}
+          {getJoinRequest.map((item, i) => (
+            <MyGroupListItem
+              type="joinRequestlist"
               key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="relative mr-3.5">
-                  <img
-                    className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={friendsImg1}
-                    alt="Ellipse2.png"
-                  />
-                </div>
-                <div className="">
-                  <h5 className="font-popstext-sm font-semibold">
-                    {item.groupName}
-                  </h5>
-                  <p className="font-popstext-xs font-medium text-[#4D4D4DBF] mt-0.5">
-                    {item.groupTitle}
-                  </p>
-                </div>
-              </div>
-              <h5 className="font-popstext-[10px] font-medium text-[#00000080]">
-                Today, 8:56pm
-              </h5>
-            </li>
-          )))}
-          {groupJoinRequest.map((item, i) => (
-            <li
-              key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="relative mr-3.5">
-                  <img
-                    className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={friendsImg1}
-                    alt="Ellipse2.png"
-                  />
-                </div>
-                <div className="">
-                  <h5 className="font-popstext-sm font-semibold">
-                    {item.senderName}
-                  </h5>
-                  <p className="font-popstext-xs font-medium text-[#4D4D4DBF] mt-0.5">
-                    {item.senderName} Wants to join!
-                  </p>
-                </div>
-              </div>
-              <button 
-              onClick={()=>acceptGroupReq(item)}
-              className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300">
-                Accept
-              </button>
-            </li>
+              item={item}
+              acceptGroupRequest={acceptGroupRequest}
+              cancleGroupRequest={cancleGroupRequest}
+            />
           ))}
         </ul>
       </div>
     </>
   );
 };
-
+MyGroups.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
 export default MyGroups;

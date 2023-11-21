@@ -1,13 +1,16 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { BiPlusMedical } from "react-icons/bi";
+// import { BiPlusMedical } from "react-icons/bi";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import LoadingSpinner from "../loading/LoadingSpinner";
 import NoData from "../noDataToShow/NoData";
+import { filteredUser } from "../reUseAble/Searching";
+import { PropTypes } from "prop-types";
+import UserListItem from "../reUseAble/listItems/UserListItem";
 
 // for userList
-const UserList = () => {
+const UserList = ({searchQuery}) => {
   const [userData, setUserData] = useState([]);
   const [friendRequestData, setFriendRequestData] = useState([]);
   const [isAccepted, setIsAccepted] = useState([]);
@@ -73,6 +76,10 @@ const UserList = () => {
     });
     
   },[db])
+
+  //search method for user list 
+  const filteredUserList = filteredUser(userData, searchQuery);
+  
   return (
     <>
       <div className="w-full  h-full  pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -82,62 +89,49 @@ const UserList = () => {
             <BsThreeDotsVertical />
           </div>
         </div>
-        <ul className="eraseBorder h-[86%] overflow-y-auto relative">
+        <ul className=" h-[86%] overflow-y-auto">
           {loading ? (
             <LoadingSpinner />
           ) : userData.length === 0 ? (
             <NoData />
-          ) : (userData.map((item, i) => (
-            <li
-              key={i}
-              className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-            >
-              <div className="flex items-center">
-                <div className="mr-3.5">
-                  <img
-                    className="w-[54px] h-[54px] rounded-full object-cover"
-                    src={item.profile_picture}
-                    alt="profile_picture"
-                  />
-                </div>
-                <div>
-                  <h5 className="font-pops text-sm font-semibold">
-                    {item.username}
-                  </h5>
-                  <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
-                    Today, 8:56pm
-                  </h5>
-                </div>
-              </div>
-              {isBlocked.includes(data.uid + item.userId) ||
-              isBlocked.includes(item.userId + data.uid) ? (
-                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
-                  blocked
-                </div>
-              ) : isAccepted.includes(data.uid + item.userId) ||
-                isAccepted.includes(item.userId + data.uid) ? (
-                <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
-                  friend
-                </div>
-              ) : friendRequestData.includes(data.uid + item.userId) ||
-                friendRequestData.includes(item.userId + data.uid) ? (
-                <div className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14">
-                  Pending
-                </div>
-              ) : (
-                <div
-                  onClick={() => sendRequest(item)}
-                  className="inline-block active:scale-90 p-1.5 bg-primary rounded-[5px] text-base text-white cursor-pointer border-[1px] border-solid border-primary duration-300 hover:text-primary hover:bg-white mr-14"
+          ) : searchQuery ? (
+            filteredUserList.length > 0 ? (
+              filteredUserList.map((item, i) => (
+                <UserListItem
+                  key={i}
+                  item={item}
+                  data={data}
+                  isBlocked={isBlocked}
+                  isAccepted={isAccepted}
+                  friendRequestData={friendRequestData}
+                  sendRequest={sendRequest}
                 >
-                  <BiPlusMedical className="" />
-                </div>
-              )}
-            </li>
-          )))}
+                  {" "}
+                  <div> {console.log(item)}</div>
+                </UserListItem>
+              ))
+            ) : (
+              <NoData />
+            )
+          ) : (
+            userData.map((item, i) => (
+              <UserListItem
+                key={i}
+                item={item}
+                data={data}
+                isBlocked={isBlocked}
+                isAccepted={isAccepted}
+                friendRequestData={friendRequestData}
+                sendRequest={sendRequest}
+              ></UserListItem>
+            ))
+          )}
         </ul>
       </div>
     </>
   );
 };
-
+UserList.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
 export default UserList;

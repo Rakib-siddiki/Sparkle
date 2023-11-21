@@ -10,10 +10,12 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import NoData from "../noDataToShow/NoData";
-import LoadingSpinner from "../loading/LoadingSpinner";
 import PropTypes from "prop-types";
 import { activeChat } from "../../slices/activeChatSlice";
-const Friends = ({ active }) => {
+import { fillterdFriend } from "../reUseAble/Searching";
+import LoadingSpinner from "../loading/LoadingSpinner";
+import FriendListItem from "../reUseAble/listItems/FriendListItem";
+const Friends = ({ active,searchQuery }) => {
   const db = getDatabase();
   const dispatch = useDispatch();
   const data = useSelector((state) => state.userInfo.userValue);
@@ -63,33 +65,40 @@ const Friends = ({ active }) => {
     }).then(() => remove(ref(db, "accepted/" + item.id)));
   };
 
+  // search method filltering
+  const fillterdFriendList = fillterdFriend(friendList, searchQuery, data.uid);
+
   // going to chat
-  const goingToChat = (item) => {
-    console.log("🚀 > file: Friends.jsx:56 > goingToChat > item:", item);
-    if (data.uid == item.receiverId) {
-      localStorage.setItem("goingToChat",JSON.stringify(dispatch(
-        activeChat({
-          status: "single",
-          name: item.senderName,
-          id: item.senderId,
-        })
-      )))
-      
-    } else {
-     localStorage.setItem(
-       "goingToChat",
-       JSON.stringify(
-         dispatch(
-           activeChat({
-             status: "single",
-             name: item.recevierName,
-             id: item.receiverId,
-           })
-         )
-       )
-     );
-    }
-  };
+  // const goingToChat = (item) => {
+  //   console.log("🚀 > file: Friends.jsx:56 > goingToChat > item:", item);
+  //   if (data.uid == item.receiverId) {
+  //     localStorage.setItem(
+  //       "goingToChat",
+  //       JSON.stringify(
+  //         dispatch(
+  //           activeChat({
+  //             status: "single",
+  //             name: item.senderName,
+  //             id: item.senderId,
+  //           })
+  //         )
+  //       )
+  //     );
+  //   } else {
+  //     localStorage.setItem(
+  //       "goingToChat",
+  //       JSON.stringify(
+  //         dispatch(
+  //           activeChat({
+  //             status: "single",
+  //             name: item.recevierName,
+  //             id: item.receiverId,
+  //           })
+  //         )
+  //       )
+  //     );
+  //   }
+  // };
 
   return (
     <>
@@ -100,50 +109,34 @@ const Friends = ({ active }) => {
             <BsThreeDotsVertical />
           </div>
         </div>
-        <ul className="eraseBorder h-[86%] overflow-y-auto">
+        <ul className=" h-[86%] overflow-y-auto">
           {loading ? (
-            <LoadingSpinner />
+            <LoadingSpinner/>
           ) : friendList.length === 0 ? (
             <NoData />
+          ) : searchQuery ? (
+            fillterdFriendList.length > 0 ? (
+              fillterdFriendList.map((item, i) => (
+                <FriendListItem
+                  key={i}
+                  item={item}
+                  data={data}
+                  blockedUsers={blockedUsers}
+                  active={active}
+                />
+              ))
+            ) : (
+              <NoData />
+            )
           ) : (
             friendList.map((item, i) => (
-              <li
+              <FriendListItem
                 key={i}
-                onClick={() => goingToChat(item)}
-                className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-              >
-                <div className="flex items-center">
-                  <div className="relative mr-3.5 ">
-                    <img
-                      className="w-[54px] h-[54px] rounded-full object-cover"
-                      src={
-                        data.uid == item.senderId
-                          ? item.recevierProfile_picture
-                          : item.senderProfile_picture
-                      }
-                      alt="friendsImg1"
-                    />
-                  </div>
-                  <div>
-                    <h5 className="font-pops text-sm font-semibold">
-                      {data.uid == item.senderId
-                        ? item.recevierName
-                        : item.senderName}
-                    </h5>
-                    <p className="font-pops text-xs font-medium text-[#4D4D4DBF] mt-0.5">
-                      Dinner ?
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => blockedUsers(item)}
-                  className={`active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize ${
-                    active == "message" ? `hidden` : `block`
-                  }`}
-                >
-                  Block
-                </button>
-              </li>
+                item={item}
+                data={data}
+                blockedUsers={blockedUsers}
+                active={active}
+              />
             ))
           )}
         </ul>
@@ -153,5 +146,6 @@ const Friends = ({ active }) => {
 };
 Friends.propTypes = {
   active: PropTypes.string.isRequired,
+  searchQuery: PropTypes.string.isRequired,
 };
 export default Friends;
