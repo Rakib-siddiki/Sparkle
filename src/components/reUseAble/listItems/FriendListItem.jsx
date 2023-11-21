@@ -1,8 +1,11 @@
 import PropTypes  from "prop-types";
-const FriendListItem = ({item,data,blockedUsers,active}) => {
+const FriendListItem = ({item,data,blockedUsers,active,goinToChat}) => {
     return (
       <>
-        <li className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]">
+        <li
+          onClick={()=>goinToChat(item)}
+          className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
+        >
           <div className="flex items-center">
             <div className="relative mr-3.5 ">
               <img
@@ -43,7 +46,8 @@ FriendListItem.propTypes={
     item:PropTypes.object.isRequired,
     data:PropTypes.object.isRequired,
     blockedUsers:PropTypes.func.isRequired,
-    active:PropTypes.deafult
+    active:PropTypes.string.isRequired,
+    goinToChat:PropTypes.func.isRequired
 }
 
 export default FriendListItem;

@@ -10,8 +10,8 @@ import { getDatabase, push, ref, set } from "firebase/database";
 
 const Chat = () => {
   const activeData = useSelector((state) => state.activeChat.activeValue);
+  console.log(activeData.Name);
   const db = getDatabase();
-  console.log("🚀 > file: Chat.jsx:11 > Chat > activeData:", activeData.status);
   const [message, setMessage] = useState("");
   const handleMessageSend = () => {
     if (activeData.status == "single") {
@@ -42,7 +42,7 @@ const Chat = () => {
             </div>
             <div className="ml-8">
               <h2 className="font-popstext-2xl font-semibold">
-                {activeData.name}
+                {activeData.Name}
               </h2>
               <p className="font-popstext-sm text-[#000000D9]">Online</p>
             </div>

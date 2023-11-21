@@ -11,16 +11,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import NoData from "../noDataToShow/NoData";
 import PropTypes from "prop-types";
-import { activeChat } from "../../slices/activeChatSlice";
 import { fillterdFriend } from "../reUseAble/Searching";
 import LoadingSpinner from "../loading/LoadingSpinner";
 import FriendListItem from "../reUseAble/listItems/FriendListItem";
-const Friends = ({ active,searchQuery }) => {
+import { activeChat } from "../../slices/activeChatSlice";
+
+const Friends = ({ active, searchQuery }) => {
   const db = getDatabase();
-  const dispatch = useDispatch();
   const data = useSelector((state) => state.userInfo.userValue);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [friendList, setFriendList] = useState([]);
+
   useEffect(() => {
     const friendListRef = ref(db, "accepted/");
     onValue(friendListRef, (snapshot) => {
@@ -69,36 +71,7 @@ const Friends = ({ active,searchQuery }) => {
   const fillterdFriendList = fillterdFriend(friendList, searchQuery, data.uid);
 
   // going to chat
-  // const goingToChat = (item) => {
-  //   console.log("🚀 > file: Friends.jsx:56 > goingToChat > item:", item);
-  //   if (data.uid == item.receiverId) {
-  //     localStorage.setItem(
-  //       "goingToChat",
-  //       JSON.stringify(
-  //         dispatch(
-  //           activeChat({
-  //             status: "single",
-  //             name: item.senderName,
-  //             id: item.senderId,
-  //           })
-  //         )
-  //       )
-  //     );
-  //   } else {
-  //     localStorage.setItem(
-  //       "goingToChat",
-  //       JSON.stringify(
-  //         dispatch(
-  //           activeChat({
-  //             status: "single",
-  //             name: item.recevierName,
-  //             id: item.receiverId,
-  //           })
-  //         )
-  //       )
-  //     );
-  //   }
-  // };
+  
 
   return (
     <>
@@ -111,7 +84,7 @@ const Friends = ({ active,searchQuery }) => {
         </div>
         <ul className=" h-[86%] overflow-y-auto">
           {loading ? (
-            <LoadingSpinner/>
+            <LoadingSpinner />
           ) : friendList.length === 0 ? (
             <NoData />
           ) : searchQuery ? (
