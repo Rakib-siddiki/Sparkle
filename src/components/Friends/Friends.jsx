@@ -71,7 +71,15 @@ const Friends = ({ active, searchQuery }) => {
   const fillterdFriendList = fillterdFriend(friendList, searchQuery, data.uid);
 
   // going to chat
-  
+  const goingToChat = (item) => {
+    const userData = {
+      Name: data.uid === item.receiverId ? item.senderName : item.recevierName,
+      type: "single",
+      userId: data.uid === item.receiverId ? item.senderId : item.receiverId,
+    };
+    dispatch(activeChat(userData))
+    localStorage.setItem('activeUser',JSON.stringify(userData))
+  };
 
   return (
     <>
@@ -96,6 +104,7 @@ const Friends = ({ active, searchQuery }) => {
                   data={data}
                   blockedUsers={blockedUsers}
                   active={active}
+                  goinToChat={goingToChat}
                 />
               ))
             ) : (
@@ -109,6 +118,7 @@ const Friends = ({ active, searchQuery }) => {
                 data={data}
                 blockedUsers={blockedUsers}
                 active={active}
+                goinToChat={goingToChat}
               />
             ))
           )}
