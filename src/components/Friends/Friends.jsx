@@ -79,8 +79,10 @@ const Friends = ({ active, searchQuery }) => {
       userId: data.uid === item.receiverId ? item.senderId : item.receiverId,
       profilePic:data.uid === item.receiverId?item.senderProfile_picture:item.recevierProfile_picture
     };
-    dispatch(activeChat(userData))
-    localStorage.setItem('activeUser',JSON.stringify(userData))
+    if (userData.type === "single") {      
+      dispatch(activeChat(userData))
+      localStorage.setItem('activeUser',JSON.stringify(userData))
+    }
   };
 
   return (

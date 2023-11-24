@@ -35,8 +35,11 @@ const Chat = () => {
         message: message,
         senderId: data.uid,
         senderName: data.displayName,
+        senderProfilePic: data.photoURL,
         reciverId: activeData.userId,
         receiverName: activeData.Name,
+        receiverProfilePic: activeData.profilePic,
+
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
         }-${new Date().getDate()}-${new Date().getHours()}-${new Date().getMinutes()}`,

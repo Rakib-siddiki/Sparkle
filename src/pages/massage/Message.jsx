@@ -2,9 +2,9 @@
 import { useState } from "react";
 import Chat from "../../components/Chat/Chat";
 import ChatFriends from "../../components/Friends/Friends";
-import Groups from "../../components/GroupList/GroupList";
 import SearchBox from "../../components/SearchBox/SearchBox";
 import Sidebar from "../../components/sidebar/Sidebar";
+import MyGroups from "../../components/MyGroups/MyGroups";
 
 const Message = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,7 +21,7 @@ const Message = () => {
             <div className="w-full h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px] ">
               <div className="h-full flex flex-col justify-between">
                 <SearchBox onSearch={(query) => setSearchQuery(query)} />
-                <Groups searchQuery={searchQuery} />
+                <MyGroups searchQuery={searchQuery} />
               </div>
             </div>
             <div className="w-full h-full md:h-[290px] lg:h-[305px] 2xl:h-[360px] ">

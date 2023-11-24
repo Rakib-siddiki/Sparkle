@@ -6,12 +6,13 @@ const MyGroupListItem = ({
   item,
   acceptGroupRequest,
   cancleGroupRequest,
+  goingToChat
 }) => {
   switch (type) {
     case "myGroupList":
       return (
         <>
-          <li className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]">
+          <li onClick={()=>goingToChat(item)} className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]">
             <div className="flex items-center">
               <div className="relative mr-3.5">
                 <img
@@ -82,5 +83,6 @@ MyGroupListItem.propTypes = {
   item: PropTypes.object.isRequired,
   acceptGroupRequest:PropTypes.func.isRequired,
   cancleGroupRequest:PropTypes.func.isRequired,
+  goingToChat:PropTypes.func.isRequired
 };
 export default MyGroupListItem;

@@ -1,18 +1,19 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { getDatabase, ref, onValue, set, remove } from "firebase/database";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
 import LoadingSpinner from "../loading/LoadingSpinner";
 import { PropTypes } from "prop-types";
 import { fillterdMyGroups } from "../reUseAble/Searching";
 import MyGroupListItem from "../reUseAble/listItems/MyGroupListItem";
+import { activeChat } from "../../slices/activeChatSlice";
 const MyGroups = ({ searchQuery }) => {
   const [loading, setLoading] = useState(true);
-
   const [myGroupsList, setMyGroupsList] = useState([]);
   const [getJoinRequest, setGetJoinRequest] = useState([]);
   const data = useSelector((state) => state.userInfo.userValue); // getting value from store
+  const dispatch =useDispatch()
   const db = getDatabase();
   // my own group
   useEffect(() => {
@@ -63,6 +64,17 @@ const MyGroups = ({ searchQuery }) => {
 
   // search method filltering
   const fillterdMyGroupsList = fillterdMyGroups(myGroupsList, searchQuery);
+  // going To Chat 
+  const goingToChat =(item)=> {
+    const users={
+      name:item.groupName,
+      type:"group"
+    }
+   if (users.type ==="group") {
+     dispatch(activeChat(users));
+     localStorage.setItem("activeUser", JSON.stringify(users));
+   }
+  }
   return (
     <>
       <div className="w-full  h-full  pt-5 pb-1.5 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -81,14 +93,14 @@ const MyGroups = ({ searchQuery }) => {
           ) : searchQuery ? (
             fillterdMyGroupsList.length > 0 ? (
               fillterdMyGroupsList.map((item, i) => (
-                <MyGroupListItem type="myGroupList" key={i} item={item} />
+                <MyGroupListItem type="myGroupList" key={i} item={item} goingToChat={goingToChat}/>
               ))
             ) : (
               <NoData />
             )
           ) : (
             myGroupsList.map((item, i) => (
-              <MyGroupListItem type="myGroupList" key={i} item={item} />
+              <MyGroupListItem type="myGroupList" key={i} item={item} goingToChat={goingToChat}/>
             ))
           )}
           {getJoinRequest.map((item, i) => (
