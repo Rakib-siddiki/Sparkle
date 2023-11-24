@@ -72,10 +72,12 @@ const Friends = ({ active, searchQuery }) => {
 
   // going to chat
   const goingToChat = (item) => {
+    console.log(item);
     const userData = {
-      Name: data.uid === item.receiverId ? item.senderName : item.recevierName,
       type: "single",
+      Name: data.uid === item.receiverId ? item.senderName : item.recevierName,
       userId: data.uid === item.receiverId ? item.senderId : item.receiverId,
+      profilePic:data.uid === item.receiverId?item.senderProfile_picture:item.recevierProfile_picture
     };
     dispatch(activeChat(userData))
     localStorage.setItem('activeUser',JSON.stringify(userData))
