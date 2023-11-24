@@ -3,15 +3,11 @@ import { getDatabase, ref, onValue, set, remove } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
-import LoadingSpinner from "../handleloading/LoadingSpinner";
+import LoadingSpinner from "../loading/LoadingSpinner";
 import { PropTypes } from "prop-types";
 import { fillterdMyGroups } from "../reUseAble/Searching";
 import MyGroupListItem from "../reUseAble/listItems/MyGroupListItem";
 const MyGroups = ({ searchQuery }) => {
-
-  
-  
-
   const [loading, setLoading] = useState(true);
 
   const [myGroupsList, setMyGroupsList] = useState([]);
@@ -62,16 +58,16 @@ const MyGroups = ({ searchQuery }) => {
     }).then(() => remove(ref(db, "groupJoinRequest/" + item.JoinId)));
   };
   const cancleGroupRequest = (item) => {
-     remove(ref(db, "groupJoinRequest/" + item.JoinId))
+    remove(ref(db, "groupJoinRequest/" + item.JoinId));
   };
 
-  // search method filltering 
-  const fillterdMyGroupsList = fillterdMyGroups(myGroupsList,searchQuery)
+  // search method filltering
+  const fillterdMyGroupsList = fillterdMyGroups(myGroupsList, searchQuery);
   return (
     <>
-      <div className="w-[32%] h-[355px] pt-5 pb-1.5 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
+      <div className="w-full  h-full  pt-5 pb-1.5 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
         <div className="flex justify-between mb-2">
-          <h3 className="font-pops text-xl font-semibold">My Groups</h3>
+          <h3 className="font-popstext-xl font-semibold">My Groups</h3>
           <div className="text-2xl cursor-pointer text-primary">
             <BsThreeDotsVertical />
           </div>

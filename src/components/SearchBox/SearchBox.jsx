@@ -1,16 +1,16 @@
 import { LuSearch } from "react-icons/lu";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import PropTypes from 'prop-types'; // Import PropTypes
-const SearchBox = ({onSearch}) => {
-   // Correct the PropTypes definition
+import PropTypes from "prop-types"; // Import PropTypes
+const SearchBox = ({ onSearch }) => {
+  // Correct the PropTypes definition
   SearchBox.propTypes = {
     onSearch: PropTypes.func.isRequired,
   };
-  const handleSearch =(e)=> {
-    const query = e.target.value
-    onSearch(query) 
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    onSearch(query);
     // console.log("🚀 > file: SearchBox.jsx:7 > handleSearch > query:", query)
-  }
+  };
   return (
     <>
       <form className="relative">

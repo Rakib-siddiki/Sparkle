@@ -9,45 +9,47 @@ import {
 } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import LoadingSpinner from "../loading/LoadingSpinner";
 import NoData from "../noDataToShow/NoData";
-import LoadingSpinner from "../handleloading/LoadingSpinner";
-import PropTypes from "prop-types"; // Import PropTypes
 import { filteredBlockUsers } from "../reUseAble/Searching";
+import PropTypes from "prop-types"; // Import PropTypes
 import BlockListItemItem from "../reUseAble/listItems/BlockListItemItem";
-
 const BlockedUsers = ({searchQuery}) => {
-  BlockedUsers.propTypes = {
-    searchQuery: PropTypes.string.isRequired,
-  };
-
-  const [loading, setLoading] = useState(true);
   const data = useSelector((state) => state.userInfo.userValue);
+  const [loading, setLoading] = useState(true);
   const db = getDatabase();
   const [blocklist, setBlockList] = useState([]);
   useEffect(() => {
-    const blockListRef = ref(db, "blockedUsers/");
-    onValue(blockListRef, (snapshot) => {
+    const blocklistRef = ref(db, "blockedUsers/");
+    onValue(blocklistRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
+        // console.log("🚀 > file: BlockList.jsx:23 > snapshot.forEach > item:", item.val())
+        const blockedById =
+          data.uid == item.val().blockedById && item.val().blockedById;
+        const blockedUserId =
+          data.uid == item.val().blockedById
+            ? item.val().blockedUserId
+            : item.val().blockedUserId;
+        const UserName =
+          data.uid == item.val().blockedById
+            ? item.val().blockedUserName
+            : item.val().blockedBy;
+        const profile =
+          data.uid == item.val().blockedById
+            ? item.val().blockedUserProfile
+            : item.val().blockedByProfile;
         if (
-          data.uid == item.val().blockId ||
-          data.uid == item.val().blockById
+          data.uid == item.val().blockedById ||
+          data.uid == item.val().blockedUserId
         ) {
-          if (data.uid == item.val().blockById) {
-            arr.push({
-              id: item.key,
-              block: item.val().block,
-              blockId: item.val().blockId,
-              profile_Picture: item.val().blockProfile,
-            });
-          } else {
-            arr.push({
-              id: item.key,
-              block: item.val().blockBy,
-              blockById: item.val().blockById,
-              profile_Picture: item.val().blockByProfile,
-            });
-          }
+          arr.push({
+            blockedUserId: blockedUserId,
+            blockedById: blockedById,
+            UserName: UserName,
+            profile: profile,
+            id: item.key,
+          });
         }
       });
       setBlockList(arr);
@@ -55,25 +57,27 @@ const BlockedUsers = ({searchQuery}) => {
     });
   }, [data.uid, db]);
   const unblockUser = (item) => {
-    console.log(item);
+    console.log("🚀 > file: BlockList.jsx:49 > unblockUser > item:", item);
     set(push(ref(db, "accepted/")), {
-      senderProfile_picture: item.profile_Picture,
-      senderName: item.block,
-      senderId: item.blockId,
-      recevierProfile_picture: data.photoURL,
-      recevierName: data.displayName,
-      receiverId: data.uid,
+      recevierProfile_picture: item.profile,
+      receiverId: item.blockedUserId,
+      recevierName: item.UserName,
+      senderProfile_picture: data.photoURL,
+      senderId: data.uid,
+      senderName: data.displayName,
+      userId: item.id,
     }).then(() => {
       remove(ref(db, "blockedUsers/" + item.id));
     });
   };
+  // search method for blockUsers
+  const filteredBlockUsersList = filteredBlockUsers(blocklist, searchQuery);
 
-  const filteredBlockUsersList = filteredBlockUsers(blocklist,searchQuery)
   return (
     <>
-      <div className=" w-[32%] h-[355px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
+      <div className="w-full h-full pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
         <div className="flex justify-between mb-5">
-          <h3 className="font-pops text-xl font-semibold">Blocked Users</h3>
+          <h3 className="font-popstext-xl font-semibold">Block List</h3>
           <div className="text-2xl cursor-pointer text-primary">
             <BsThreeDotsVertical />
           </div>
@@ -109,5 +113,7 @@ const BlockedUsers = ({searchQuery}) => {
     </>
   );
 };
-
+BlockedUsers.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
 export default BlockedUsers;

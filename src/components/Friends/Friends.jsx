@@ -7,19 +7,22 @@ import {
   push,
   remove,
 } from "firebase/database";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import NoData from "../noDataToShow/NoData";
-import LoadingSppiner from "../handleloading/LoadingSpinner";
 import PropTypes from "prop-types";
 import { fillterdFriend } from "../reUseAble/Searching";
+import LoadingSpinner from "../loading/LoadingSpinner";
 import FriendListItem from "../reUseAble/listItems/FriendListItem";
-const Friends = ({ searchQuery }) => {
-  const [loading, setLoading] = useState(true);
+import { activeChat } from "../../slices/activeChatSlice";
 
+const Friends = ({ active, searchQuery }) => {
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
   const [friendList, setFriendList] = useState([]);
+
   useEffect(() => {
     const friendListRef = ref(db, "accepted/");
     onValue(friendListRef, (snapshot) => {
@@ -37,42 +40,61 @@ const Friends = ({ searchQuery }) => {
     });
   }, [data.uid, db]);
   const blockedUsers = (item) => {
-    console.log(item);
-    if (data.uid === item.senderId) {
-      set(push(ref(db, "blockedUsers/")), {
-        block: item.recevierName,
-        blockId: item.receiverId,
-        blockProfile: item.recevierProfile_picture,
-        blockBy: item.senderName,
-        blockById: item.senderId,
-        blockByProfile: item.senderProfile_picture,
-      }).then(() => remove(ref(db, "accepted/" + item.id)));
-    } else {
-      set(push(ref(db, "blockedUsers/")), {
-        block: item.senderName,
-        blockId: item.senderId,
-        blockProfile: item.senderProfile_picture,
-        blockBy: item.recevierName,
-        blockById: item.receiverId,
-        blockByProfile: item.recevierProfile_picture,
-      }).then(() => remove(ref(db, "accepted/" + item.id)));
-    }
+    const blockedUserId =
+      data.uid == item.senderId ? item.receiverId : item.senderId;
+    const blockedById =
+      data.uid == item.senderId ? item.senderId : item.receiverId;
+    const blockedUserName =
+      data.uid == item.senderId ? item.recevierName : item.senderName;
+    const blockedBy =
+      data.uid == item.senderId ? item.senderName : item.recevierName;
+    const blockedUserProfile =
+      data.uid == item.senderId
+        ? item.recevierProfile_picture
+        : item.senderProfile_picture;
+    const blockedByProfile =
+      data.uid == item.senderId
+        ? item.senderProfile_picture
+        : item.recevierProfile_picture;
+
+    set(push(ref(db, "blockedUsers/")), {
+      blockedUserId: blockedUserId,
+      blockedById: blockedById,
+      blockedUserName: blockedUserName,
+      blockedBy: blockedBy,
+      blockedUserProfile: blockedUserProfile,
+      blockedByProfile: blockedByProfile,
+    }).then(() => remove(ref(db, "accepted/" + item.id)));
   };
 
   // search method filltering
   const fillterdFriendList = fillterdFriend(friendList, searchQuery, data.uid);
+
+  // going to chat
+  const goingToChat = (item) => {
+    console.log(item);
+    const userData = {
+      type: "single",
+      Name: data.uid === item.receiverId ? item.senderName : item.recevierName,
+      userId: data.uid === item.receiverId ? item.senderId : item.receiverId,
+      profilePic:data.uid === item.receiverId?item.senderProfile_picture:item.recevierProfile_picture
+    };
+    dispatch(activeChat(userData))
+    localStorage.setItem('activeUser',JSON.stringify(userData))
+  };
+
   return (
     <>
-      <div className=" w-[32%] h-[355px] xxl:h-[489px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
+      <div className="w-full  h-full  pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
         <div className="flex justify-between mb-5">
-          <h3 className="font-pops text-xl font-semibold">Friends</h3>
+          <h3 className="font-popstext-xl font-semibold">Friends</h3>
           <div className="text-2xl cursor-pointer text-primary">
             <BsThreeDotsVertical />
           </div>
         </div>
         <ul className=" h-[86%] overflow-y-auto">
           {loading ? (
-            <LoadingSppiner />
+            <LoadingSpinner />
           ) : friendList.length === 0 ? (
             <NoData />
           ) : searchQuery ? (
@@ -83,6 +105,8 @@ const Friends = ({ searchQuery }) => {
                   item={item}
                   data={data}
                   blockedUsers={blockedUsers}
+                  active={active}
+                  goinToChat={goingToChat}
                 />
               ))
             ) : (
@@ -95,6 +119,8 @@ const Friends = ({ searchQuery }) => {
                 item={item}
                 data={data}
                 blockedUsers={blockedUsers}
+                active={active}
+                goinToChat={goingToChat}
               />
             ))
           )}
@@ -104,6 +130,7 @@ const Friends = ({ searchQuery }) => {
   );
 };
 Friends.propTypes = {
+  active: PropTypes.string.isRequired,
   searchQuery: PropTypes.string.isRequired,
 };
 export default Friends;

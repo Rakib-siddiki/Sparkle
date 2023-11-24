@@ -1,38 +1,36 @@
 import { useEffect, useState } from "react";
-import PopUp from "./PopUp";
+import PopUp from "./CreatePopUp";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
-import LoadingSpinner from "../handleloading/LoadingSpinner";
-import PropTypes from "prop-types"; // Import PropTypes
-import { filteredGroups} from "../reUseAble/Searching";
+import LoadingSpinner from "../loading/LoadingSpinner";
+import PropTypes from "prop-types";
+import { filteredGroups } from "../reUseAble/Searching";
 import AllGroupListItem from "../reUseAble/listItems/AllGroupListItem";
+
 const GroupList = ({ searchQuery }) => {
-  
-
-  const data = useSelector((state) => state.userInfo.userValue); // getting value from store
-
+  const data = useSelector((state) => state.userInfo.userValue);
   const db = getDatabase();
   const [loading, setLoading] = useState(true);
   const [grouplist, setGrouplist] = useState([]);
   const [groupJoinRequest, setGroupJoinRequest] = useState([]);
   const [showPopUp, setShowPopUp] = useState(false);
+
   const handleShow = () => {
     setShowPopUp((prev) => !prev);
   };
+
   // get user lists
   useEffect(() => {
     const groupListRef = ref(db, "grouplist/");
     onValue(groupListRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        {
-          if (
-            data.uid !== item.val().adminId &&
-            data.uid !== item.val().othersGroupId
-          ) {
-            arr.push({ ...item.val(), id: item.key });
-          }
+        if (
+          data.uid !== item.val().adminId &&
+          data.uid !== item.val().othersGroupId
+        ) {
+          arr.push({ ...item.val(), id: item.key });
         }
       });
       setGrouplist(arr);
@@ -47,24 +45,22 @@ const GroupList = ({ searchQuery }) => {
       senderName: data.displayName,
     });
   };
+
   // get group join request
   useEffect(() => {
     const groupJoinRequestRef = ref(db, "groupJoinRequest/");
-
     onValue(groupJoinRequestRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        {
-          arr.push(item.val().senderId + item.val().id);
-        }
+        arr.push(item.val().senderId + item.val().id);
       });
       setGroupJoinRequest(arr);
     });
   }, [data.uid, db]);
 
+  // search method filtering
+  const filteredGroupsList = filteredGroups(grouplist, searchQuery);
 
-  // search method filltering
-  const filteredGroupsList = filteredGroups(grouplist,searchQuery)
   return (
     <>
       <div className="h-[77%] xxl:h-[338px] pt-3 xxl:mt-10 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -89,7 +85,6 @@ const GroupList = ({ searchQuery }) => {
             filteredGroupsList.length > 0 ? (
               // Render user information here based on the filtered group data
               filteredGroupsList.map((item, i) => (
-                // Render user information based on the filtered group data
                 <AllGroupListItem
                   key={i}
                   item={item}
@@ -117,7 +112,9 @@ const GroupList = ({ searchQuery }) => {
     </>
   );
 };
+
 GroupList.propTypes = {
   searchQuery: PropTypes.string.isRequired,
 };
+
 export default GroupList;

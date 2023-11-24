@@ -7,6 +7,7 @@ export default {
         nunito: ["Nunito", "sans-serif"],
         pops: ["Poppins", "sans-serif"],
         open: ["Open Sans", "sans-serif"],
+        lobster: ["Lobster", "sans-serif"],
       },
       backgroundImage: {
         "reg-img": "url(./assets/reg/reg_Img.png)",
@@ -23,6 +24,10 @@ export default {
       },
       borderRadius: {
         "20px": "20px",
+        "10px":"10px",
+      },
+      backdropBlur: {
+        xs: "2px",
       },
       dropShadow: {
         iconDropShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -34,6 +39,21 @@ export default {
       screens: {
         xxl: "1480px",
         // => @media (min-width: 1280px) { ... }
+      },
+      gridTemplateRows: {
+        8: "repeat(8, minmax(0, 1fr))",
+        7: "repeat(7, minmax(0, 1fr))",
+        12: "repeat(12, minmax(0, 1fr))",
+        13: "repeat(13, minmax(0, 1fr))",
+      },
+      gridRow: {
+        "span-8": "span 8 / span 8",
+        "span-9": "span 9 / span 9",
+      },
+      borderWidth: {
+        20: "20px",
+        22: "22px",
+        28: "28px",
       },
     },
   },

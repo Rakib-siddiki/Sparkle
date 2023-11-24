@@ -9,15 +9,16 @@ import {
 } from "firebase/database";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import LoadingSpinner from "../loading/LoadingSpinner";
 import NoData from "../noDataToShow/NoData";
-import LoadingSpinner from "../handleloading/LoadingSpinner";
-import { PropTypes } from "prop-types";
 import { filteredFriendRequest } from "../reUseAble/Searching";
+import { PropTypes } from "prop-types";
 import FriendReqListItem from "../reUseAble/listItems/FriendReqListItem";
-const FriendRequest = ({ searchQuery }) => {
-  const [loading, setLoading] = useState(true);
+
+const FriendRequest = ({searchQuery}) => {
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
+  const [loading, setLoading] = useState(true);
   const [requestList, setRequestList] = useState([]);
   useEffect(() => {
     const friendListRef = ref(db, "friendRequest/");
@@ -41,11 +42,12 @@ const FriendRequest = ({ searchQuery }) => {
 
   // Search method filltering
   const filteredFriendReq = filteredFriendRequest(requestList, searchQuery);
+
   return (
     <>
-      <div className="w-[32%] h-[355px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
+      <div className="w-full  h-full  pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
         <div className="flex justify-between mb-2">
-          <h3 className="font-pops text-xl font-semibold">Friend Request</h3>
+          <h3 className="font-popstext-xl font-semibold">Friend Request</h3>
           <div className="text-2xl cursor-pointer text-primary">
             <BsThreeDotsVertical />
           </div>

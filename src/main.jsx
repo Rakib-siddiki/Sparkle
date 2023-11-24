@@ -12,6 +12,8 @@ import Reg from "./pages/reg/Reg";
 import NotFound from "./pages/not-found/NotFound";
 import ForgetPassword from "./pages/forgetPassword/forgetPassword";
 import Home from "./pages/home/Home";
+import Message from "./pages/massage/message.jsx";
+
 // redux tool-kit
 import { store } from "./store";
 import { Provider } from "react-redux";
@@ -32,6 +34,9 @@ const router = createBrowserRouter([
   {
     path: "/forgetPassword",
     element: <ForgetPassword />,
+  }, {
+    path: "/message",
+    element: <Message/>
   },
   {
     path: "*",

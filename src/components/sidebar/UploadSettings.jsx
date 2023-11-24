@@ -70,16 +70,18 @@ const UploadSettings = ({ cancleUpload }) => {
           console.log("File available at", downloadURL);
           updateProfile(auth.currentUser, {
             photoURL: downloadURL,
-          }).then(()=>{
-            set(databaseRef(db, "users/" + data.uid), {
-              username: data.displayName,
-              email: data.email,
-              profile_picture: data.photoURL,
+          })
+            .then(() => {
+              set(databaseRef(db, "users/" + data.uid), {
+                username: data.displayName,
+                email: data.email,
+                profile_picture: data.photoURL,
+              });
             })
-          }).then(() => {
-            setLoading(false);
-            cancleUpload();
-          });
+            .then(() => {
+              setLoading(false);
+              cancleUpload();
+            });
         });
       });
     }
@@ -118,13 +120,13 @@ const UploadSettings = ({ cancleUpload }) => {
         pauseOnHover={false}
         theme="colored"
       />
-      <div className=" absolute top-0 left-0 z-50 w-full h-screen backdrop-blur-sm bg-black/20 flex flex-col justify-center items-center">
-        <div>
+      <div className=" hidden absolute top-0 left-0 z-50 w-full h-screen backdrop-blur-xs bg-black/20 md:flex flex-col justify-center items-center">
+        <div className="w-full md:w-fit">
           <h2 className=" font-pops bg-slate-100 font-semibold text-xl text-gray-700 px-5 py-3 capitalize">
             Upload your image
           </h2>
           <div className="p-5 bg-white flex flex-col gap-3 relative">
-            <div className="flex justify-around items-center">
+            <div className="md:flex justify-around items-center">
               {/* left  */}
               <div>
                 <div className="w-96">
@@ -213,6 +215,61 @@ const UploadSettings = ({ cancleUpload }) => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      {/* =============================== */}
+      <div className=" md:hidden w-screen h-screen bg-black/5 fixed top-0 left-0 z-[110]">
+        <div
+          className={`py-5 md:py-8 px-4 md:px-6 w-10/12 md:w-[500px] bg-white rounded-xl shadow-uploadImg absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] z-50 }`}
+        >
+          <h2 className="font-popstext-2xl md:text-[35px] font-semibold mb-2">
+            Upload Profile Photo
+          </h2>
+
+          {image ? (
+            <div className="img-preview w-full h-full overflow-hidden"></div>
+          ) : (
+            <img className="mx-auto" src={userImg} alt="userImage" />
+          )}
+
+          <input
+            onChange={handleImgChange}
+            className="mb-3 font-popstext-base font-medium cursor-pointer mt-2 w-full"
+            type="file"
+          />
+          {image && (
+            <Cropper
+              ref={cropperRef}
+              style={{ height: 200, width: "100%", margin: "0 auto" }}
+              zoomTo={0.5}
+              initialAspectRatio={1}
+              aspectRatio={1} // Set the same aspect ratio as initialAspectRatio
+              preview=".img-preview"
+              src={image}
+              viewMode={1}
+              minCropBoxHeight={10}
+              minCropBoxWidth={10}
+              background={false}
+              responsive={true}
+              autoCropArea={1}
+              checkOrientation={false}
+              guides={true}
+            />
+          )}
+          <div className="flex justify-start mt-6">
+            <button
+              onClick={getCropData}
+              className="px-3 py-2 active:scale-95 bg-primary text-white rounded-md font-nunito"
+            >
+              Upload
+            </button>
+            <button
+              onClick={handleCancle}
+              className="px-3 py-2 active:scale-95 bg-red-500 text-white rounded-md font-nunito ml-4"
+            >
+              Cancle
+            </button>
           </div>
         </div>
       </div>

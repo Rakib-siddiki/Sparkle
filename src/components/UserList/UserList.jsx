@@ -1,27 +1,24 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
+// import { BiPlusMedical } from "react-icons/bi";
 import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import LoadingSpinner from "../loading/LoadingSpinner";
 import NoData from "../noDataToShow/NoData";
-import LoadingSpinner from "../handleloading/LoadingSpinner";
-import { PropTypes } from "prop-types";
 import { filteredUser } from "../reUseAble/Searching";
+import { PropTypes } from "prop-types";
 import UserListItem from "../reUseAble/listItems/UserListItem";
 
 // for userList
-const UserList = ({ searchQuery }) => {
-  UserList.propTypes = {
-    searchQuery: PropTypes.string.isRequired,
-  };
-  const [loading, setLoading] = useState(true);
-
+const UserList = ({searchQuery}) => {
   const [userData, setUserData] = useState([]);
   const [friendRequestData, setFriendRequestData] = useState([]);
   const [isAccepted, setIsAccepted] = useState([]);
-  const [ifBlocked, setIfBlocked] = useState([]);
-  const db = getDatabase();
-  const data = useSelector((state) => state.userInfo.userValue);
-  useEffect(() => {
+  const [isBlocked, setIfBlocked] = useState([]);
+  const [loading, setLoading] = useState(true);
+   const db = getDatabase();
+   const data = useSelector((state) => state.userInfo.userValue);
+   useEffect(() => {
     const userLists = ref(db, "users/");
     onValue(userLists, (snapshot) => {
       let arr = [];
@@ -45,7 +42,7 @@ const UserList = ({ searchQuery }) => {
       recevierProfile_picture: item.profile_picture,
     });
   };
-
+//get Friend request lists data
   useEffect(() => {
     const friendRequestRef = ref(db, "friendRequest/");
     onValue(friendRequestRef, (snapshot) => {
@@ -56,7 +53,7 @@ const UserList = ({ searchQuery }) => {
       setFriendRequestData(arr);
     });
   }, [db]);
-
+  // get accepted lists data
   useEffect(() => {
     const isAcceptedRef = ref(db, "accepted/");
     let arr = [];
@@ -67,26 +64,27 @@ const UserList = ({ searchQuery }) => {
       setIsAccepted(arr);
     });
   }, [db]);
-  useEffect(() => {
+  // get BlockedList data
+  useEffect(()=>{
     const ifBlockedRef = ref(db, "blockedUsers/");
     onValue(ifBlockedRef, (snapshot) => {
-      let arr = [];
-      snapshot.forEach((item) => {
-        arr.push(item.val().blockById + item.val().blockId);
-      });
-      setIfBlocked(arr);
+      let arr = []
+      snapshot.forEach(item=>{
+        arr.push(item.val().blockedUserId + item.val().blockedById);
+      })
+      setIfBlocked(arr)
     });
-  }, [db]);
+    
+  },[db])
 
-  // search method filltering
-
+  //search method for user list 
   const filteredUserList = filteredUser(userData, searchQuery);
-
+  
   return (
     <>
-      <div className=" w-[32%] h-[355px] xxl:h-[490px] pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
+      <div className="w-full  h-full  pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
         <div className="flex justify-between mb-5">
-          <h3 className="font-pops text-xl font-semibold">User List</h3>
+          <h3 className="font-popstext-xl font-semibold">User List</h3>
           <div className="text-2xl cursor-pointer text-primary">
             <BsThreeDotsVertical />
           </div>
@@ -103,7 +101,7 @@ const UserList = ({ searchQuery }) => {
                   key={i}
                   item={item}
                   data={data}
-                  ifBlocked={ifBlocked}
+                  isBlocked={isBlocked}
                   isAccepted={isAccepted}
                   friendRequestData={friendRequestData}
                   sendRequest={sendRequest}
@@ -121,12 +119,11 @@ const UserList = ({ searchQuery }) => {
                 key={i}
                 item={item}
                 data={data}
-                ifBlocked={ifBlocked}
+                isBlocked={isBlocked}
                 isAccepted={isAccepted}
                 friendRequestData={friendRequestData}
                 sendRequest={sendRequest}
-              >
-              </UserListItem>
+              ></UserListItem>
             ))
           )}
         </ul>
@@ -134,5 +131,7 @@ const UserList = ({ searchQuery }) => {
     </>
   );
 };
-
+UserList.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+};
 export default UserList;

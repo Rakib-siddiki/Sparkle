@@ -1,8 +1,9 @@
 import PropTypes  from "prop-types";
-const FriendListItem = ({item,data,blockedUsers}) => {
+const FriendListItem = ({item,data,blockedUsers,active,goinToChat}) => {
     return (
       <>
         <li
+          onClick={()=>goinToChat(item)}
           className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
         >
           <div className="flex items-center">
@@ -30,7 +31,9 @@ const FriendListItem = ({item,data,blockedUsers}) => {
           </div>
           <button
             onClick={() => blockedUsers(item)}
-            className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize"
+            className={`active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 capitalize ${
+              active == "message" ? `hidden` : `block`
+            }`}
           >
             Block
           </button>
@@ -43,6 +46,8 @@ FriendListItem.propTypes={
     item:PropTypes.object.isRequired,
     data:PropTypes.object.isRequired,
     blockedUsers:PropTypes.func.isRequired,
+    active:PropTypes.string.isRequired,
+    goinToChat:PropTypes.func.isRequired
 }
 
 export default FriendListItem;

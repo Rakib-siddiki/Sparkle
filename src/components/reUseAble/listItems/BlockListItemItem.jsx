@@ -10,19 +10,21 @@ const BlockListItemItem = ({item,unblockUser}) => {
             <div className="mr-3.5">
               <img
                 className="w-[54px] h-[54px] rounded-full object-cover"
-                src={item.profile_Picture}
-                alt="Image"
+                src={item.profile}
+                alt="friendsImg1"
               />
             </div>
             <div className="">
-              <h5 className="font-pops text-sm font-semibold">{item.block}</h5>
+              <h5 className="font-pops text-sm font-semibold">
+                {item.UserName}
+              </h5>
               <h5 className="font-pops text-[10px] font-medium text-[#00000080] mt-1">
                 Today, 8:56pm
               </h5>
             </div>
           </div>
           <div className="mr-9">
-            {!item.blockById && (
+            {item.blockedById && (
               <button
                 onClick={() => unblockUser(item)}
                 className=" active:scale-90 font-pops text-xl font-semibold text-white px-1.5 py-0.5 bg-primary rounded-md border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300"

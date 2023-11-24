@@ -3,14 +3,17 @@ import  PropTypes  from "prop-types";
 const UserListItem = ({
   item,
   data,
-  ifBlocked,
+  isBlocked,
   isAccepted,
   friendRequestData,
   sendRequest,
 }) => {
   return (
     <>
-      <li className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]">
+      <li
+        
+        className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
+      >
         <div className="flex items-center">
           <div className="mr-3.5">
             <img
@@ -26,8 +29,8 @@ const UserListItem = ({
             </h5>
           </div>
         </div>
-        {ifBlocked.includes(data.uid + item.userId) ||
-        ifBlocked.includes(item.userId + data.uid) ? (
+        {isBlocked.includes(data.uid + item.userId) ||
+        isBlocked.includes(item.userId + data.uid) ? (
           <div className="font-pops text-base font-medium text-[#4D4D4DBF] mr-5 capitalize">
             blocked
           </div>
@@ -49,7 +52,6 @@ const UserListItem = ({
             <BiPlusMedical className="" />
           </div>
         )}
-        {/* {} */}
       </li>
     </>
   );
@@ -57,7 +59,7 @@ const UserListItem = ({
 UserListItem.propTypes = {
   item: PropTypes.object.isRequired,
   data: PropTypes.object.isRequired,
-  ifBlocked: PropTypes.array.isRequired,
+  isBlocked: PropTypes.array.isRequired,
   isAccepted: PropTypes.array.isRequired,
   friendRequestData: PropTypes.array.isRequired,
   sendRequest: PropTypes.func.isRequired,
