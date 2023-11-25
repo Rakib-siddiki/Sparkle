@@ -1,8 +1,8 @@
+// Import necessary dependencies from React, Firebase, and other libraries
 import { createRef, useState } from "react";
 import { getDatabase, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 import img from "../../assets/home/groupLists/groupImg2.png";
-// react copper
 import "cropperjs/dist/cropper.css";
 import { Cropper } from "react-cropper";
 import {
@@ -11,33 +11,42 @@ import {
   ref as imageRef,
   uploadString,
 } from "firebase/storage";
-// import "./Demo.css";
-// eslint-disable-next-line react/prop-types
+import PropTypes from "prop-types";
+import LoadingSpinner from "../loading/LoadingSpinner";
+// Define the functional component PopUp
 const PopUp = ({ handleShow }) => {
-  const data = useSelector((state) => state.userInfo.userValue); // getting value from store
+  // Access user information from the Redux store
+  const data = useSelector((state) => state.userInfo.userValue);
+
+  // Initialize Firebase storage and database
   const storage = getStorage();
   const db = getDatabase();
+
+  // State variables to manage group information and errors
   const [groupName, setGroupName] = useState("");
-  console.log("🚀 > file: PopUp.jsx:6 > PopUp > groupName:", groupName);
   const [groupTitle, setGroupTitle] = useState("");
-  console.log("🚀 > file: PopUp.jsx:7 > PopUp > groupTitle:", groupTitle);
   const [nameError, setNameError] = useState(false);
   const [titleError, setTitleError] = useState(false);
   const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // eslint-disable-next-line no-unused-vars
   const [cropData, setCropData] = useState("");
   const cropperRef = createRef();
-  console.log("🚀 > file: PopUp.jsx:8 > PopUp > error:", nameError);
-  const grpdata = useSelector((state) => state);
-  console.log("🚀 > file: PopUp.jsx:33 > PopUp > grpdata:", grpdata);
 
+  // Handle input changes for group name
   const handleNameChange = (e) => {
     setGroupName(e.target.value);
     setNameError("");
   };
+
+  // Handle input changes for group title
   const handleTitleChange = (e) => {
     setGroupTitle(e.target.value);
     setTitleError("");
   };
+
+  // Validate input data and initiate the cropping process
   const sendGroupData = () => {
     if (!groupName) {
       setNameError("Enter your Group Name");
@@ -45,16 +54,17 @@ const PopUp = ({ handleShow }) => {
     if (!groupTitle) {
       setTitleError("Enter your Group Title");
     }
-    getCropData();
+    getCropData(); // Function to extract crop data from the image
   };
+
+  // Handle Enter key press for quick submission
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       sendGroupData();
     }
   };
 
-  // react copper functions
-
+  // Handle image upload and set it for cropping
   const handleUpload = (e) => {
     e.preventDefault();
     let files;
@@ -68,21 +78,35 @@ const PopUp = ({ handleShow }) => {
       setImage(reader.result);
     };
     reader.readAsDataURL(files[0]);
+    setCropData(""); // Clear previous cropping data when a new image is selected
   };
 
+  // Extract crop data from the selected image and upload it to Firebase storage
   const getCropData = () => {
     if (typeof cropperRef.current?.cropper !== "undefined") {
+      // Get cropped canvas data and convert it to a data URL
       setCropData(cropperRef.current?.cropper.getCroppedCanvas().toDataURL());
-      const storageRef = imageRef(storage, "groupProfile");
 
+      // Set up storage reference for the cropped image
+      const storageRef = imageRef(
+        storage,
+        `groupProfile/${push(ref(db, "grouplist/")).key}`
+      );
+
+      // Upload the cropped image data to Firebase storage
       const message4 = cropperRef.current?.cropper
         .getCroppedCanvas()
         .toDataURL();
       // eslint-disable-next-line no-unused-vars
+
+      setLoading(true) // Set loading to true before starting the operation
+
       uploadString(storageRef, message4, "data_url").then((snapshot) => {
-        // Upload completed successfully, now we can get the download URL
+        // Upload completed successfully, get the download URL
         getDownloadURL(storageRef).then((downloadURL) => {
           console.log("File available at", downloadURL);
+
+          // If group name and title are not empty, set group data in the database
           if (groupName.trim() && groupTitle.trim()) {
             set(push(ref(db, "grouplist/")), {
               groupName: groupName,
@@ -90,14 +114,16 @@ const PopUp = ({ handleShow }) => {
               adminId: data.uid,
               admin: data.displayName,
               profilePicture: downloadURL,
-            }).then(() => handleShow());
+            }).then(() => {
+              // Set loading to false after the operation is completed
+              setLoading(false);
+              handleShow();
+            });
           }
         });
       });
-      console.log(cropData);
     }
   };
-
   return (
     <>
       <section>
@@ -198,7 +224,7 @@ const PopUp = ({ handleShow }) => {
                 onClick={sendGroupData}
                 className="active:scale-90 font-pops text-sm font-semibold text-white px-[22px] py-2 bg-blue-600 rounded-bl-full rounded-tr-full border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 mt-5"
               >
-                Create
+                {loading ? <LoadingSpinner /> : 'Create'}
               </button>
             </div>
           </div>
@@ -207,5 +233,7 @@ const PopUp = ({ handleShow }) => {
     </>
   );
 };
-
+PopUp.propTypes = {
+  handleShow: PropTypes.func.isRequired,
+};
 export default PopUp;

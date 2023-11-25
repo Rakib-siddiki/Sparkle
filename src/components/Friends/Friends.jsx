@@ -1,3 +1,4 @@
+// Importing necessary components and libraries
 import { BsThreeDotsVertical } from "react-icons/bs";
 import {
   getDatabase,
@@ -16,17 +17,27 @@ import LoadingSpinner from "../loading/LoadingSpinner";
 import FriendListItem from "../reUseAble/listItems/FriendListItem";
 import { activeChat } from "../../slices/activeChatSlice";
 
+// Functional component 'Friends' with props 'active' and 'searchQuery'
 const Friends = ({ active, searchQuery }) => {
+  // Initializing Firebase database
   const db = getDatabase();
+  // Fetching user data from Redux state
   const data = useSelector((state) => state.userInfo.userValue);
+  // Initializing Redux dispatcher
   const dispatch = useDispatch();
+  // State variables for loading status and friend list
   const [loading, setLoading] = useState(true);
   const [friendList, setFriendList] = useState([]);
 
+  // useEffect hook to fetch and update friend list based on changes
   useEffect(() => {
+    // Creating a reference to the 'accepted' node in the Firebase database
     const friendListRef = ref(db, "accepted/");
+
+    // Event listener for changes in the 'accepted' node
     onValue(friendListRef, (snapshot) => {
       let arr = [];
+      // Iterating through the snapshot data and filtering friend list
       snapshot.forEach((item) => {
         if (
           data.uid == item.val().receiverId ||
@@ -35,11 +46,15 @@ const Friends = ({ active, searchQuery }) => {
           arr.push({ ...item.val(), id: item.key });
         }
       });
+      // Updating the friend list and setting loading status to false
       setFriendList(arr);
       setLoading(false);
     });
   }, [data.uid, db]);
+
+  // Method to handle blocking users
   const blockedUsers = (item) => {
+    // Extracting relevant information for blocked user
     const blockedUserId =
       data.uid == item.senderId ? item.receiverId : item.senderId;
     const blockedById =
@@ -57,6 +72,7 @@ const Friends = ({ active, searchQuery }) => {
         ? item.senderProfile_picture
         : item.recevierProfile_picture;
 
+    // Adding blocked user to 'blockedUsers' node and removing from 'accepted' node
     set(push(ref(db, "blockedUsers/")), {
       blockedUserId: blockedUserId,
       blockedById: blockedById,
@@ -67,24 +83,28 @@ const Friends = ({ active, searchQuery }) => {
     }).then(() => remove(ref(db, "accepted/" + item.id)));
   };
 
-  // search method filltering
+  // Search method for filtering friend list
   const fillterdFriendList = fillterdFriend(friendList, searchQuery, data.uid);
 
-  // going to chat
+  // Method to navigate to chat with a friend
   const goingToChat = (item) => {
-    console.log(item);
+    // Creating user data object for active chat
     const userData = {
       type: "single",
       name: data.uid === item.receiverId ? item.senderName : item.recevierName,
       userId: data.uid === item.receiverId ? item.senderId : item.receiverId,
-      profilePic:data.uid === item.receiverId?item.senderProfile_picture:item.recevierProfile_picture
+      profilePic:
+        data.uid === item.receiverId
+          ? item.senderProfile_picture
+          : item.recevierProfile_picture,
     };
-    if (userData.type === "single") {      
-      dispatch(activeChat(userData))
-      localStorage.setItem('activeUser',JSON.stringify(userData))
+
+    // Dispatching action to set active chat and storing in local storage
+    if (userData.type === "single") {
+      dispatch(activeChat(userData));
+      localStorage.setItem("activeUser", JSON.stringify(userData));
     }
   };
-
   return (
     <>
       <div className="w-full  h-full  pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
