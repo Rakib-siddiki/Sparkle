@@ -38,7 +38,7 @@ const ChatBox = ({item}) => {
                   ? item.receiverProfilePic
                   : item.senderProfilePic
               }
-              alt="Image Description"
+              alt="Image"
             />
 
             <h4 className=" inline-block max-w-[85%] py-[13px] px-4 rounded-e-10px rounded-t-10px bg-[#F1F1F1] font-pops text-base font-medium tracking-wide ml-3 relative before:content-[''] before:absolute before:left-2 before:bottom-0 before:-translate-x-4 before:rounded-[5px] before:border-solid before:border-t-22 before:border-r-22 before:border-b-20 before:border-l-28 before:border-t-transparent before:border-r-transparent before:border-b-[#F1F1F1] before:border-l-transparent">

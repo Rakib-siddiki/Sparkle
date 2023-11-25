@@ -56,6 +56,7 @@ const MyGroups = ({ searchQuery }) => {
       othersGroupId: item.adminId,
       groupName: item.groupName,
       groupTitle: item.groupTitle,
+      profilePicture:item.profilePicture,
       id: item.id,
     }).then(() => remove(ref(db, "groupJoinRequest/" + item.JoinId)));
   };
@@ -68,12 +69,13 @@ const MyGroups = ({ searchQuery }) => {
   // going To Chat 
   const goingToChat =(item)=> {
     console.log("🚀 > file: MyGroups.jsx:69 > goingToChat > item:", item)
-    const users={
-      name:item.groupName,
-      type:"group",
-      adminId:item.adminId,
-      othersId:item.othersGroupId
-    }
+    const users = {
+      name: item.groupName,
+      type: "group",
+      profilePic: item.profilePicture,
+      adminId: item.adminId,
+      othersId: item.othersGroupId,
+    };
    if (users.type ==="group") {
      dispatch(activeChat(users));
      localStorage.setItem("activeUser", JSON.stringify(users));

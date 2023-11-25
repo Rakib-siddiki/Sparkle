@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import PopUp from "./CreatePopUp";
+import PopUp from "./PopUp";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";

@@ -1,4 +1,3 @@
-import groupImg1 from "../../../assets/home/groupLists/groupImg1.png";
 
 import PropTypes from "prop-types";
 const AllGroupListItem = ({ item, groupJoinRequest, data, handleJoin }) => {
@@ -9,7 +8,7 @@ const AllGroupListItem = ({ item, groupJoinRequest, data, handleJoin }) => {
           <div className="">
             <img
               className="mr-3.5 w-[70px] h-[70px] rounded-full object-cover"
-              src={groupImg1}
+              src={item.profilePicture}
               alt="groupImg1"
             />
           </div>
