@@ -49,6 +49,7 @@ const Chat = () => {
     } else if (activeData.type == "group" && onlyWhiteSpace !== "") {
       console.log("group");
       set(push(ref(db, "groupMessages/")), {
+        adminId:activeData.adminId,
         message: message,
         senderId: data.uid,
         senderName: data.displayName,
@@ -88,18 +89,20 @@ const Chat = () => {
       snapshot.forEach((item) => {
         console.log(
           "🚀 > file: Chat.jsx:89 > snapshot.forEach > item:",
-          item.val(),
+          item.val()
         );
-        if (
-          (data.uid && activeData.adminId) ||
-          (data.uid && activeData.othersId)
+          if (
+          item.val().adminId === activeData.adminId &&
+          ((data.uid && activeData.adminId) ||
+            (data.uid && activeData.othersId))
         ) {
           arr.push(item.val());
         }
+
       });
       setShowMessage(arr);
     });
-  }, [activeData.adminId, activeData.othersId, data.uid, db]);
+  }, [activeData, data.uid, db]);
   // Function to handle keydown event in input
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {

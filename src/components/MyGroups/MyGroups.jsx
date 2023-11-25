@@ -1,5 +1,5 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { getDatabase, ref, onValue, set, remove } from "firebase/database";
+import { getDatabase, ref, onValue, set, remove, get } from "firebase/database";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NoData from "../noDataToShow/NoData";
@@ -18,14 +18,18 @@ const MyGroups = ({ searchQuery }) => {
   // my own group
   useEffect(() => {
     const myGroupsRef = ref(db, "grouplist/");
+
     onValue(myGroupsRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        if (data.uid == item.val().adminId) {
+        console.log("🚀 > file: MyGroups.jsx:25 > snapshot.forEach > item:", item.val())
+        const members = item.val().members || []
+        const isMember = members.includes(data.uid);
+        if ((data.uid === item.val().adminId)||(data.uid === item.val().othersGroupId )) {
           arr.push({ ...item.val(), id: item.key });
-        }
-        if (data.uid == item.val().othersGroupId) {
+        }if (isMember) {
           arr.push({ ...item.val(), id: item.key });
+          
         }
       });
 
@@ -47,21 +51,28 @@ const MyGroups = ({ searchQuery }) => {
       setGetJoinRequest(arr);
     });
   }, [data.uid, db]);
+  
   // Acepting group request
   const acceptGroupRequest = (item) => {
     console.log(
       "🚀 > file: MyGroups.jsx:52 > acceptGroupRequest > item:",
-      item,
+      item
     );
-    set(ref(db, "grouplist/" + item.id), {
-      admin: item.admin,
-      adminId: item.senderId,
-      othersGroupId: item.adminId,
-      groupName: item.groupName,
-      groupTitle: item.groupTitle,
-      profilePicture: item.profilePicture,
-      id: item.id,
-    }).then(() => remove(ref(db, "groupJoinRequest/" + item.JoinId)));
+
+
+    // Fetch the current group information
+    const groupRef = ref(db, "grouplist/" + item.id);
+    get(groupRef).then((groupSnapshot) => {
+      const currentGroup = groupSnapshot.val();
+
+      // Update the group with the new member
+      set(groupRef, {
+        ...currentGroup,
+        members: currentGroup.members
+          ? [...currentGroup.members, item.senderId]
+          : [item.senderId],
+      }).then(() => remove(ref(db, "groupJoinRequest/" + item.JoinId)));
+    });
   };
   const cancleGroupRequest = (item) => {
     remove(ref(db, "groupJoinRequest/" + item.JoinId));
