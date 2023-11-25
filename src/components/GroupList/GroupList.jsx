@@ -43,6 +43,8 @@ const GroupList = ({ searchQuery}) => {
   }, [data.uid, db]);
 
   const handleJoin = (item) => {
+    console.log("🚀 > file: GroupList.jsx:46 > handleJoin > item:", item)
+    
     const newJoinRequest = {
       ...item,
       senderId: data.uid,
@@ -54,10 +56,10 @@ const GroupList = ({ searchQuery}) => {
     set(newJoinRequestRef, newJoinRequest);
 
     // Update the state to include the newly joined group
-    setGrouplist((prevList) => [
-      ...prevList,
-      { ...item, id: newJoinRequestRef.key },
-    ]);
+    // setGrouplist((prevList) => [
+    //   ...prevList,
+    //   { ...item, id: newJoinRequestRef.key },
+    // ]);
    
   };
 

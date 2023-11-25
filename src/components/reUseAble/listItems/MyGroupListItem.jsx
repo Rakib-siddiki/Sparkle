@@ -48,6 +48,7 @@ const MyGroupListItem = ({
                 src={item.profilePicture}
                 alt="friendsImg1"
               />
+              {console.log(item)}
             </div>
             <div className="">
               <h5 className="font-pops text-sm font-semibold">

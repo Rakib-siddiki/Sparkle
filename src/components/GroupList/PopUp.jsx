@@ -2,7 +2,7 @@
 import { createRef, useState } from "react";
 import { getDatabase, push, ref, set } from "firebase/database";
 import { useSelector } from "react-redux";
-import img from "../../assets/home/groupLists/groupImg2.png";
+import defaultImg from "../../assets/user.png";
 import "cropperjs/dist/cropper.css";
 import { Cropper } from "react-cropper";
 import {
@@ -148,7 +148,7 @@ const PopUp = ({ handleShow }) => {
                 ) : (
                   <img
                     className="inline-block w-20 rounded-full "
-                    src={img}
+                    src={defaultImg}
                     alt="Image Description"
                   />
                 )}
