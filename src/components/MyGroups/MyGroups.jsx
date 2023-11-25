@@ -13,7 +13,7 @@ const MyGroups = ({ searchQuery }) => {
   const [myGroupsList, setMyGroupsList] = useState([]);
   const [getJoinRequest, setGetJoinRequest] = useState([]);
   const data = useSelector((state) => state.userInfo.userValue); // getting value from store
-  const dispatch =useDispatch()
+  const dispatch = useDispatch();
   const db = getDatabase();
   // my own group
   useEffect(() => {
@@ -49,14 +49,17 @@ const MyGroups = ({ searchQuery }) => {
   }, [data.uid, db]);
   // Acepting group request
   const acceptGroupRequest = (item) => {
-    console.log("🚀 > file: MyGroups.jsx:52 > acceptGroupRequest > item:", item)
+    console.log(
+      "🚀 > file: MyGroups.jsx:52 > acceptGroupRequest > item:",
+      item,
+    );
     set(ref(db, "grouplist/" + item.id), {
       admin: item.admin,
       adminId: item.senderId,
       othersGroupId: item.adminId,
       groupName: item.groupName,
       groupTitle: item.groupTitle,
-      profilePicture:item.profilePicture,
+      profilePicture: item.profilePicture,
       id: item.id,
     }).then(() => remove(ref(db, "groupJoinRequest/" + item.JoinId)));
   };
@@ -66,9 +69,9 @@ const MyGroups = ({ searchQuery }) => {
 
   // search method filltering
   const fillterdMyGroupsList = fillterdMyGroups(myGroupsList, searchQuery);
-  // going To Chat 
-  const goingToChat =(item)=> {
-    console.log("🚀 > file: MyGroups.jsx:69 > goingToChat > item:", item)
+  // going To Chat
+  const goingToChat = (item) => {
+    console.log("🚀 > file: MyGroups.jsx:69 > goingToChat > item:", item);
     const users = {
       name: item.groupName,
       type: "group",
@@ -76,11 +79,11 @@ const MyGroups = ({ searchQuery }) => {
       adminId: item.adminId,
       othersId: item.othersGroupId,
     };
-   if (users.type ==="group") {
-     dispatch(activeChat(users));
-     localStorage.setItem("activeUser", JSON.stringify(users));
-   }
-  }
+    if (users.type === "group") {
+      dispatch(activeChat(users));
+      localStorage.setItem("activeUser", JSON.stringify(users));
+    }
+  };
   return (
     <>
       <div className="w-full  h-full  pt-5 pb-1.5 pl-5 pr-[22px] rounded-20px shadow-CardShadow">
@@ -99,14 +102,24 @@ const MyGroups = ({ searchQuery }) => {
           ) : searchQuery ? (
             fillterdMyGroupsList.length > 0 ? (
               fillterdMyGroupsList.map((item, i) => (
-                <MyGroupListItem type="myGroupList" key={i} item={item} goingToChat={goingToChat}/>
+                <MyGroupListItem
+                  type="myGroupList"
+                  key={i}
+                  item={item}
+                  goingToChat={goingToChat}
+                />
               ))
             ) : (
               <NoData />
             )
           ) : (
             myGroupsList.map((item, i) => (
-              <MyGroupListItem type="myGroupList" key={i} item={item} goingToChat={goingToChat}/>
+              <MyGroupListItem
+                type="myGroupList"
+                key={i}
+                item={item}
+                goingToChat={goingToChat}
+              />
             ))
           )}
           {getJoinRequest.map((item, i) => (

@@ -5,7 +5,7 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
-import { getDatabase, ref,set } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 
 import regImg from "../../assets/reg/reg_Img.png";
 import { GiBullseye, GiBurningEye } from "react-icons/gi";
@@ -106,17 +106,20 @@ const Reg = () => {
               }, 2500);
             })
             .then(() => {
-              const userId = user.user.uid
-              const userName = user.user.displayName
-              const userEmail = user.user.email
-              const photoURL = user.user.photoURL
-              console.log("🚀 > file: Reg.jsx:113 > .then > photoURL:", photoURL)
+              const userId = user.user.uid;
+              const userName = user.user.displayName;
+              const userEmail = user.user.email;
+              const photoURL = user.user.photoURL;
+              console.log(
+                "🚀 > file: Reg.jsx:113 > .then > photoURL:",
+                photoURL,
+              );
               set(ref(db, "users/" + userId), {
                 username: userName,
                 email: userEmail,
                 profile_picture: photoURL,
               });
-              console.log(db)
+              console.log(db);
             });
         })
         .catch((error) => {

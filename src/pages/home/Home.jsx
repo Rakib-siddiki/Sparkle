@@ -14,7 +14,6 @@ import SearchBox from "../../components/SearchBox/SearchBox";
 import { ColorRing } from "react-loader-spinner";
 import { userLogInfo } from "../../slices/userSlice";
 
-
 const Home = () => {
   const auth = getAuth();
   const dispatch = useDispatch();

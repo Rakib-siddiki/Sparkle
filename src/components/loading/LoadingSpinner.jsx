@@ -1,4 +1,3 @@
-
 import { ColorRing } from "react-loader-spinner";
 const LoadingSpinner = () => {
   return (

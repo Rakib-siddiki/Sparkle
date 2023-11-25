@@ -12,7 +12,6 @@ export const userSlice = createSlice({
     userLogInfo: (state, action) => {
       state.userValue = action.payload;
     },
-    
   },
 });
 

@@ -1,4 +1,3 @@
-
 import PropTypes from "prop-types";
 const AllGroupListItem = ({ item, groupJoinRequest, data, handleJoin }) => {
   return (

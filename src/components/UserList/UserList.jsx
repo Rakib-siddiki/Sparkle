@@ -10,15 +10,15 @@ import { PropTypes } from "prop-types";
 import UserListItem from "../reUseAble/listItems/UserListItem";
 
 // for userList
-const UserList = ({searchQuery}) => {
+const UserList = ({ searchQuery }) => {
   const [userData, setUserData] = useState([]);
   const [friendRequestData, setFriendRequestData] = useState([]);
   const [isAccepted, setIsAccepted] = useState([]);
   const [isBlocked, setIfBlocked] = useState([]);
   const [loading, setLoading] = useState(true);
-   const db = getDatabase();
-   const data = useSelector((state) => state.userInfo.userValue);
-   useEffect(() => {
+  const db = getDatabase();
+  const data = useSelector((state) => state.userInfo.userValue);
+  useEffect(() => {
     const userLists = ref(db, "users/");
     onValue(userLists, (snapshot) => {
       let arr = [];
@@ -42,7 +42,7 @@ const UserList = ({searchQuery}) => {
       recevierProfile_picture: item.profile_picture,
     });
   };
-//get Friend request lists data
+  //get Friend request lists data
   useEffect(() => {
     const friendRequestRef = ref(db, "friendRequest/");
     onValue(friendRequestRef, (snapshot) => {
@@ -65,21 +65,20 @@ const UserList = ({searchQuery}) => {
     });
   }, [db]);
   // get BlockedList data
-  useEffect(()=>{
+  useEffect(() => {
     const ifBlockedRef = ref(db, "blockedUsers/");
     onValue(ifBlockedRef, (snapshot) => {
-      let arr = []
-      snapshot.forEach(item=>{
+      let arr = [];
+      snapshot.forEach((item) => {
         arr.push(item.val().blockedUserId + item.val().blockedById);
-      })
-      setIfBlocked(arr)
+      });
+      setIfBlocked(arr);
     });
-    
-  },[db])
+  }, [db]);
 
-  //search method for user list 
+  //search method for user list
   const filteredUserList = filteredUser(userData, searchQuery);
-  
+
   return (
     <>
       <div className="w-full  h-full  pt-5 pb-3 pl-5 pr-[22px] rounded-20px shadow-CardShadow">

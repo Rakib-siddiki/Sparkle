@@ -23,7 +23,7 @@ import { PiUserListBold } from "react-icons/pi";
 import { MdOutlineBlock } from "react-icons/md";
 
 import PropTypes from "prop-types";
-const Sidebar = ({active}) => {
+const Sidebar = ({ active }) => {
   // uplod profile picture
   const [upLoadProfilePicture, setUpLoadProfilePicture] = useState(false);
   const cancleUpload = () => {
@@ -243,7 +243,7 @@ const Sidebar = ({active}) => {
     </>
   );
 };
-Sidebar.propTypes={
-  active:PropTypes.string.isRequired,
-}
+Sidebar.propTypes = {
+  active: PropTypes.string.isRequired,
+};
 export default Sidebar;

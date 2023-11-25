@@ -15,7 +15,7 @@ import { filteredFriendRequest } from "../reUseAble/Searching";
 import { PropTypes } from "prop-types";
 import FriendReqListItem from "../reUseAble/listItems/FriendReqListItem";
 
-const FriendRequest = ({searchQuery}) => {
+const FriendRequest = ({ searchQuery }) => {
   const db = getDatabase();
   const data = useSelector((state) => state.userInfo.userValue);
   const [loading, setLoading] = useState(true);

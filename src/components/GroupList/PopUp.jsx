@@ -90,7 +90,7 @@ const PopUp = ({ handleShow }) => {
       // Set up storage reference for the cropped image
       const storageRef = imageRef(
         storage,
-        `groupProfile/${push(ref(db, "grouplist/")).key}`
+        `groupProfile/${push(ref(db, "grouplist/")).key}`,
       );
 
       // Upload the cropped image data to Firebase storage
@@ -99,8 +99,9 @@ const PopUp = ({ handleShow }) => {
         .toDataURL();
       // eslint-disable-next-line no-unused-vars
 
-      setLoading(true) // Set loading to true before starting the operation
+      setLoading(true); // Set loading to true before starting the operation
 
+      // eslint-disable-next-line no-unused-vars
       uploadString(storageRef, message4, "data_url").then((snapshot) => {
         // Upload completed successfully, get the download URL
         getDownloadURL(storageRef).then((downloadURL) => {
@@ -224,7 +225,7 @@ const PopUp = ({ handleShow }) => {
                 onClick={sendGroupData}
                 className="active:scale-90 font-pops text-sm font-semibold text-white px-[22px] py-2 bg-blue-600 rounded-bl-full rounded-tr-full border-[1px] border-solid border-primary hover:bg-white hover:text-primary duration-300 mt-5"
               >
-                {loading ? <LoadingSpinner /> : 'Create'}
+                {loading ? <LoadingSpinner /> : "Create"}
               </button>
             </div>
           </div>

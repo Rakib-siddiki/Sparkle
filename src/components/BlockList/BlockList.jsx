@@ -14,7 +14,7 @@ import NoData from "../noDataToShow/NoData";
 import { filteredBlockUsers } from "../reUseAble/Searching";
 import PropTypes from "prop-types"; // Import PropTypes
 import BlockListItemItem from "../reUseAble/listItems/BlockListItemItem";
-const BlockedUsers = ({searchQuery}) => {
+const BlockedUsers = ({ searchQuery }) => {
   const data = useSelector((state) => state.userInfo.userValue);
   const [loading, setLoading] = useState(true);
   const db = getDatabase();

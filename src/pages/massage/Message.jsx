@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Chat from "../../components/Chat/Chat";
 import ChatFriends from "../../components/Friends/Friends";

@@ -1,5 +1,5 @@
 import { BiPlusMedical } from "react-icons/bi";
-import  PropTypes  from "prop-types";
+import PropTypes from "prop-types";
 const UserListItem = ({
   item,
   data,
@@ -10,10 +10,7 @@ const UserListItem = ({
 }) => {
   return (
     <>
-      <li
-        
-        className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]"
-      >
+      <li className="py-3 flex justify-between items-center border-b-[1px] border-solid border-[#00000040]">
         <div className="flex items-center">
           <div className="mr-3.5">
             <img

@@ -88,7 +88,7 @@ const Chat = () => {
       snapshot.forEach((item) => {
         console.log(
           "🚀 > file: Chat.jsx:89 > snapshot.forEach > item:",
-          item.val()
+          item.val(),
         );
         if (
           (data.uid && activeData.adminId) ||
@@ -127,7 +127,7 @@ const Chat = () => {
               new Date().getMonth() + 1
             }-${new Date().getDate()}-${new Date().getHours()}-${new Date().getMinutes()}`,
           });
-        }else{
+        } else {
           set(push(ref(db, "groupMessages/")), {
             image: downloadURL,
             senderId: data.uid,
