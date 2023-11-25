@@ -37,6 +37,7 @@ const MyGroups = ({ searchQuery }) => {
       setLoading(false);
     });
   }, [data.uid, db]);
+
   //  get groupJoinRequests
   useEffect(() => {
     const getJoinRequestRef = ref(db, "groupJoinRequest/");
@@ -54,12 +55,6 @@ const MyGroups = ({ searchQuery }) => {
   
   // Acepting group request
   const acceptGroupRequest = (item) => {
-    console.log(
-      "🚀 > file: MyGroups.jsx:52 > acceptGroupRequest > item:",
-      item
-    );
-
-
     // Fetch the current group information
     const groupRef = ref(db, "grouplist/" + item.id);
     get(groupRef).then((groupSnapshot) => {
@@ -89,6 +84,7 @@ const MyGroups = ({ searchQuery }) => {
       profilePic: item.profilePicture,
       adminId: item.adminId,
       othersId: item.othersGroupId,
+      groupId:item.id
     };
     if (users.type === "group") {
       dispatch(activeChat(users));

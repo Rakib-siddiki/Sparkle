@@ -16,7 +16,6 @@ import ChatBox from "../reUseAble/listItems/chatBox";
 const Chat = () => {
   // Redux state hooks
   const activeData = useSelector((state) => state.activeChat.activeValue);
-  console.log("🚀 > file: Chat.jsx:19 > Chat > activeData:", activeData.name);
   const data = useSelector((state) => state.userInfo.userValue);
 
   // Firebase database and storage initialization
@@ -49,7 +48,7 @@ const Chat = () => {
     } else if (activeData.type == "group" && onlyWhiteSpace !== "") {
       console.log("group");
       set(push(ref(db, "groupMessages/")), {
-        adminId:activeData.adminId,
+        groupId:activeData.groupId,
         message: message,
         senderId: data.uid,
         senderName: data.displayName,
@@ -87,12 +86,9 @@ const Chat = () => {
     onValue(groupMessages, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        console.log(
-          "🚀 > file: Chat.jsx:89 > snapshot.forEach > item:",
-          item.val()
-        );
+          console.log("🚀 > file: Chat.jsx:89 > snapshot.forEach > item:", item.val())
           if (
-          item.val().adminId === activeData.adminId &&
+          item.val().groupId === activeData.groupId &&
           ((data.uid && activeData.adminId) ||
             (data.uid && activeData.othersId))
         ) {
