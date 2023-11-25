@@ -75,7 +75,7 @@ const Friends = ({ active, searchQuery }) => {
     console.log(item);
     const userData = {
       type: "single",
-      Name: data.uid === item.receiverId ? item.senderName : item.recevierName,
+      name: data.uid === item.receiverId ? item.senderName : item.recevierName,
       userId: data.uid === item.receiverId ? item.senderId : item.receiverId,
       profilePic:data.uid === item.receiverId?item.senderProfile_picture:item.recevierProfile_picture
     };

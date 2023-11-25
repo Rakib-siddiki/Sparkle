@@ -49,6 +49,7 @@ const MyGroups = ({ searchQuery }) => {
   }, [data.uid, db]);
   // Acepting group request
   const acceptGroupRequest = (item) => {
+    console.log("🚀 > file: MyGroups.jsx:52 > acceptGroupRequest > item:", item)
     set(ref(db, "grouplist/" + item.id), {
       admin: item.admin,
       adminId: item.senderId,
@@ -66,9 +67,12 @@ const MyGroups = ({ searchQuery }) => {
   const fillterdMyGroupsList = fillterdMyGroups(myGroupsList, searchQuery);
   // going To Chat 
   const goingToChat =(item)=> {
+    console.log("🚀 > file: MyGroups.jsx:69 > goingToChat > item:", item)
     const users={
       name:item.groupName,
-      type:"group"
+      type:"group",
+      adminId:item.adminId,
+      othersId:item.othersGroupId
     }
    if (users.type ==="group") {
      dispatch(activeChat(users));

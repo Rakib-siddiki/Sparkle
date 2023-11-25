@@ -16,6 +16,7 @@ import ChatBox from "../reUseAble/listItems/chatBox";
 const Chat = () => {
   // Redux state hooks
   const activeData = useSelector((state) => state.activeChat.activeValue);
+  console.log("🚀 > file: Chat.jsx:19 > Chat > activeData:", activeData.name)
   const data = useSelector((state) => state.userInfo.userValue);
 
   // Firebase database and storage initialization
@@ -26,7 +27,7 @@ const Chat = () => {
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState([]);
   // state for emoji picker
-  const [showEmoji, setShowEmoji] = useState(false);  
+  const [showEmoji, setShowEmoji] = useState(false);
   // Function to handle sending messages
   const handleMessageSend = () => {
     const onlyWhiteSpace = message.trim();
@@ -39,7 +40,19 @@ const Chat = () => {
         reciverId: activeData.userId,
         receiverName: activeData.Name,
         receiverProfilePic: activeData.profilePic,
-
+        date: `${new Date().getFullYear()}-${
+          new Date().getMonth() + 1
+        }-${new Date().getDate()}-${new Date().getHours()}-${new Date().getMinutes()}`,
+      }).then(() => {
+        setMessage("");
+      });
+    } else if (activeData.type == "group" && onlyWhiteSpace !== "") {
+      console.log('group');
+      set(push(ref(db, "groupMessages/")), {
+        message: message,
+        senderId: data.uid,
+        senderName: data.displayName,
+        senderProfilePic: data.photoURL,
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
         }-${new Date().getDate()}-${new Date().getHours()}-${new Date().getMinutes()}`,
@@ -49,7 +62,7 @@ const Chat = () => {
     }
   };
 
-  // Effect to listen for changes in messages
+  // Feaching data from Single Messages
   useEffect(() => {
     const singleMessages = ref(db, "singleMessages/");
     onValue(singleMessages, (snapshot) => {
@@ -67,7 +80,21 @@ const Chat = () => {
       setShowMessage(arr);
     });
   }, [activeData.userId, data.uid, db]);
-
+  // Feaching data from group Messages
+  useEffect(() => {
+    const groupMessages = ref(db, "groupMessages/");
+    onValue(groupMessages, (snapshot) => {
+      let arr = [];
+      snapshot.forEach((item) => {
+       console.log("🚀 > file: Chat.jsx:89 > snapshot.forEach > item:", item.val())
+       if (data.uid && activeData.adminId || data.uid && activeData.othersId) {
+         arr.push(item.val());
+       }
+        
+      });
+      setShowMessage(arr);
+    });
+  }, [activeData.adminId, activeData.othersId, data.uid, db]);
   // Function to handle keydown event in input
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -100,12 +127,12 @@ const Chat = () => {
     const emoji = e.emoji;
     setMessage((prevMessage) => prevMessage + emoji); // Append emoji to the message
   };
-  const stickBottom = useRef(null)
-  useEffect(()=>{
+  const stickBottom = useRef(null);
+  useEffect(() => {
     if (stickBottom.current) {
-        stickBottom.current.scrollTop=stickBottom.current.scrollHeight;
+      stickBottom.current.scrollTop = stickBottom.current.scrollHeight;
     }
-  },[message])
+  }, [message]);
   return (
     <>
       {/* Chat container */}
@@ -124,7 +151,7 @@ const Chat = () => {
             {/* User details */}
             <div className="">
               <h2 className="font-pops text-xl font-semibold">
-                {activeData?.Name}
+                {activeData?.name}
               </h2>
               <p className="font-pops text-sm text-[#000000D9]">Online</p>
             </div>
@@ -137,7 +164,10 @@ const Chat = () => {
 
         {/* Messages container */}
         <div className="row-span-9 py-4">
-          <div ref={stickBottom} className=" h-[480px] min-h-full max-h-full overflow-y-scroll">
+          <div
+            ref={stickBottom}
+            className=" h-[480px] min-h-full max-h-full overflow-y-scroll"
+          >
             {showMessage.map((item, i) => (
               <ChatBox key={i} item={item} />
             ))}
