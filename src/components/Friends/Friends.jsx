@@ -18,7 +18,7 @@ import FriendListItem from "../reUseAble/listItems/FriendListItem";
 import { activeChat } from "../../slices/activeChatSlice";
 
 // Functional component 'Friends' with props 'active' and 'searchQuery'
-const Friends = ({ active, searchQuery }) => {
+const Friends = ({ searchQuery,active }) => {
   // Initializing Firebase database
   const db = getDatabase();
   // Fetching user data from Redux state
@@ -151,8 +151,11 @@ const Friends = ({ active, searchQuery }) => {
     </>
   );
 };
+FriendListItem.defaultProps = {
+  active: '', // Set your default value here
+};
 Friends.propTypes = {
-  active: PropTypes.string.isRequired,
   searchQuery: PropTypes.string.isRequired,
+  active: PropTypes.string, // Making 'active' optional
 };
 export default Friends;

@@ -86,7 +86,6 @@ const Chat = () => {
     onValue(groupMessages, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-          console.log("🚀 > file: Chat.jsx:89 > snapshot.forEach > item:", item.val())
           if (
           item.val().groupId === activeData.groupId &&
           ((data.uid && activeData.adminId) ||
@@ -128,6 +127,7 @@ const Chat = () => {
           });
         } else {
           set(push(ref(db, "groupMessages/")), {
+            groupId: activeData.groupId,
             image: downloadURL,
             senderId: data.uid,
             senderName: data.displayName,

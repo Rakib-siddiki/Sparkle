@@ -26,7 +26,6 @@ const GroupList = ({ searchQuery}) => {
     onValue(groupListRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        console.log("🚀 > file: GroupList.jsx:29 > snapshot.forEach > item:", item.val())
         const members = item.val().members || []; // Ensure members array is defined
         const isMember = members.includes(data.uid);
         if (
@@ -43,7 +42,6 @@ const GroupList = ({ searchQuery}) => {
   }, [data.uid, db]);
 
   const handleJoin = (item) => {
-    console.log("🚀 > file: GroupList.jsx:46 > handleJoin > item:", item)
     
     const newJoinRequest = {
       ...item,

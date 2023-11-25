@@ -22,7 +22,6 @@ const MyGroups = ({ searchQuery }) => {
     onValue(myGroupsRef, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-        console.log("🚀 > file: MyGroups.jsx:25 > snapshot.forEach > item:", item.val())
         const members = item.val().members || []
         const isMember = members.includes(data.uid);
         if ((data.uid === item.val().adminId)||(data.uid === item.val().othersGroupId )) {
@@ -77,7 +76,6 @@ const MyGroups = ({ searchQuery }) => {
   const fillterdMyGroupsList = fillterdMyGroups(myGroupsList, searchQuery);
   // going To Chat
   const goingToChat = (item) => {
-    console.log("🚀 > file: MyGroups.jsx:69 > goingToChat > item:", item);
     const users = {
       name: item.groupName,
       type: "group",
@@ -114,6 +112,8 @@ const MyGroups = ({ searchQuery }) => {
                   key={i}
                   item={item}
                   goingToChat={goingToChat}
+                  acceptGroupRequest={acceptGroupRequest}
+                  cancleGroupRequest={cancleGroupRequest}
                 />
               ))
             ) : (
@@ -126,6 +126,8 @@ const MyGroups = ({ searchQuery }) => {
                 key={i}
                 item={item}
                 goingToChat={goingToChat}
+                acceptGroupRequest={acceptGroupRequest}
+                cancleGroupRequest={cancleGroupRequest}
               />
             ))
           )}
