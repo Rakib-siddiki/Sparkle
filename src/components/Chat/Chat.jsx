@@ -16,7 +16,7 @@ import ChatBox from "../reUseAble/listItems/chatBox";
 const Chat = () => {
   // Redux state hooks
   const activeData = useSelector((state) => state.activeChat.activeValue);
-  console.log("🚀 > file: Chat.jsx:19 > Chat > activeData:", activeData.name)
+  console.log("🚀 > file: Chat.jsx:19 > Chat > activeData:", activeData.name);
   const data = useSelector((state) => state.userInfo.userValue);
 
   // Firebase database and storage initialization
@@ -38,7 +38,7 @@ const Chat = () => {
         senderName: data.displayName,
         senderProfilePic: data.photoURL,
         reciverId: activeData.userId,
-        receiverName: activeData.Name,
+        receiverName: activeData.name,
         receiverProfilePic: activeData.profilePic,
         date: `${new Date().getFullYear()}-${
           new Date().getMonth() + 1
@@ -47,7 +47,7 @@ const Chat = () => {
         setMessage("");
       });
     } else if (activeData.type == "group" && onlyWhiteSpace !== "") {
-      console.log('group');
+      console.log("group");
       set(push(ref(db, "groupMessages/")), {
         message: message,
         senderId: data.uid,
@@ -86,11 +86,16 @@ const Chat = () => {
     onValue(groupMessages, (snapshot) => {
       let arr = [];
       snapshot.forEach((item) => {
-       console.log("🚀 > file: Chat.jsx:89 > snapshot.forEach > item:", item.val())
-       if (data.uid && activeData.adminId || data.uid && activeData.othersId) {
-         arr.push(item.val());
-       }
-        
+        console.log(
+          "🚀 > file: Chat.jsx:89 > snapshot.forEach > item:",
+          item.val()
+        );
+        if (
+          (data.uid && activeData.adminId) ||
+          (data.uid && activeData.othersId)
+        ) {
+          arr.push(item.val());
+        }
       });
       setShowMessage(arr);
     });
@@ -104,21 +109,35 @@ const Chat = () => {
 
   // Function to handle image upload
   const handeleImageUpload = (e) => {
+    const onlyWhiteSpace = message.trim();
     const file = e.target.files[0];
     const storageRef = imageRef(storage, file.name);
     // eslint-disable-next-line no-unused-vars
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((downloadURL) => {
-        set(push(ref(db, "singleMessages/")), {
-          image: downloadURL,
-          senderId: data.uid,
-          senderName: data.displayName,
-          reciverId: activeData.userId,
-          receiverName: activeData.Name,
-          date: `${new Date().getFullYear()}-${
-            new Date().getMonth() + 1
-          }-${new Date().getDate()}-${new Date().getHours()}-${new Date().getMinutes()}`,
-        });
+        if (activeData.type == "single" && onlyWhiteSpace !== "") {
+          set(push(ref(db, "singleMessages/")), {
+            image: downloadURL,
+            senderId: data.uid,
+            senderName: data.displayName,
+            reciverId: activeData.userId,
+            receiverName: activeData.name,
+            senderProfilePic: data.photoURL,
+            date: `${new Date().getFullYear()}-${
+              new Date().getMonth() + 1
+            }-${new Date().getDate()}-${new Date().getHours()}-${new Date().getMinutes()}`,
+          });
+        }else{
+          set(push(ref(db, "groupMessages/")), {
+            image: downloadURL,
+            senderId: data.uid,
+            senderName: data.displayName,
+            senderProfilePic: data.photoURL,
+            date: `${new Date().getFullYear()}-${
+              new Date().getMonth() + 1
+            }-${new Date().getDate()}-${new Date().getHours()}-${new Date().getMinutes()}`,
+          });
+        }
       });
     });
   };
