@@ -5,6 +5,8 @@ import { BsFillEmojiLaughingFill, BsFillCameraFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import defaultImg from "../../assets/user.png";
+
 import EmojiPicker from "emoji-picker-react";
 import {
   getDownloadURL,
@@ -164,14 +166,14 @@ const Chat = () => {
             <div className=" inline-block relative mr-3.5 after:drop-shadow-iconDropShadow">
               <img
                 className="w-[75px] h-[75px] rounded-full object-cover drop-shadow-iconDropShadow"
-                src={activeData?.profilePic}
+                src={activeData?.profilePic?activeData.profilePic:defaultImg}
                 alt="user.png"
               />
             </div>
             {/* User details */}
             <div className="">
               <h2 className="font-pops text-xl font-semibold">
-                {activeData?.name}
+                {activeData?.name?activeData.name:"User"}
               </h2>
               <p className="font-pops text-sm text-[#000000D9]">Online</p>
             </div>
