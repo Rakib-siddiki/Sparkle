@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {  useState } from "react";
 import Chat from "../../components/Chat/Chat";
 import ChatFriends from "../../components/Friends/Friends";
 import SearchBox from "../../components/SearchBox/SearchBox";
@@ -7,7 +7,7 @@ import MyGroups from "../../components/MyGroups/MyGroups";
 
 const Message = () => {
   const [searchQuery, setSearchQuery] = useState("");
-
+  
   return (
     <>
       <section className="h-screen pt-16 p-2.5 md:p-3 xl:p-5 md:grid grid-cols-9 gap-10 lg:landscape:gap-5 xl:landscape:gap-10">

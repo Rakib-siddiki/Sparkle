@@ -16,6 +16,7 @@ import ChatBox from "../reUseAble/listItems/chatBox";
 const Chat = () => {
   // Redux state hooks
   const activeData = useSelector((state) => state.activeChat.activeValue);
+  console.log("🚀 > file: Chat.jsx:19 > Chat > activeData:", activeData)
   const data = useSelector((state) => state.userInfo.userValue);
 
   // Firebase database and storage initialization
@@ -63,23 +64,23 @@ const Chat = () => {
   };
 
   // Feaching data from Single Messages
-  useEffect(() => {
-    const singleMessages = ref(db, "singleMessages/");
-    onValue(singleMessages, (snapshot) => {
-      let arr = [];
-      snapshot.forEach((item) => {
-        if (
-          (data.uid === item.val().reciverId ||
-            item.val().reciverId === activeData.userId) &&
-          (data.uid === item.val().senderId ||
-            item.val().senderId === activeData.userId)
-        ) {
-          arr.push(item.val());
-        }
+    useEffect(() => {
+      const singleMessages = ref(db, "singleMessages/");
+      onValue(singleMessages, (snapshot) => {
+        let arr = [];
+        snapshot.forEach((item) => {
+          if (
+            (data.uid === item.val().reciverId ||
+              item.val().reciverId === activeData.userId) &&
+            (data.uid === item.val().senderId ||
+              item.val().senderId === activeData.userId)
+          ) {
+            arr.push(item.val());
+          }
+        });
+        setShowMessage(arr);
       });
-      setShowMessage(arr);
-    });
-  }, [activeData.userId, data.uid, db]);
+    }, [activeData?.userId, data.uid, db,activeData]);
   // Feaching data from group Messages
   useEffect(() => {
     const groupMessages = ref(db, "groupMessages/");
@@ -97,7 +98,8 @@ const Chat = () => {
       });
       setShowMessage(arr);
     });
-  }, [activeData, data.uid, db]);
+  }, [activeData?.adminId, activeData?.groupId, activeData?.othersId, data.uid, db]);
+
   // Function to handle keydown event in input
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
