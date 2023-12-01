@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch } from "react-redux";
@@ -72,15 +73,32 @@ const Login = () => {
   };
   // handle submit
   //for Google Login
-  const handleGoogle = async () => {
-    await signInWithPopup(auth, provider)
-      .then(() => {
-        navigate("/home");
+  // const handleGoogle = async () => {
+  //   await signInWithPopup(auth, provider)
+  //     .then(() => {
+  //       navigate("/");
+  //     })
+  //     .catch((error) => {
+  //       // Handle Errors here.
+  //       const errorCode = error.code;
+  //       console.log(errorCode);
+  //     });
+      
+  // };
+
+  const handleGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        dispatch(userLogInfo(user));
+        localStorage.setItem("userData", JSON.stringify(user));
+        navigate("/");
       })
       .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
-        console.log(errorCode);
+        console.log("🚀 > file: Login.jsx:103 > handleGoogle > errorCode:", errorCode)
+        // ...
       });
   };
   return (

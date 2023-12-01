@@ -18,7 +18,6 @@ import ChatBox from "../reUseAble/listItems/chatBox";
 const Chat = () => {
   // Redux state hooks
   const activeData = useSelector((state) => state.activeChat.activeValue);
-  console.log("🚀 > file: Chat.jsx:19 > Chat > activeData:", activeData)
   const data = useSelector((state) => state.userInfo.userValue);
 
   // Firebase database and storage initialization
